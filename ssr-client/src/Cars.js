@@ -10,7 +10,7 @@ const Cars = ({setSelectedCar}) => {
 
     return (
         <div className="cars">
-            <h2>Cars</h2>
+            <h2>Amuzely</h2>
             <ul>
                 {cars.map(car => (
                     <li key={car.name} onClick={() => setSelectedCar(car)}>
