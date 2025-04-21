@@ -34,6 +34,10 @@ const ReadDirectoryContentToArray = (folderPath, array) => {
 ReadDirectoryContentToArray(`${staticPathRoot}/js`, bootstrapScripts);
 ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
 
+
+app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))));
+
 app.get("/dashboard", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
@@ -86,8 +90,6 @@ app.use(
   express.static(path.join(__dirname, 'app'))
 );
 
-app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))));
 
 app.listen(port, () => {
     console.log(`Application started on port ${port}`);
