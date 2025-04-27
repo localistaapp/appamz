@@ -1,0 +1,64 @@
+@media screen and (max-width:768px) {
+  .w-full.md\:w-1\/2.xl\:w-auto.p-8.xl\:p-12 {
+    padding-top: 0
+    }
+  section.relative.pb-24.bg-white.overflow-hidden.pt-16 {
+    padding-bottom: 3.5rem;
+}
+  }
+@media screen and (min-width:1048px) {
+.wide-headline {
+    width: 50% !important;
+    margin: 0 auto;
+}
+}
+section.relative.pb-24.bg-white.overflow-hidden.pt-16 {
+    padding-bottom: 6rem;
+}
+section.pt-24.bg-white.overflow-hidden.pb-8 {
+    padding-top: 0px;
+}
+  .relative.z-20.overflow-hidden.pt-12.pb-28 {
+    padding-bottom: 0
+    }
+  .bg-indigo-100 {
+    --tw-bg-opacity: 1;
+    background-color: #fff
+    }
+  .bg-indigo-600,
+    button.py-4.px-6.w-full.text-white.font-semibold.border.border-indigo-700.rounded-xl.focus\:ring.focus\:ring-indigo-300.bg-indigo-600.hover\:bg-indigo-700.transition.ease-in-out.duration-200:hover {
+      background-image: initial;
+      background-position-x: initial;
+      background-position-y: initial;
+      background-size: initial;
+      background-repeat: initial;
+      background-attachment: initial;
+      background-origin: initial;
+      background-clip: initial;
+      background-color: #ff0405
+      }
+    .text-indigo-600 {
+      color: #ff0405
+      }
+    .logo {
+      width: 160px;
+      margin-top: 4px;
+      }
+    button.py-4.px-6.w-full.text-white.font-semibold.border.border-indigo-700.rounded-xl.focus\:ring.focus\:ring-indigo-300.bg-indigo-600.hover\:bg-indigo-700.transition.ease-in-out.duration-200 {
+      border-top-width: initial;
+      border-right-width: initial;
+      border-bottom-width: initial;
+      border-left-width: initial;
+      border-style: none;
+      border-color: initial;
+      border-image-source: initial;
+      border-image-slice: initial;
+      border-image-width: initial;
+      border-image-outset: initial;
+      border-image-repeat: initial
+      }
+    .wide-headline {
+      width: 100%
+      }
+    }
+
