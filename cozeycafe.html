@@ -72,6 +72,9 @@
         .wide-headline {
           width: 100%
           }
+          h1 {
+            font-size: 2rem;
+          }
         }</style>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" defer></script>
 </head>
@@ -80,12 +83,12 @@
                 
       <section x-data="{ mobileNavOpen: false }" class="relative ">  <div class="absolute z-10 hidden lg:block left-0 top-0 max-w-xs w-full h-full bg-indigo-100"></div>  <div class="container mx-auto overflow-hidden">    <div class="relative z-20 flex items-center justify-between px-4 py-5 bg-transparent">      <div class="w-auto">        <div class="flex flex-wrap items-center">          <div class="w-auto mr-14">            <a href="#">              <img src="assets/images/amlogo3.png" alt="" class="logo">            </a>          </div>          <div class="w-auto hidden lg:block">            <ul class="flex items-center mr-16">              <li class="mr-9 font-medium hover:text-gray-700"><a href="#">How it works</a></li>              <li class="mr-9 font-medium hover:text-gray-700"><a href="#">Onboarding</a></li>              <li class="mr-9 font-medium hover:text-gray-700"><a href="#">Case Studies</a></li>              <li class="font-medium hover:text-gray-700"><a href="#">Contact +91-7619514999</a></li>            </ul>          </div>        </div>      </div>      <div class="w-auto">        <div class="flex flex-wrap items-center">          <div class="w-auto hidden mr-5 lg:block">            <div class="inline-block">              <button class="py-3 px-5 w-full hover:text-gray-700 font-medium rounded-xl bg-transparent transition ease-in-out duration-200" type="button">Learn more</button>            </div>          </div>          <div class="w-auto hidden lg:block">            <div class="inline-block">              <button class="py-3 px-5 w-full font-semibold border hover:border-gray-300 rounded-xl focus:ring focus:ring-gray-50 bg-white hover:bg-gray-50 transition ease-in-out duration-200" type="button">Book Free Demo</button>            </div>          </div>          <div class="w-auto lg:hidden">            <button x-on:click="mobileNavOpen = !mobileNavOpen">              <svg class="text-indigo-600" width="41" height="41" viewbox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="28" fill="currentColor"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>            </button>          </div>        </div>      </div>    </div>    <div :class="{'block': mobileNavOpen, 'hidden': !mobileNavOpen}" class="fixed top-0 left-0 bottom-0 w-4/6 sm:max-w-xs z-50 block">      <div x-on:click="mobileNavOpen = !mobileNavOpen" class="fixed inset-0 bg-gray-800 opacity-80"></div>      <nav class="relative z-10 px-9 pt-8 bg-white h-full overflow-y-auto">        <div class="flex flex-wrap justify-between h-full">          <div class="w-full">            <div class="flex items-center justify-between -m-2">              <div class="w-auto p-2">                <a class="inline-block" href="#">                  <img src="assets/images/amlogo3.png" alt="">                </a>              </div>              <div class="w-auto p-2">                <button x-on:click="mobileNavOpen = !mobileNavOpen">                  <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                    <path d="M6 18L18 6M6 6L18 18" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>                  </svg>                </button>              </div>            </div>          </div>          <div class="flex flex-col justify-center py-16 w-full">            <ul>              <li class="mb-12"><a href="#">How it works</a></li>              <li class="mb-12"><a href="#">Onboarding</a></li>              <li class="mb-12"><a href="#">Case Studies</a></li>              <li class="mb-12"><a href="#">Contact +91-7619514999</a></li>            </ul>          </div>          <div class="flex flex-col justify-end w-full pb-8">            <div class="flex flex-wrap">              <div class="w-full mb-3">                <div class="block">                  <button class="py-3 px-5 w-full hover:text-gray-700 font-medium rounded-xl bg-transparent transition ease-in-out duration-200" type="button">Learn More</button>                </div>              </div>              <div class="w-full">                <div class="block">                  <button class="py-3 px-5 w-full font-semibold border hover:border-gray-300 rounded-xl focus:ring focus:ring-gray-50 bg-white hover:bg-gray-50 transition ease-in-out duration-200" type="button">Book Free Demo</button>                </div>              </div>            </div>          </div>        </div>      </nav>    </div>  </div>  </section>
                 
-      <section class="py-28 bg-black bg-no-repeat bg-center bg-cover bg-fixed overflow-hidden" style="background-image: url('assets/flaro-assets/images/blog/bg.jpeg');">
+      <section class="py-28 bg-black bg-no-repeat bg-center bg-cover bg-fixed overflow-hidden" style="background-image: url('assets/images/cozeybg.jpeg');background-size: contain;background-position-x: 500px;background-repeat: repeat;">
         <div class="container px-4 mx-auto">
           <div class="px-12 pt-12 pb-9 md:max-w-xl bg-black bg-opacity-80 rounded-4xl" style="backdrop-filter: blur(10px);">
-            <p class="mb-7 font-sans max-w-max px-3 py-1.5 text-sm text-white font-semibold uppercase border border-gray-700 rounded-md">Business</p>
-            <h2 class="mb-4 text-6xl md:text-7xl text-white font-bold font-heading tracking-px-n leading-tight">How to handle your good employee for the business.</h2>
-            <p class="mb-11 text-lg text-gray-400 font-medium leading-normal">Lorem ipsum dolor sit amet, to the consectr adipiscing elit. Volutpat tempor to the condim entum vitae vel purus.</p>
+            <p class="mb-7 font-sans max-w-max px-3 py-1.5 text-sm text-white font-semibold uppercase border border-gray-700 rounded-md">Business Showcase</p>
+            <h2 class="mb-4 text-6xl md:text-7xl text-white font-bold font-heading tracking-px-n leading-tight">How Cozey Cafe could build a loyal customer base</h1><br/><br/>
+            <p class="mb-11 text-lg text-gray-400 font-medium leading-normal">Learn how a local artisanal cafe could unlock growth with targeted digital tools.</p>
             <a class="inline-flex flex-wrap items-center text-white hover:text-gray-200" href="#">
               <span class="mr-2 font-semibold leading-normal">Read Full Article</span>
               <svg width="19" height="18" viewbox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,7 +99,51 @@
         </div>
       </section>
                 
-      <section class="py-12 px-4 md:px-8 lg:px-16 bg-white">  <div class="container mx-auto">    <div class="max-w-3xl mx-auto">      <h1 class="mb-6 text-6xl md:text-7xl lg:text-8xl font-bold font-heading leading-tight">Discover New Possibilities</h1>      <div class="mb-8">              </div>      <p class="mb-8 text-lg text-gray-700 leading-relaxed">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>      <div class="md:inline-block">        <button class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button">Learn More</button>      </div>    </div>  </div></section>
+      <section class="py-12 px-4 md:px-8 lg:px-16 bg-white">  <div class="container mx-auto">    <div class="max-w-3xl mx-auto">      <h1 class="mb-6 text-6xl md:text-7xl lg:text-8xl font-bold font-heading leading-tight">Unlocking Growth: How a Local Artisanal Café Can Thrive Using Targeted Digital Tools</h1>      
+        <div class="mb-8">              </div>  
+
+<p>In today’s competitive landscape, local artisanal cafés have an opportunity to stand out—not just with their handcrafted coffee and pastries, but by embracing smarter digital strategies. With the right support, even a small café can build a loyal community, drive repeat business, and boost revenue.</p>
+
+<p><strong>Amuzely Growth Tools</strong> offer an easy, powerful way for cafés to modernize their marketing and operations without losing their authentic touch. Here’s how a local artisanal café can unlock new growth with Amuzely.</p>
+
+<br/><br/><h1>Building a Stronger Brand Presence with Amuzely Growth Tools</h1><br/><br/>
+
+<p>Every local café has a story worth telling. Whether it’s the care in sourcing ingredients, the craft behind every brew, or the connection with the neighborhood, customers want to hear it—and discover it online.</p>
+
+<p>With <strong>Amuzely Growth Tools</strong>, creating a professional, mobile-friendly website becomes simple. Cafés can showcase their menu, share their story, display customer reviews, and make it easy for visitors to find store hours and location. Built-in SEO enhancements help the café rank higher when locals search for the best coffee spots nearby.</p>
+
+<p>Social media integration is another strength. Through Amuzely’s easy-to-use content scheduler, cafés can maintain a consistent posting rhythm on Instagram, Facebook, and even TikTok without getting overwhelmed. With pre-designed templates and caption ideas, posting beautiful updates about the latest pastry, a behind-the-scenes baking session, or upcoming events becomes quick and fun.</p>
+
+<p>Amuzely Growth Tools also help manage your Google Business Profile more efficiently. Updating new offers, adding fresh photos, and replying to customer reviews can all be streamlined to ensure your café stands out when people are browsing on Google Maps.</p>
+
+<br/><br/><h1>Creating Deeper Customer Relationships with Amuzely Growth Tools</h1><br/><br/>
+
+<p>The real strength of an artisanal café is its ability to build a personal bond with customers. <strong>Amuzely Growth Tools</strong> make it easier to nurture these relationships digitally without losing that personal feel.</p>
+
+<p>Amuzely’s built-in CRM lets cafés track customer preferences effortlessly. You’ll know who loves oat milk lattes, who never misses a Friday visit, and who’s celebrating a birthday soon. With this knowledge, sending personalized offers or simple birthday greetings becomes a breeze.</p>
+
+<p>Launching a digital loyalty program is just as easy. Instead of relying on outdated paper punch cards, Amuzely lets cafés set up custom rewards—like "Buy 9 coffees, get the 10th free"—and automatically track customer progress. You can even run referral rewards to encourage your biggest fans to bring their friends.</p>
+
+<p>Email marketing is also built-in. Whether it’s announcing a new seasonal drink, inviting regulars to a latte art competition, or simply sharing a heartfelt newsletter, Amuzely’s simple email composer helps keep your community engaged and excited. Personalized, automated emails based on customer activity ensure your messages feel thoughtful, not spammy.</p>
+
+<br/><br/><h1>Driving Revenue with Smarter Online Ordering and Promotions</h1><br/><br/>
+
+<p>Today’s customers appreciate convenience. Offering online ordering doesn’t just meet expectations—it creates opportunities for more sales, even when foot traffic is slow.</p>
+
+<p>Amuzely Growth Tools enable cafés to launch a sleek online ordering system within hours. Whether customers want to pre-order a cappuccino for pickup or schedule a pastry box for a Sunday brunch, the process is intuitive for them and effortless for the café team.</p>
+
+<p>Beyond ordering, <strong>Amuzely Growth Tools</strong> also make promotions smarter. You can easily set up time-limited offers (like a Monday morning pastry deal), create online-only bundles, or reward frequent customers with surprise perks. Amuzely’s targeting tools allow you to send promotions based on purchase history or customer behavior—boosting the chances of repeat visits and bigger orders.</p>
+
+<p>And with real-time analytics built right into the dashboard, cafés can track which promotions work best, which items are customer favorites, and when peak ordering times occur. This makes it easy to optimize operations, adjust the menu, and continuously fine-tune marketing efforts.</p>
+
+<br/><br/><h1>Conclusion</h1><br/><br/>
+
+<p>By adopting <strong>Amuzely Growth Tools</strong>, a local artisanal café doesn’t need a massive budget or marketing team to compete. It just needs the right digital toolkit to amplify its story, deepen its customer relationships, and unlock sustainable, exciting growth. With Amuzely, cafés can stay true to their roots—while reaching a whole new generation of loyal fans.</p>
+    
+        <p class="mb-8 text-lg text-gray-700 leading-relaxed">
+          
+        
+        </p>      <div class="md:inline-block">        <button class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button">Learn More</button>      </div>    </div>  </div></section>
     </div>
 </body>
 </html>
