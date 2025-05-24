@@ -14,10 +14,74 @@
 :root {
   --appmain: #039be5;
 }
+.hover\:bg-indigo-700:hover {
+        background-color: #ff0405;
+      }
+      .focus-within\:ring-indigo-300:focus-within
+      {
+          --tw-ring-opacity: 1;
+          --tw-ring-color: rgb(255 214 214);
+      }
+      .focus\:ring-indigo-300:focus {
+          --tw-ring-opacity: 1;
+          --tw-ring-color: rgb(255 214 214 / var(--tw-ring-opacity));
+      }
 
+      .hover\:bg-indigo-700:hover {
+        background-color: #ff0405;
+      }
+      .focus-within\:ring-indigo-300:focus-within
+      {
+          --tw-ring-opacity: 1;
+          --tw-ring-color: rgb(255 214 214);
+      }
+      .focus\:ring-indigo-300:focus {
+          --tw-ring-opacity: 1;
+          --tw-ring-color: rgb(255 214 214 / var(--tw-ring-opacity));
+      }
+      .xl\:text-10xl {
+        font-size: 3.75rem;
+        font-weight: 300;
+      }
+      h2 {
+        font-size: 2.625rem !important;
+        font-weight: 300 !important;
+      }
+      @media (min-width: 768px) {
+          .md\:text-6xl {
+              font-size: 2.625rem;
+              font-weight: 300;
+          }
+          .video-frame {
+            position: relative !important;
+            top: -636px !important;
+            z-index: 10 !important;
+            width: 282px !important;
+            margin: 0 auto !important;
+            left: 6px !important;
+        }
+      }
+      @media (max-width: 768px) {
+          .xl\:text-10xl{
+              font-size: 2.8rem;
+              font-weight: 300;
+          }
+          h2 {
+              font-size: 1.5rem !important;
+          }
+      }
+      
 
 .hidden {
     display: none;
+}
+
+.video-frame {
+  position: relative;
+  top: -640px;
+  z-index: 10;
+  width: 81%;
+  margin: 0 auto;
 }
 
 .product-list {
@@ -1322,7 +1386,7 @@ function hideAllSteps() {
 function renderProductList() {
     const container = document.getElementById('productList');
     container.classList.remove('hidden');
-    const category = "Dresses"; // You can make this dynamic
+    const category = window.selectedProductCategory; // You can make this dynamic
 
     productData[category].forEach(product => {
       const card = document.createElement('div');
@@ -1362,7 +1426,60 @@ function next(step) {
         document.getElementById('splashElem').classList.add('welcome');
         
         setTimeout(()=>{renderProductList();document.getElementById('splash-overlay').style.display = 'none';},2000);
-    }
+    } else if (step == 5) {
+        document.getElementById('productList').classList.add('hidden');
+    } else if (step == 6) {
+        document.getElementById('splashElem').style.background = '#fff';
+        document.getElementById('productList').style.display = 'none';
+        document.getElementById('videoDashboard').classList.add('hidden');
+        document.getElementById('videoOnlineOrders').classList.add('hidden');
+        document.getElementById('videoStoreDashboard').classList.add('hidden');
+        document.getElementById('videoContent').classList.add('hidden');
+        document.getElementById('videoEvent').classList.add('hidden');
+
+        document.getElementById('videoDashboard').classList.remove('hidden');
+        document.getElementById('videoDashboard').play();
+    } else if (step == 7) {
+        document.getElementById('productList').style.display = 'none';
+        document.getElementById('videoDashboard').classList.add('hidden');
+        document.getElementById('videoOnlineOrders').classList.add('hidden');
+        document.getElementById('videoStoreDashboard').classList.add('hidden');
+        document.getElementById('videoContent').classList.add('hidden');
+        document.getElementById('videoEvent').classList.add('hidden');
+
+        document.getElementById('videoStoreDashboard').classList.remove('hidden');
+        document.getElementById('videoStoreDashboard').play();
+    } else if (step == 8) {
+        document.getElementById('productList').style.display = 'none';
+        document.getElementById('videoDashboard').classList.add('hidden');
+        document.getElementById('videoOnlineOrders').classList.add('hidden');
+        document.getElementById('videoStoreDashboard').classList.add('hidden');
+        document.getElementById('videoContent').classList.add('hidden');
+        document.getElementById('videoEvent').classList.add('hidden');
+
+        document.getElementById('videoOnlineOrders').classList.remove('hidden');
+        document.getElementById('videoOnlineOrders').play();
+    } else if (step == 9) {
+        document.getElementById('productList').style.display = 'none';
+        document.getElementById('videoDashboard').classList.add('hidden');
+        document.getElementById('videoOnlineOrders').classList.add('hidden');
+        document.getElementById('videoStoreDashboard').classList.add('hidden');
+        document.getElementById('videoContent').classList.add('hidden');
+        document.getElementById('videoEvent').classList.add('hidden');
+
+        document.getElementById('videoContent').classList.remove('hidden');
+        document.getElementById('videoContent').play();
+    } else if (step == 10) {
+        document.getElementById('productList').style.display = 'none';
+        document.getElementById('videoDashboard').classList.add('hidden');
+        document.getElementById('videoOnlineOrders').classList.add('hidden');
+        document.getElementById('videoStoreDashboard').classList.add('hidden');
+        document.getElementById('videoContent').classList.add('hidden');
+        document.getElementById('videoEvent').classList.add('hidden');
+
+        document.getElementById('videoEvent').classList.remove('hidden');
+        document.getElementById('videoEvent').play();
+    } 
 }
 
 window.addEventListener('scroll', () => {
@@ -1487,9 +1604,79 @@ function updateAppIconAfterContent(newContent) {
                <label for="category" style="margin-top: 0px;font-weight: 500;">You can easily digitize your products with complete online ordering functionality.</label>
             </div>
             <div class="md:inline-block pb-6">          
-               <button id="btnCreatingApp" onclick="next(4)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+               <button id="btnCreatingApp" onclick="next(5)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
             </div>
          </div>
+         <div id="step6" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+          <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Voila! Customers can install your app & order online</h2>
+          
+          <div class="selector-container" style="margin-bottom: 20px;">
+             <label for="category" style="margin-top: 0px;font-weight: 500;">Click 'Next' to view the business dashboard.</label>
+          </div>
+          <div class="md:inline-block pb-6">          
+             <button id="btnCreatingApp" onclick="next(6)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+          </div>
+       </div>
+       <div id="step7" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+        <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Your business dashboard</h2>
+        
+        <div class="selector-container" style="margin-bottom: 20px;">
+           <label for="category" style="margin-top: 0px;font-weight: 500;">Stay on top of new orders, enquiries and more with a unified dashboard.</label>
+        </div>
+        <div class="md:inline-block pb-6">          
+           <button id="btnCreatingApp" onclick="next(7)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+        </div>
+     </div>
+     <div id="step8" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+      <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Your store dashboard</h2>
+      
+      <div class="selector-container" style="margin-bottom: 20px;">
+         <label for="category" style="margin-top: 0px;font-weight: 500;">Create new store orders and more with your store dashboard.</label>
+      </div>
+      <div class="md:inline-block pb-6">          
+         <button id="btnCreatingApp" onclick="next(8)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+      </div>
+   </div>
+   <div id="step9" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+    <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Accept online orders</h2>
+    
+    <div class="selector-container" style="margin-bottom: 20px;">
+       <label for="category" style="margin-top: 0px;font-weight: 500;">Get notified when customers order or enquire online.</label>
+    </div>
+    <div class="md:inline-block pb-6">          
+       <button id="btnCreatingApp" onclick="next(9)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+    </div>
+ </div>
+ <div id="step10" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+  <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Create Content Notifications</h2>
+  
+  <div class="selector-container" style="margin-bottom: 20px;">
+     <label for="category" style="margin-top: 0px;font-weight: 500;">Get daily suggested content to notify and engage customers using push notification.</label>
+  </div>
+  <div class="md:inline-block pb-6">          
+     <button id="btnCreatingApp" onclick="next(10)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+  </div>
+</div>
+<div id="step11" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+  <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Create Event-based Push Notifications</h2>
+  
+  <div class="selector-container" style="margin-bottom: 20px;">
+     <label for="category" style="margin-top: 0px;font-weight: 500;">Remind customers of your offering with a relevant event like a cricket match, OTT show premiere etc!</label>
+  </div>
+  <div class="md:inline-block pb-6">          
+     <button id="btnCreatingApp" onclick="next(11)" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Next →</button>        
+  </div>
+</div>
+<div id="step12" class="steps md:w-1/2 md:pr-8 mb-10 md:mb-0 hidden bottom-bar">
+  <h2 id="titleCreatingApp" class="text-3xl font-bold text-gray-900 mb-4" data-config-id="text2">Enquire now to get started</h2>
+  
+  <div class="selector-container" style="margin-bottom: 20px;">
+     <label for="category" style="margin-top: 0px;font-weight: 500;">Click below enquire about creation of your own app now!</label>
+  </div>
+  <div class="md:inline-block pb-6">          
+     <button id="btnCreatingApp" onclick="window.location.href='https://wa.me/7619514999?text=Im%20interested%20in%20amuzely%20growth%20tools';" class="py-4 px-6 w-full text-white font-semibold border border-indigo-700 rounded-xl shadow-4xl focus:ring focus:ring-indigo-300 bg-indigo-600 hover:bg-indigo-700 transition ease-in-out duration-200" type="button" data-config-id="text5">Enquire Now</button>        
+  </div>
+</div>
 
 
           <!-- Mobile Image (Right Side) -->      
@@ -1525,11 +1712,13 @@ function updateAppIconAfterContent(newContent) {
                       <span class="container grey-text text-lighten-1 ">
                   
                         <div class="product-list hidden" id="productList"></div>
-                  
+                        
                       </span>
                     </main>
+                    
                   
                   </div>
+                 
                 
             </div>
          </div>
@@ -1541,6 +1730,12 @@ function updateAppIconAfterContent(newContent) {
 
 
        </div>
+       <video class="video-frame hidden" id="videoDashboard" src="assets/images/rec1.mp4"></video>
+       <video class="video-frame hidden" id="videoStoreDashboard" src="assets/images/rec2.mp4"></video>
+       <video class="video-frame hidden" id="videoOnlineOrders" src="assets/images/rec3.mp4"></video>
+       <video class="video-frame hidden" id="videoContent" src="assets/images/rec4.mp4"></video>
+       <video class="video-frame hidden" id="videoEvent" src="assets/images/rec5.mp4"></video>
+                  
     </div>
  </section>
 </div>
@@ -1712,6 +1907,140 @@ const projectFiles = ["index.html","cozeycafe.html","demo.html"];
         { "attributeName": "material", "attributeValue": "Chiffon" }
       ]
     }
+  ],
+  "Coffee": [
+    {
+      "title": "Espresso Shot",
+      "price": 120,
+      "imageUrl": "https://images.pexels.com/photos/302899/pexels-photo-302899.jpeg",
+      "shortDescription": "Rich and intense espresso",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Espresso" },
+        { "attributeName": "size", "attributeValue": "Single" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    },
+    {
+      "title": "Cappuccino",
+      "price": 180,
+      "imageUrl": "https://images.pexels.com/photos/261510/pexels-photo-261510.jpeg",
+      "shortDescription": "Foamy and balanced espresso",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Cappuccino" },
+        { "attributeName": "size", "attributeValue": "Medium" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Latte",
+      "price": 190,
+      "imageUrl": "https://images.pexels.com/photos/1695052/pexels-photo-1695052.jpeg",
+      "shortDescription": "Smooth milk-based espresso",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Latte" },
+        { "attributeName": "size", "attributeValue": "Large" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Flat White",
+      "price": 200,
+      "imageUrl": "https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg",
+      "shortDescription": "Velvety milk with espresso",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Flat White" },
+        { "attributeName": "size", "attributeValue": "Medium" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    },
+    {
+      "title": "Iced Americano",
+      "price": 160,
+      "imageUrl": "https://images.pexels.com/photos/4342137/pexels-photo-4342137.jpeg",
+      "shortDescription": "Chilled water and espresso",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Americano" },
+        { "attributeName": "size", "attributeValue": "Large" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    },
+    {
+      "title": "Mocha",
+      "price": 210,
+      "imageUrl": "https://images.pexels.com/photos/374852/pexels-photo-374852.jpeg",
+      "shortDescription": "Espresso with chocolate milk",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Mocha" },
+        { "attributeName": "size", "attributeValue": "Large" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Cold Brew",
+      "price": 200,
+      "imageUrl": "https://images.pexels.com/photos/7125711/pexels-photo-7125711.jpeg",
+      "shortDescription": "Slow-steeped chilled coffee",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Cold Brew" },
+        { "attributeName": "size", "attributeValue": "Large" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    },
+    {
+      "title": "Caramel Macchiato",
+      "price": 230,
+      "imageUrl": "https://images.pexels.com/photos/624989/pexels-photo-624989.jpeg",
+      "shortDescription": "Sweet caramel espresso blend",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Macchiato" },
+        { "attributeName": "size", "attributeValue": "Medium" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Vanilla Latte",
+      "price": 220,
+      "imageUrl": "https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg",
+      "shortDescription": "Vanilla infused smooth latte",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Latte" },
+        { "attributeName": "size", "attributeValue": "Large" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Hazelnut Cappuccino",
+      "price": 210,
+      "imageUrl": "https://images.pexels.com/photos/1445702/pexels-photo-1445702.jpeg",
+      "shortDescription": "Nutty twist on classic cappuccino",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Cappuccino" },
+        { "attributeName": "size", "attributeValue": "Medium" },
+        { "attributeName": "caffeine", "attributeValue": "Medium" }
+      ]
+    },
+    {
+      "title": "Affogato",
+      "price": 190,
+      "imageUrl": "https://images.pexels.com/photos/302896/pexels-photo-302896.jpeg",
+      "shortDescription": "Espresso over vanilla ice cream",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Affogato" },
+        { "attributeName": "size", "attributeValue": "Single" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    },
+    {
+      "title": "Irish Coffee",
+      "price": 250,
+      "imageUrl": "https://images.pexels.com/photos/302889/pexels-photo-302889.jpeg",
+      "shortDescription": "Coffee with whiskey and cream",
+      "attributes": [
+        { "attributeName": "type", "attributeValue": "Specialty" },
+        { "attributeName": "size", "attributeValue": "Standard" },
+        { "attributeName": "caffeine", "attributeValue": "High" }
+      ]
+    }
   ]
 };
 
@@ -1777,6 +2106,7 @@ const projectFiles = ["index.html","cozeycafe.html","demo.html"];
 
     if (item) {
       output.textContent = `You selected: ${cat} → ${sub} → ${item}`;
+      window.selectedProductCategory = item;
     }
   });
 
