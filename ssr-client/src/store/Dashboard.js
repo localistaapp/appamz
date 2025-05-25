@@ -10,7 +10,7 @@ const HeadersComponent = lazy(() =>
 );
 
 const SidebarComponent = lazy(() =>
-    delay(1000).then(() => import("./sidebar/Sidebar.js"))
+    delay(500).then(() => import("./sidebar/Sidebar.js"))
 );
 
 const CarsComponent = lazy(() =>
