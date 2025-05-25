@@ -82,6 +82,28 @@ app.get("/dashboard", (req, res) => {
   );
 });
 
+app.get("/dashboard/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <StoreSSR bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+
 app.get("/example", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
@@ -105,6 +127,11 @@ app.get("/example", (req, res) => {
 
 app.use(
   "/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/dashboard/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 

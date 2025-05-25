@@ -1,7 +1,7 @@
 import Dashboard from "./Dashboard";
 import PropTypes from 'prop-types';
 
-const StoreSSR = ({ bootStrapCSS=[] }) => {
+const StoreSSR = ({ bootStrapCSS=[], locationHref='' }) => {
     console.log('Rendering Store App component on server-side');
     return (
         <html>
@@ -15,7 +15,7 @@ const StoreSSR = ({ bootStrapCSS=[] }) => {
             </head>
             <body>
                 <div id="root-store">
-                    <Dashboard />
+                    <Dashboard locationHref={locationHref} />
                 </div>
             </body>
         </html>
