@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkssr_client=self.webpackChunkssr_client||[]).push([[241],{622:(e,s,a)=>{a.r(s),a.d(s,{default:()=>l});var c=a(507);const l=()=>(0,c.jsx)("div",{className:"header",children:"React 18 SSR example with Pipeable stream"})}}]);
-//# sourceMappingURL=241.e6b8ed70.chunk.js.map

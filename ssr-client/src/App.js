@@ -4,11 +4,11 @@ import {Suspense, lazy, useState} from "react";
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const HeadersComponent = lazy(() =>
-    import("./Header.js")
+    import("./store/header/Header.js")
 );
 
 const SidebarComponent = lazy(() =>
-    delay(1000).then(() => import("./Sidebar.js"))
+    delay(1000).then(() => import("./store/sidebar/Sidebar.js"))
 );
 
 const CarsComponent = lazy(() =>
@@ -19,7 +19,7 @@ const CarDetailComponent = lazy(() =>
     delay(100).then(() => import("./CarDetail.js"))
 );
 
-const FooterComponent = lazy(() => import("./Footer.js"));
+const FooterComponent = lazy(() => import("./store/footer/Footer.js"));
 
 const LoadingScreen = () => <div>Loading Cars...</div>;
 const LoadingSidebarScreen = () => <div>Loading Sidebar...</div>;

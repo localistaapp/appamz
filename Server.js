@@ -37,7 +37,8 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
 
 
 app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))));
+.use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('swirlyojpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 /*app.get("/", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
