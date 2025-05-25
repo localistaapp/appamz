@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkssr_client=self.webpackChunkssr_client||[]).push([[816],{816:(s,e,l)=>{l.r(e),l.d(e,{default:()=>a});var o=l(507);const c=()=>{console.log("--clicked log out--"),alert("Log out")},a=s=>(0,o.jsxs)("div",{className:"header",children:["",(0,o.jsx)("img",{className:"store-logo",src:"/assets/images/logo_rc.png"}),s.loggedOut&&(0,o.jsx)("span",{id:"logout",className:"logout",onClick:c,children:"Logout"})]})}}]);
-//# sourceMappingURL=816.7327d324.chunk.js.map
