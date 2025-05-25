@@ -30,6 +30,7 @@ const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 
 const initializeStats = (email) => {
     let enquiriesArr = [];
+    typeof window !== 'undefined' && window.sessionStorage.setItem('user-profile', email);
     axios.get(`/stats/${email}`)
       .then(function (response) {
         if(response.data != 'auth error') {
