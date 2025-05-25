@@ -61,7 +61,7 @@ function Dashboard({locationHref}) {
     return (
         <>
             <HeadersComponent loggedOut={true} locationHref={locationHref} />
-            {typeof window !== 'undefined' && window.sessionStorage.getItem('user') == null && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);initializeStats(response.email);}} googleAccountConfigs={{ client_id: '854842086574-uk0kfphicblidrs1pkbqi7r242iaih80.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}
+            {typeof window !== 'undefined' && window.sessionStorage.getItem('user-profile') == null && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);initializeStats(response.email);}} googleAccountConfigs={{ client_id: '854842086574-uk0kfphicblidrs1pkbqi7r242iaih80.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}
             <div className="app-layout">
                 <Suspense fallback={<LoadingSidebarScreen />}>
                     <SidebarComponent />
