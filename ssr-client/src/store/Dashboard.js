@@ -1,5 +1,5 @@
 import "./Dashboard.css";
-import {Suspense, lazy, useState} from "react";
+import {Suspense, lazy, useEffect, useState} from "react";
 import axios from 'axios';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
 
@@ -10,7 +10,7 @@ const HeadersComponent = lazy(() =>
 );
 
 const SidebarComponent = lazy(() =>
-    delay(3000).then(() => import("./sidebar/Sidebar.js"))
+    delay(1000).then(() => import("./sidebar/Sidebar.js"))
 );
 
 const CarsComponent = lazy(() =>
@@ -24,7 +24,7 @@ const CarDetailComponent = lazy(() =>
 const FooterComponent = lazy(() => import("./footer/Footer.js"));
 
 const LoadingScreen = () => <div>Loading Cars...</div>;
-const LoadingSidebarScreen = () => <div>Loading Sidebar...</div>;
+const LoadingSidebarScreen = () => <div className="loading-screen"><div className="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div></div>;
 const LoadingFooterScreen = () => <div>Loading Footer...</div>;
 const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 
@@ -57,16 +57,27 @@ const initializeStats = (email) => {
 
 function Dashboard({locationHref}) {
     const [selectedCar, setSelectedCar] = useState(null);
+    const [showSideBar, setShowSideBar] = useState(false);
+
+    const toggleSideBar = () => {
+        setShowSideBar(!showSideBar);
+    }
+
+    useEffect( ()=> {
+        if (window.screen.width >= 768) {
+            setShowSideBar(true);
+        }
+    }, []);
 
     return (
         <>
-            <HeadersComponent loggedOut={true} locationHref={locationHref} />
+            <HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />
             {typeof window !== 'undefined' && window.sessionStorage.getItem('user-profile') == null && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);initializeStats(response.email);}} googleAccountConfigs={{ client_id: '854842086574-uk0kfphicblidrs1pkbqi7r242iaih80.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}
             <div className="app-layout">
-                <Suspense fallback={<LoadingSidebarScreen />}>
+                {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
                     <SidebarComponent />
-                </Suspense>
-                <div><span>Main View</span></div>
+                </Suspense>}
+                <div><span></span></div>
             </div>
         </>
     );

@@ -14,12 +14,19 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <h3>Sidebar</h3>
-            <p>Links and other content can go hereeee.</p>
+            <h3>Menu</h3>
             <div className="links">
-                <a href="/">Home</a>
-                <a href="/cars">Cars</a>
-                <a href="/about">About</a>
+                <a href="/">Create Store Order</a>
+                <hr class="line-light"></hr>
+                <a href="/">Orders</a>
+                <hr class="line-light" ></hr>
+                <a href="/">Bookings</a>
+                <hr class="line-light" ></hr>
+                <a href="/stats">Enquiries</a>
+                <hr class="line-light" ></hr>
+                <a href="/notifications">Push Notifications</a>
+                <hr class="line-light" ></hr>
+                <a href="/about">Stats</a>
             </div>
             {message && <div className="message">{message}</div>}
         </div>

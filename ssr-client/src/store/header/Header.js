@@ -35,6 +35,7 @@ const Header = (props) => {
 
     return <div
         className="header">{""}
+            <svg onClick={props.showSideBar} className="menu-bar text-indigo-600" width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>
             <img className="store-logo" src={logoSrc} />
             {props.loggedOut &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}

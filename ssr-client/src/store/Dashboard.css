@@ -16,3 +16,77 @@ body {
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+.loading-screen {
+    position: absolute;
+    margin: 0 auto;
+    width: 100%;
+    opacity: 0.4;
+}
+
+.loading-screen img {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    margin-top: 20%;
+    width: 240px;
+}
+.title {
+    width: 40%;
+  }
+  .link {
+    width: 60%;
+  }
+  .description {
+    width: 70%;
+  }
+  .shimmer {
+    padding: 5px;
+    width: 95%;
+    height: 120px;
+    margin: 10px auto;
+    background: #ffffff;
+    width: 87%;
+    padding: 6px;
+    margin: 12px auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .shimmer .image-card {
+    height: 90px;
+    width: 90px;
+    float: right;
+    border-radius: 8px;
+  }
+  .stroke {
+    height: 15px;
+    background: #777;
+    margin-top: 20px;
+  }
+  
+  .wrapper {
+    width: 0px;
+    animation: fullView 0.5s forwards linear;
+  }
+  
+  @keyframes fullView {
+    100% {
+      width: 100%;
+    }
+  }
+  .animate {
+    animation: shimmer 3s;
+    animation-iteration-count: infinite;
+    background: linear-gradient(to right, #e6e6e6 5%, #cccccc 25%, #e6e6e6 35%);
+    background-size: 1000px 100%;
+  }
+  @keyframes shimmer {
+    from {
+      background-position: -1000px 0;
+    }
+    to {
+      background-position: 1000px 0;
+    }
+  }
+  
