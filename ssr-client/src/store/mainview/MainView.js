@@ -15,6 +15,11 @@ const MainView = () => {
         import("./addproducts/AddProducts.js")
     );
 
+    const ViewProductsComponent = lazy(() =>
+        //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
+        import("./viewproducts/ViewProducts.js")
+    );
+
     const showMessage = (msg) => {
         setMessage(msg);
     };
@@ -29,6 +34,9 @@ const MainView = () => {
             {view == 'add-products' && <Suspense fallback={<></>}>
                     <AddProductsComponent />
                 </Suspense>}
+            {view == 'view-products' && <Suspense fallback={<></>}>
+                <ViewProductsComponent />
+            </Suspense>}
             
         </div>
     );
