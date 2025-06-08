@@ -1,0 +1,37 @@
+import {Suspense, lazy, useState} from "react";
+import "./MainView.css";
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const MainView = () => {
+    let view = '';
+    if(typeof window !== 'undefined' && window.location.href) {
+        if (window.location.href.indexOf('?') >= 0) {
+            view = window.location.href.substring(window.location.href.indexOf('?view=')+6, window.location.href.length);
+        }
+    }
+    const [message, setMessage] = useState("");
+    const AddProductsComponent = lazy(() =>
+        //delay(100).then(() => import("./addproducts/AddProducts.js"))
+        import("./addproducts/AddProducts.js")
+    );
+
+    const showMessage = (msg) => {
+        setMessage(msg);
+    };
+
+    const clearMessage = () => {
+        setMessage("");
+    };
+
+    return (
+        <div className="main">
+            {view == '' && <span></span> }
+            {view == 'add-products' && <Suspense fallback={<></>}>
+                    <AddProductsComponent />
+                </Suspense>}
+            
+        </div>
+    );
+}
+
+export default MainView;

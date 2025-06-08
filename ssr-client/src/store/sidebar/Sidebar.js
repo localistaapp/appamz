@@ -16,9 +16,9 @@ const Sidebar = () => {
         <div className="sidebar">
             <h3>Menu</h3>
             <div className="links">
-                <a href="/">Create Store Order</a>
+                <a href={`${window.location.pathname}?view=add-products`}>Add Products ✚</a>
                 <hr class="line-light"></hr>
-                <a href="/">Orders</a>
+                <a href="/">Online Orders</a>
                 <hr class="line-light" ></hr>
                 <a href="/">Bookings</a>
                 <hr class="line-light" ></hr>

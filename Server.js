@@ -103,6 +103,28 @@ app.get("/dashboard/:store", (req, res) => {
   );
 });
 
+/*app.get("/dashboard/:store/:view", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const storeId = req.params.store; 
+
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <StoreSSR bootStrapCSS={bootstrapCSS} locationHref={`/dashboard/${storeId}`} view={req.query.view}  />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});*/
+
 
 app.get("/example", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));

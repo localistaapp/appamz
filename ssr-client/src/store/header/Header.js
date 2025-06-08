@@ -20,23 +20,34 @@ const getLogoSrcWithSubdomain = () => {
 const getLogoSrc = (locationHref) => {
     let url = '';
     debugger;
+    console.log('--locationHref1--', locationHref);
+    let storeFolder = '';
     if (typeof locationHref !== 'undefined' && locationHref.indexOf('/dashboard/') != -1) {
-        const storeFolder = locationHref.substring(locationHref.indexOf('/dashboard/')+'/dashboard/'.length,locationHref.length);
+        storeFolder = locationHref.substring(locationHref.indexOf('/dashboard/')+'/dashboard/'.length,locationHref.length);
+        if(storeFolder.indexOf('?')>=0) {
+            storeFolder = storeFolder.substring(0, storeFolder.indexOf('?'));
+        }
         url = `../../app/blr/${storeFolder}/images/logo.png`;
     }
     else {
         url = '../../app/blr/swirlyojpnagar/images/logo.png';
     }
+    console.log('--storeFolder--', storeFolder);
     return url;
 }
 
 const Header = (props) => {
+    console.log('--props.locationHref--', props.locationHref);
+    let homeLocation = typeof window !== 'undefined' ? window.location.href : '';
+    if (homeLocation.indexOf('?') >= 0) {
+        homeLocation = window.location.href .substring(0,window.location.href.indexOf('?'));
+    } 
     const logoSrc = getLogoSrc(props.locationHref);
 
     return <div
         className="header">{""}
             <svg onClick={props.showSideBar} className="menu-bar text-indigo-600" width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>
-            <img className="store-logo" src={logoSrc} />
+            <img onClick={()=> window.location.href=homeLocation} className="store-logo" src={logoSrc} />
             {props.loggedOut &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}
         </div>

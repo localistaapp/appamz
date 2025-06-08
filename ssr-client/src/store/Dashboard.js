@@ -13,6 +13,10 @@ const SidebarComponent = lazy(() =>
     delay(500).then(() => import("./sidebar/Sidebar.js"))
 );
 
+const MainViewComponent = lazy(() =>
+    import("./mainview/MainView.js")
+);
+
 const CarsComponent = lazy(() =>
     delay(500).then(() => import("../Cars.js" ))
 );
@@ -77,7 +81,9 @@ function Dashboard({locationHref}) {
                 {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
                     <SidebarComponent />
                 </Suspense>}
-                <div><span></span></div>
+                <div><Suspense fallback={<></>}>
+                    <MainViewComponent />
+                </Suspense></div>
             </div>
         </>
     );
