@@ -59,7 +59,7 @@ const AddProducts = ({url}) => {
         const price = document.querySelector('#pPrice').value;
         const eligibleFor = document.querySelector('#pEligibleFor').options[document.querySelector('#pEligibleFor').selectedIndex].value;
         const primaryCat = document.querySelector('#pCategory').options[document.querySelector('#pCategory').selectedIndex].value;
-        const thumbnailUrl = 'https://ik.imagekit.io/amuzely/tr:n-ik_ml_thumbnail/06c4ecec55b4cb2db03da5b984bbeb4b_EWQ2YMVEU.avif';
+        const thumbnailUrl = uploadUrl;
         const storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
 
         console.log('--title--', title);
