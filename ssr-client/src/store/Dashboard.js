@@ -40,7 +40,7 @@ const initializeStats = (email) => {
         if(response.data != 'auth error') {
             typeof window !== 'undefined' && window.sessionStorage.setItem('user', JSON.stringify(email));
             if (response.data) {
-                window.sessionStorage.setItem('user-profile', '{"user":"'+email+'","storeId":"'+response.data.storeId+'","franchiseId":"'+response.data.franchiseId+'"');
+                window.sessionStorage.setItem('user-profile', '{"user":"'+email+'","storeId":"'+response.data.storeId+'","franchiseId":"'+response.data.franchiseId+'"}');
                 /*this.setState({
                   statTotalSales: response.data.eventSales && response.data.storeSales?  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(response.data.eventSales + response.data.storeSales): 0,
                   statEventSales: response.data.eventSales? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(response.data.eventSales) : 0,
