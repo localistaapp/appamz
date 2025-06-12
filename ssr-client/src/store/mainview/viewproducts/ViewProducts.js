@@ -135,21 +135,20 @@ const ViewProducts = ({url}) => {
               let tabMap = {};
               productsData.forEach(product => {
                 const highlights = product.highlights.split(',').map(h => h.trim());
+                let current = tabMap;
               
-                if (highlights.length === 1) {
-                  const [primary] = highlights;
-                  if (!tabMap[primary]) {
-                    tabMap[primary] = 0;
+                highlights.forEach((level, index) => {
+                  if (index === highlights.length - 1) {
+                    // Final level - assign 0
+                    current[level] = 0;
+                  } else {
+                    // Intermediate level - go deeper
+                    if (!current[level]) {
+                      current[level] = {};
+                    }
+                    current = current[level];
                   }
-                } else if (highlights.length >= 2) {
-                  const [primary, secondary] = highlights;
-                  if (!tabMap[primary]) {
-                    tabMap[primary] = {};
-                  }
-                  if (!tabMap[primary][secondary]) {
-                    tabMap[primary][secondary] = 0;
-                  }
-                }
+                });
               });
             setCategories(tabMap);
             console.log('tabMap:', tabMap);
