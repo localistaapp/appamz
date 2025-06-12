@@ -1,4 +1,4 @@
-import { useState, createRef } from "react";
+import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 import "./ViewProducts.css";
 
@@ -27,32 +27,100 @@ const ProductList = ({products}) => {
     );
   };
 
+  const isLeaf = (val) =>
+  Array.isArray(val) || typeof val !== 'object' || val === null;
+
+const NestedTabs = (categories) => {
+  const [selectedKeys, setSelectedKeys] = useState({});
+
+  useEffect(()=> {
+    handleSelect(0, 'categories');
+  },[]);
+  // Traverse using selectedKeys to build visible levels
+  //ToDo: Check here
+  const buildLevels = (data, keys) => {
+    const levels = [];
+    let current = data;
+
+    while (current && typeof current === 'object') {
+      const levelKeys = Object.keys(current);
+      levels.push({ data: current, keys: levelKeys });
+
+      const selectedKey = keys[levels.length - 1];
+      if (selectedKey && current[selectedKey]) {
+        current = current[selectedKey];
+      } else {
+        break;
+      }
+    }
+
+    return levels;
+  };
+
+  const levels = buildLevels(categories, Object.values(selectedKeys));
+
+  const handleSelect = (levelIndex, key) => {
+    setSelectedKeys((prev) => {
+      const updated = { ...prev };
+      updated[levelIndex] = key;
+      // Clear deeper levels
+      Object.keys(updated)
+        .filter((k) => parseInt(k) > levelIndex)
+        .forEach((k) => delete updated[k]);
+      return updated;
+    });
+  };
+
+  return (
+    <div>
+      {levels.map((level, index) => {
+        window.scrollTo(0,index*55);
+        if (index > 0) {
+            return <div key={index}>
+            <div className="tabs">
+                {/* check type - something like ..if level.keys is object vs array  */}
+              {
+              level.keys.map((key) => {
+                    if (key.match(/^\d+$/)) {
+                        return null
+                    } else {
+                        return (
+                            <div
+                            className={`tab ${
+                                selectedKeys[index] === key ? 'active' : ''
+                            }`}
+                            key={key}
+                            onClick={() => handleSelect(index, key)}
+                            >
+                            {key}
+                            </div>);
+                    }
+                
+                })}
+            </div>
+          </div>
+        } else {
+            return <div></div>
+        }
+        
+    })}
+
+     
+    </div>
+  );
+};
+  
+
+
 const ViewProducts = ({url}) => {
     const [message, setMessage] = useState("");
     const [products, setProducts] = useState([]);
-    const productsList = [
-        {
-          "title": "Cool Kids Tee1",
-          "description": "Soft cotton t-shirt for kids.",
-          "price": "499",
-          "image_url": "https://via.placeholder.com/300x200?text=Kids+Tee",
-          "highlights": "type: kidswear, age: 9-10"
-        },
-        {
-          "title": "Men’s Jacket",
-          "description": "Windproof winter jacket.",
-          "price": "1499",
-          "image_url": "https://via.placeholder.com/300x200?text=Mens+Jacket",
-          "highlights": "type: menswear, size: L"
-        },
-        {
-          "title": "Women's Dress",
-          "description": "Elegant floral print dress.",
-          "price": "1299",
-          "image_url": "https://via.placeholder.com/300x200?text=Womens+Dress",
-          "highlights": "type: womenswear, size: M"
-        }
-      ];
+    const [categories, setCategories] = useState({});
+    /*const categories = {
+        "mens": {"shirts" : { "formals": {"xl": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}},
+        "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
+    };*/
+    
 
       const storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId; 
 
@@ -60,8 +128,31 @@ const ViewProducts = ({url}) => {
         axios.get(`/products/${storeId}`)
         .then(function (response) {
           if(response.data != 'auth error') {
-              console.log('--product res--', response.data);
+              console.log('--product res--', JSON.stringify(response.data));
               setProducts(response.data);
+              let productsData = response.data;
+
+              let tabMap = {};
+              productsData.forEach(product => {
+                const highlights = product.highlights.split(',').map(h => h.trim());
+              
+                if (highlights.length === 1) {
+                  const [primary] = highlights;
+                  if (!tabMap[primary]) {
+                    tabMap[primary] = 0;
+                  }
+                } else if (highlights.length >= 2) {
+                  const [primary, secondary] = highlights;
+                  if (!tabMap[primary]) {
+                    tabMap[primary] = {};
+                  }
+                  if (!tabMap[primary][secondary]) {
+                    tabMap[primary][secondary] = 0;
+                  }
+                }
+              });
+            setCategories(tabMap);
+            console.log('tabMap:', tabMap);
           }
         }.bind(this));
       }
@@ -76,10 +167,8 @@ const ViewProducts = ({url}) => {
                     <div class="tab">Season's Special</div>
                     <div class="tab">New Arrivals</div>
                     </div>
-                    <div class="sub-tabs" id="sub-tabs">
-                    <div class="sub-tab active">Kidswear</div>
-                    <div class="sub-tab">Menswear</div>
-                    <div class="sub-tab">Womenswear</div>
+                    <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
+                    <NestedTabs categories={categories} />
                     </div>
                 </div>
                 <ProductList products={products} />
