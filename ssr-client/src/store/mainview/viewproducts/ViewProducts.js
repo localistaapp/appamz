@@ -31,7 +31,7 @@ const ProductList = ({products}) => {
   Array.isArray(val) || typeof val !== 'object' || val === null;
 
 const NestedTabs = (categories) => {
-  const [selectedKeys, setSelectedKeys] = useState({});
+  const [selectedKeys, setSelectedKeys] = useState({}); 
 
   useEffect(()=> {
     handleSelect(0, 'categories');
@@ -60,6 +60,10 @@ const NestedTabs = (categories) => {
   const levels = buildLevels(categories, Object.values(selectedKeys));
 
   const handleSelect = (levelIndex, key) => {
+    if (key !== 'categories') {
+        console.log('--levelIndex--', levelIndex);
+        window.onFilter(key);
+    }
     setSelectedKeys((prev) => {
       const updated = { ...prev };
       updated[levelIndex] = key;
@@ -84,6 +88,7 @@ const NestedTabs = (categories) => {
                     if (key.match(/^\d+$/)) {
                         return null
                     } else {
+                        
                         return (
                             <div
                             className={`tab ${
@@ -121,8 +126,13 @@ const ViewProducts = ({url}) => {
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
     };*/
     
-
-      const storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId; 
+    let storeId = 0;
+    try {
+        storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
+    } catch(e) {
+        console.log('error');
+    }
+      
 
       if (products.length == 0) {
         axios.get(`/products/${storeId}`)
@@ -154,6 +164,10 @@ const ViewProducts = ({url}) => {
             console.log('tabMap:', tabMap);
           }
         }.bind(this));
+      }
+
+    window.onFilter = (selected) => {
+        console.log('-selected-', selected);
       }
     
     return (
