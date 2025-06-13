@@ -58,11 +58,24 @@ const NestedTabs = (categories) => {
   };
 
   const levels = buildLevels(categories, Object.values(selectedKeys));
-
+  
   const handleSelect = (levelIndex, key) => {
+    debugger;
     if (key !== 'categories') {
         console.log('--levelIndex--', levelIndex);
-        window.onFilter(key);
+        
+        window.filterStr = typeof window.filterStr == 'undefined' ? key : window.filterStr+','+key;
+
+        if (levelIndex < window.filterStr.split(',').length) {
+            let arr = window.filterStr.split(',');
+            arr.splice(levelIndex-1, 0, key);
+            arr.length = levelIndex;
+            window.filterStr = arr.toString();
+        } 
+            console.log('--filterStr--', window.filterStr);
+        
+        
+        window.onFilter(key, window.filterStr);
     }
     setSelectedKeys((prev) => {
       const updated = { ...prev };
@@ -118,8 +131,10 @@ const NestedTabs = (categories) => {
 
 
 const ViewProducts = ({url}) => {
+
     const [message, setMessage] = useState("");
     const [products, setProducts] = useState([]);
+    const [origProducts, setOrigProducts] = useState([]);
     const [categories, setCategories] = useState({});
     /*const categories = {
         "mens": {"shirts" : { "formals": {"xl": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}},
@@ -140,6 +155,7 @@ const ViewProducts = ({url}) => {
           if(response.data != 'auth error') {
               console.log('--product res--', JSON.stringify(response.data));
               setProducts(response.data);
+              setOrigProducts(response.data);
               let productsData = response.data;
 
               let tabMap = {};
@@ -166,8 +182,13 @@ const ViewProducts = ({url}) => {
         }.bind(this));
       }
 
-    window.onFilter = (selected) => {
+    window.onFilter = (selected, filters) => {
         console.log('-selected-', selected);
+        console.log('-filters-'+ filters+'-');
+        let filterPattern =filters;
+        const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
+        console.log('--newArr--', newArr);
+        setProducts(newArr);
       }
     
     return (
