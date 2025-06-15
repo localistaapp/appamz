@@ -97,9 +97,13 @@
   }
 
   .product-list {
-    padding: 16px;
+    grid-gap: 16px;
     display: grid;
     gap: 16px;
+    padding: 16px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background: #f9f9f9;
   }
 
   .card {
