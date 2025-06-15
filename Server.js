@@ -58,6 +58,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
 
 app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('snugglefitsjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/snugglefitsjpnagar'))))
 .use(vhost('swirlyojpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 /*app.get("/", (req, res) => {
@@ -195,6 +196,37 @@ app.get("/products/:storeId", (req, res) => {
       client.end();
     } else {
         client.query("Select id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') ",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                res.send(response.rows);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+app.get("/products/:storeId/:type", (req, res) => {
+  const client = new Client(dbConfig);
+  let type = req.params.type;
+  let storeId = req.params.storeId;
+
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("Select id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where "+type+" IN ('TRUE') AND store_id IN ('"+storeId+"') ",
         [], (err, response) => {
           if (err) {
             console.log(err)

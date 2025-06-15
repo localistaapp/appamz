@@ -60,7 +60,7 @@ const NestedTabs = (categories) => {
   const levels = buildLevels(categories, Object.values(selectedKeys));
   
   const handleSelect = (levelIndex, key) => {
-    debugger;
+    document.getElementById('sub-tabs').style.display = 'inline-block';
     if (key !== 'categories') {
         console.log('--levelIndex--', levelIndex);
         
@@ -87,7 +87,7 @@ const NestedTabs = (categories) => {
       return updated;
     });
   };
-
+  
   return (
     <div>
       {levels.map((level, index) => {
@@ -127,6 +127,8 @@ const NestedTabs = (categories) => {
     </div>
   );
 };
+
+const LoadingShimmer = () => <div className="loading-screen"><div className="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div></div>;
   
 
 
@@ -136,10 +138,48 @@ const ViewProducts = ({url}) => {
     const [products, setProducts] = useState([]);
     const [origProducts, setOrigProducts] = useState([]);
     const [categories, setCategories] = useState({});
+    const [tabUpdate, setTabUpdate] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     /*const categories = {
         "mens": {"shirts" : { "formals": {"xl": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}},
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
     };*/
+
+    const handlePrimaryTabSelect = (type, tabId) => {
+        let tabUpdateNew = tabUpdate + 1;
+        setTabUpdate(tabUpdateNew);
+        document.getElementById('tabDefault').classList.remove('active');
+        document.getElementById('tabSeasons').classList.remove('active');
+        document.getElementById('tabArrival').classList.remove('active');
+        document.getElementById(tabId).classList.add('active');
+
+        if (tabId == 'tabDefault') {
+            document.getElementById('sub-tabs').style.display = 'inline-block';
+            const subTabs = document.getElementById('sub-tabs');
+            if (subTabs) {
+            const activeElements = subTabs.querySelectorAll('.active');
+            activeElements.forEach(el => el.classList.remove('active'));
+            }
+        } else {
+            document.getElementById('sub-tabs').style.display = 'none';
+        }
+
+        let storeId = 0;
+        try {
+            storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
+        } catch(e) {
+            console.log('error');
+        }
+        axios.get(`/products/${storeId}/${type}`)
+            .then(function (response) {
+              if(response.data != 'auth error') {
+                  console.log('--product res--', JSON.stringify(response.data));
+                  setIsLoading(false);
+                  setProducts(response.data);
+              }
+            });
+      };
+    
     
     let storeId = 0;
     try {
@@ -154,6 +194,7 @@ const ViewProducts = ({url}) => {
         .then(function (response) {
           if(response.data != 'auth error') {
               console.log('--product res--', JSON.stringify(response.data));
+              setIsLoading(false);
               setProducts(response.data);
               setOrigProducts(response.data);
               let productsData = response.data;
@@ -197,15 +238,16 @@ const ViewProducts = ({url}) => {
                 <h1 style={{marginLeft: '16px'}}>View Products</h1>
                 <div class="tabs-container">
                     <div class="tabs" id="main-tabs">
-                    <div class="tab active">All</div>
-                    <div class="tab">Season's Special</div>
-                    <div class="tab">New Arrivals</div>
+                    <div id="tabDefault" class="tab active" onClick={() => handlePrimaryTabSelect('tags_default', 'tabDefault')}>All</div>
+                    <div id="tabSeasons" class="tab" onClick={() => handlePrimaryTabSelect('tags_seasons_special', 'tabSeasons')}>Season's Special</div>
+                    <div id="tabArrival" class="tab" onClick={() => handlePrimaryTabSelect('tags_new_arrival', 'tabArrival')}>New Arrivals</div>
                     </div>
                     <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
-                    <NestedTabs categories={categories} />
+                    {tabUpdate >=0 && <NestedTabs categories={categories} />}
                     </div>
                 </div>
-                <ProductList products={products} />
+                {!isLoading && <ProductList products={products} />}
+                {isLoading && <LoadingShimmer/>}
             </div>
         </div>
     );
