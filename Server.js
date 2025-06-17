@@ -148,10 +148,10 @@ app.get("/app", (req, res) => {
 
 app.get("/app/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
-
+  const pathName = req.params.store;
   let didError = false;
   const stream = ReactDOMServer.renderToPipeableStream(
-    <AppSSR appName={'Snuggly'} bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    <AppSSR pathName={pathName} appName={'Snuggly'} bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
     {
       bootstrapScripts,
       onShellReady: () => {

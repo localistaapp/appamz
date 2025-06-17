@@ -132,7 +132,7 @@ const LoadingShimmer = () => <div className="loading-screen"><div className="shi
   
 
 
-const ViewProducts = ({url}) => {
+const ViewProducts = ({url, storeConfig}) => {
 
     const [message, setMessage] = useState("");
     const [products, setProducts] = useState([]);
@@ -181,13 +181,8 @@ const ViewProducts = ({url}) => {
       };
     
     
-    let storeId = 0;
-    try {
-        storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
-    } catch(e) {
-        console.log('error');
-    }
-      
+    let storeId = storeConfig.storeId;
+    console.log('--store config in view products--', storeConfig);
 
       if (products.length == 0) {
         axios.get(`/products/${storeId}`)

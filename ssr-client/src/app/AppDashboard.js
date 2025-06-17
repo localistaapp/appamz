@@ -59,7 +59,7 @@ const initializeStats = (email) => {
       }.bind(this));
 }
 
-function AppDashboard({locationHref}) {
+function AppDashboard({storeConfig, locationHref}) {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showSideBar, setShowSideBar] = useState(false);
 
@@ -81,7 +81,7 @@ function AppDashboard({locationHref}) {
                     <AppSidebarComponent />
                 </Suspense>}
                 <div><Suspense fallback={<></>}>
-                    <MainViewComponent />
+                    <MainViewComponent storeConfig={storeConfig} />
                 </Suspense></div>
             </div>
         </>

@@ -1,13 +1,18 @@
 import AppDashboard from "./AppDashboard";
 import PropTypes from 'prop-types';
 
-const AppSSR = ({ appName = 'Amuzely', bootStrapCSS=[], locationHref='' }) => {
+const AppSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=[], locationHref='' }) => {
     console.log('Rendering Store App component on server-side');
     console.log('--bootstrapCSS--', bootStrapCSS);
     let cssPaths = [];
     bootStrapCSS.map(cssPath => {
         cssPaths.push('../dashboard/'+cssPath);
     });
+
+    const storePathNameConfig = {
+        'swirlyojpnagar': {storeId: '9'},
+        'snugglefitsjpnagar': {storeId: '13'}
+    }
     
     return (
         <html>
@@ -25,7 +30,7 @@ const AppSSR = ({ appName = 'Amuzely', bootStrapCSS=[], locationHref='' }) => {
             </head>
             <body>
                 <div id="root-app">
-                    <AppDashboard locationHref={locationHref} />
+                    <AppDashboard storeConfig={storePathNameConfig[pathName]} locationHref={locationHref} />
                 </div>
             </body>
         </html>

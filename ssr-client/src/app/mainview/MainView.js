@@ -2,7 +2,7 @@ import {Suspense, lazy, useState} from "react";
 import "./MainView.css";
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const MainView = () => {
+const MainView = ({storeConfig}) => {
     let view = '';
     if(typeof window !== 'undefined' && window.location.href) {
         if (window.location.href.indexOf('?') >= 0) {
@@ -30,7 +30,7 @@ const MainView = () => {
 
     return (
         <div className="main">
-            {view == '' && <span></span> }
+            {view == '' && <ViewProductsComponent storeConfig={storeConfig} /> }
             {view == 'add-products' && <Suspense fallback={<></>}>
                     <AddProductsComponent />
                 </Suspense>}
