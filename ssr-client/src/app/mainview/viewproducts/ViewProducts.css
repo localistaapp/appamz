@@ -1,0 +1,161 @@
+
+
+.container {
+  flex: 1 1;
+  left: 0;
+  margin: 0 auto;
+  padding: 0px;
+  position: relative;
+  right: 0;
+  width: 100vw;
+}
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  input, select, textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding: 12px;
+    width: -webkit-fill-available;
+    font-family: "Montserrat", sans-serif;
+}
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .footer-buttons {
+    background: #fff;
+    bottom: 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, .1);
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 16px;
+    position: -webkit-sticky;
+    position: sticky;
+    width: -webkit-fill-available;
+  }
+
+  .footer-buttons button {
+    align-items: center;
+    border: 1px solid #ffffff !important;
+    background: linear-gradient(180deg, #f94f50, #dc0304);
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex: 1 1;
+    font-size: 1rem;
+    gap: 8px;
+    justify-content: center;
+    padding: 12px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+  }
+
+  .footer-buttons button:hover {
+    opacity: 0.95;
+  }
+  
+  .tabs-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .tabs, .sub-tabs {
+    display: flex;
+    gap: 8px;
+    padding: 0px;
+    padding-left: 14px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 0px;
+  }
+
+  .tab, .sub-tab {
+    padding: 8px 16px;
+    border-radius: 16px;
+    background: #eee;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+
+  .tab.active, .sub-tab.active {
+    background: #ff2c2d;
+    color: #fff;
+  }
+
+  .product-list {
+    grid-gap: 16px;
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    padding-left: 40px;
+    padding-right: 40px;
+    background: #f9f9f9;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .card-content {
+    padding: 12px;
+  }
+
+  .highlights {
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 6px;
+  }
+
+  .description {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  .price {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-current {
+    font-weight: bold;
+    color: #d32f2f;
+  }
+
+  .price-original {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.9rem;
+  }
+
+  @media (min-width: 600px) {
+    .product-list {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }

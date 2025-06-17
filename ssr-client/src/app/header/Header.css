@@ -1,0 +1,31 @@
+.header {
+    padding: 20px;
+    background-color: #fff;
+    color: #000;
+    text-align: center;
+    font-size: 24px;
+    height: 22px;
+}
+.store-logo {
+    position: absolute;
+    width: 140px;
+    left: 70px;
+    top: 10px;
+}
+.header .logout {
+    position: relative;
+    right: 0px;
+    float: right;
+    font-size: 1rem;
+}
+.menu-bar {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    cursor: pointer;
+}
+@media screen and (min-width:768px) {
+    .menu-bar {
+        display: block;
+    }
+}

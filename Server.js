@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 import path from "path";
-import AppSSR from "./ssr-client/src/AppSSR";
+import AppSSR from "./ssr-client/src/app/AppSSR";
 import StoreSSR from "./ssr-client/src/store/StoreSSR";
 import express from "express";
 import fs from "fs";
@@ -61,6 +61,8 @@ app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/a
 .use(vhost('snugglefitsjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/snugglefitsjpnagar'))))
 .use(vhost('swirlyojpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
+//create vhost to new ssr-client route
+
 /*app.get("/", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
@@ -108,6 +110,48 @@ app.get("/dashboard", (req, res) => {
   let didError = false;
   const stream = ReactDOMServer.renderToPipeableStream(
     <StoreSSR bootStrapCSS={bootstrapCSS} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+app.get("/app", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR bootStrapCSS={bootstrapCSS} appName="Snugglyf" />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+app.get("/app/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR appName={'Snuggly'} bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
     {
       bootstrapScripts,
       onShellReady: () => {
@@ -322,6 +366,22 @@ app.use(
   "/dashboard/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
+
+app.use(
+  "/app/dashboard/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/app/*/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/app/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
 
 app.use(
   "/app/",
