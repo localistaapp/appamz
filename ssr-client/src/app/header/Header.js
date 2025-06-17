@@ -22,8 +22,8 @@ const getLogoSrc = (locationHref) => {
     debugger;
     console.log('--locationHref1--', locationHref);
     let storeFolder = '';
-    if (typeof locationHref !== 'undefined' && locationHref.indexOf('/dashboard/') != -1) {
-        storeFolder = locationHref.substring(locationHref.indexOf('/dashboard/')+'/dashboard/'.length,locationHref.length);
+    if (typeof locationHref !== 'undefined' && locationHref.indexOf('/app/') != -1) {
+        storeFolder = locationHref.substring(locationHref.indexOf('/app/')+'/app/'.length,locationHref.length);
         if(storeFolder.indexOf('?')>=0) {
             storeFolder = storeFolder.substring(0, storeFolder.indexOf('?'));
         }

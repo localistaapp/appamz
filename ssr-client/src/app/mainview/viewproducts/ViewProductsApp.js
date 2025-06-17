@@ -132,7 +132,7 @@ const LoadingShimmer = () => <div className="loading-screen"><div className="shi
   
 
 
-const ViewProducts = ({url, storeConfig}) => {
+const ViewProductsApp = ({url,storeConfig}) => {
 
     const [message, setMessage] = useState("");
     const [products, setProducts] = useState([]);
@@ -140,6 +140,7 @@ const ViewProducts = ({url, storeConfig}) => {
     const [categories, setCategories] = useState({});
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    console.log('--store c1--', storeConfig);
     /*const categories = {
         "mens": {"shirts" : { "formals": {"xl": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}},
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
@@ -166,7 +167,7 @@ const ViewProducts = ({url, storeConfig}) => {
 
         let storeId = 0;
         try {
-            storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
+            storeId = storeConfig.storeId;
         } catch(e) {
             console.log('error');
         }
@@ -181,8 +182,13 @@ const ViewProducts = ({url, storeConfig}) => {
       };
     
     
-    let storeId = storeConfig.storeId;
-    console.log('--store config in view products--', storeConfig);
+    let storeId = 0;
+    try {
+        storeId = storeConfig.storeId;
+    } catch(e) {
+        console.log('error');
+    }
+      
 
       if (products.length == 0) {
         axios.get(`/products/${storeId}`)
@@ -248,4 +254,4 @@ const ViewProducts = ({url, storeConfig}) => {
     );
 }
 
-export default ViewProducts;
+export default ViewProductsApp;

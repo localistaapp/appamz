@@ -233,6 +233,7 @@ app.get("/stats/:email", (req, res) => {
 app.get("/products/:storeId", (req, res) => {
   const client = new Client(dbConfig);
   let storeId = req.params.storeId;
+  console.log('---products api storeId--', storeId);
   client.connect(err => {
     if (err) {
       console.error('error connecting', err.stack)
