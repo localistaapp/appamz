@@ -123,6 +123,8 @@
 
   .card-content {
     padding: 12px;
+    padding-bottom: 18px;
+    padding-right: 18px;
   }
 
   .highlights {
@@ -153,6 +155,196 @@
     color: #888;
     font-size: 0.9rem;
   }
+
+  .quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-top: 9px;
+    float: right;
+  }
+  .quantity.inv{
+      margin-top: -35px;
+      justify-content: right;
+      margin-right: 40px;
+  }
+  .quantity__minus,
+  .quantity__plus {
+    display: block;
+    background: #ee9d7d;
+    color: #fff;
+    font-size: 19px;
+    height: 30px;
+    line-height: 28px;
+    margin: 0;
+    padding: 2px 8px 5px 0px;
+    text-align: center;
+    text-decoration: none;
+    width: 30px;
+    padding-right: 0px;
+  }
+  .quantity__minus:hover,
+  .quantity__plus:hover {
+      background: #ee9d7d;
+      color: #fff;
+  }
+  .quantity__minus {
+    border-radius: 3px 0 0 3px;
+  }
+  .quantity__plus {
+    border-radius: 0 3px 3px 0;
+  }
+  .quantity__input {
+      width: 32px;
+      height: 33px;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      border-top: 2px solid #dbc2b48f;
+      border-bottom: 2px solid #dbc2b48f;
+      border-left: 1px solid #dbc2b48f;
+      border-right: 2px solid #dbc2b48f;
+      background: #fe4a28;
+      color: #ffffff;
+      pointer-events: none;
+      border-radius: 0 !important;
+  }
+  .quantity__minus:link,
+  .quantity__plus:link {
+    color: #fff;
+  }
+  .quantity__minus:visited,
+  .quantity__plus:visited {
+    color: #fff;
+  }
+  .incrementer {
+      position: relative;
+      bottom: 74px;
+      float: right;
+      opacity: 0.75;
+      margin-left: 198px;
+  }
+  .c-count {
+    background: #ffdc40;
+    border: 2px solid #fef5cd;
+    border-radius: 50px;
+    color: #000;
+    float: right;
+    font-size: 16px;
+    height: 7px;
+    line-height: 7px;
+    max-width: 27px;
+    padding: 12px 16px 12px 11px;
+    position: absolute;
+    right: -9px;
+    top: 2px;
+    z-index: 2;
+    font-weight: 500;
+    width: 7px;
+}
+  .checkout {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    background: #333;
+    background: linear-gradient(-45deg, #fa6037, #f57556, #fd5531, rgba(255, 27, 0, .98));
+    border-radius: 30px;
+    color: #fff;
+    float: right;
+    font-weight: 700;
+    height: 39px;
+    line-height: 33px;
+    margin-top: 21px;
+    padding-left: 14px;
+    padding-top: 5px;
+    right: 50px;
+    top: -79px;
+    width: 112px;
+}
+
+#checkoutHeader {
+  display: none;
+  height: 82px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  right: 12px;
+}
+
+.checkout-modal{
+    position: fixed;
+    top: 1300px;
+    z-index: 1;
+    width: 100%;
+    height: 100vh;
+    transition: all 0.7s ease 0s;
+    opacity: 1;
+    background: none;
+}
+card-btn{
+  font-family: Quicksand;
+  font-weight: bold;
+  font-size: 16px;
+  padding-top: 8px;
+  padding-bottom: 7px;
+  border-radius: 40px;
+  text-align: center;
+  margin-top: 4px;
+  margin-right: 8px;
+  display: inline-block;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-box-shadow: 0px 0px 46px 0px rgba(0,0,0,0.27);
+  -moz-box-shadow: 0px 0px 46px 0px rgba(0,0,0,0.27);
+  box-shadow: 0px 0px 46px 0px rgba(0,0,0,0.27);
+  color: rgba(255,255,255,0.9);
+  border-radius: 8px;
+  background: linear-gradient(-45deg, #fa6037, #f57556,#fd5531, rgba(255,27,0,0.98));
+  width: calc(100% - 36px);
+  height: 42px;
+  margin-top: 20px;
+  position: absolute;
+  margin-left: -3px;
+}
+
+.card-btn.small {
+  top: 254px;
+  margin-top: auto;
+  float: left;
+  right: 0px;
+  left: 0px;
+  margin: 0 auto;
+  width: 200px;
+  font-size: 16px;
+}
+
+.coupon-btn {
+  z-index: 1;
+  margin-top: 10px;
+  float: right;
+  width: 98px;
+  right: 23px;
+  line-height: 23px;
+  top: 20px;
+  position: absolute;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: #333;
+  border-radius: 30px;
+  height: 42px;
+  background: linear-gradient(-45deg, #fa6037, #f57556,#fd5531, rgba(255,27,0,0.98));
+  border-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.card-btn.secondary {
+  background: transparent;
+  color: #ffffff63;
+  box-shadow: none;
+  border: 1px solid #ffffff57;
+}
 
   @media (min-width: 600px) {
     .product-list {

@@ -2,26 +2,60 @@ import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 import "./ViewProducts.css";
 
+const ProductCard = ({product, index}) => {
+  const originalPrice = Math.round(product.price * 1.2);
+
+  const [qty, setQty] = useState(0);
+
+  const setCheckoutCount = (count) => {
+    if (count >= 1) {
+      document.getElementById('checkoutHeader').style.display = 'block';
+      document.getElementById('checkoutCount').innerHTML = count;
+    } else {
+      document.getElementById('checkoutHeader').style.display = 'none';
+    }
+  }
+
+  const handlePlusClick = () => {
+    setQty(qty + 1);
+    setCheckoutCount(qty + 1);
+  }
+
+  const handleMinusClick = () => {
+    if (qty >= 1) {
+      setQty(qty - 1);
+      setCheckoutCount(qty - 1);
+    }
+  }
+
+  return (
+    <div key={index} className="card">
+      <img src={product.image_url} alt={product.title} />
+      <div className="card-content">
+        <div className="highlights">{product.highlights}</div>
+        <div className="description">{product.description}</div>
+        <div className="price">
+          <div className="price-current">₹{product.price}</div>
+          <div className="price-original">₹{originalPrice}</div>
+        </div>
+        <div className="quantity"><a className="quantity__minus"><span style={{fontSize: '25px', lineHeight: '0px', marginLeft: '2px'}} onClick={handleMinusClick}>-</span></a><input name="quantity" type="text" className="quantity__input" value={qty}/><a className="quantity__plus" onClick={handlePlusClick}><span>+</span></a></div>
+      </div>
+    </div>
+  );
+};
+
 const ProductList = ({products}) => {
   
     return (
       <div className="product-list">
-        {products.map((p, index) => {
-          const originalPrice = Math.round(p.price * 1.2);
-  
-          return (
-            <div key={index} className="card">
-              <img src={p.image_url} alt={p.title} />
-              <div className="card-content">
-                <div className="highlights">{p.highlights}</div>
-                <div className="description">{p.description}</div>
-                <div className="price">
-                  <div className="price-current">₹{p.price}</div>
-                  <div className="price-original">₹{originalPrice}</div>
-                </div>
-              </div>
+        <div id="checkoutHeader">
+            <div id="checkoutBtn" className="card-btn checkout" onClick={()=>{document.getElementById('checkoutModal').style.top='-40px';this.setState({orderSummary: localStorage.getItem('basket') != null ? JSON.parse(localStorage.getItem('basket')) : []});}}>Checkout&nbsp;→
+                <div className=""></div>
+                <div id="checkoutCount" class="c-count">0</div>
             </div>
-          );
+        </div>
+        {products.map((p, index) => {
+          return (<ProductCard product={p} index={index} />)
         })}
       </div>
     );
