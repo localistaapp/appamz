@@ -5,20 +5,20 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const MainView = ({storeConfig}) => {
     let view = '';
     let storeConfigVal = {};
-    if(typeof window !== 'undefined' && window.location.href) {
-        window.storeConfig = storeConfig;
+    //if(typeof window !== 'undefined' && window.location.href) {
+        let t = window ? window.storeConfig = storeConfig : '';
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9'},
             'snugglefitsjpnagar': {storeId: '13'}
         }
-        storeConfigVal = storePathNameConfig[window.location.pathname.split('/')[2]];
-        if (window.location.href.indexOf('?') >= 0) {
-            view = window.location.href.substring(window.location.href.indexOf('?view=')+6, window.location.href.length);
+        storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
+        if (window && window?.location.href.indexOf('?') >= 0) {
+            t = window ? view = window?.location.href.substring(window?.location.href.indexOf('?view=')+6, window.location.href.length) : '';
         } else {
             view = 'default';
         }
         console.log('--storeConfigVal--', storeConfigVal);
-    }
+    //}
     const [message, setMessage] = useState("");
     const AddProductsComponent = lazy(() =>
         //delay(100).then(() => import("./addproducts/AddProducts.js"))
