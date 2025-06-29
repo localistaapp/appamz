@@ -17,7 +17,6 @@ const MainView = ({storeConfig}) => {
         } else {
             view = 'default';
         }
-        console.log('--storeConfigVal--', storeConfigVal);
     //}
     const [message, setMessage] = useState("");
     const AddProductsComponent = lazy(() =>
