@@ -89,11 +89,27 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
   );
 };
 
-const ProductList = ({products}) => {
+const ProductList = ({products, storeConfig}) => {
 
     const [basketData, setBasketData] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
     const [currStep, setCurrStep] = useState(1);
+
+    const [onlineOrdersTimings, setOnlineOrdersTimings] = useState({});
+    const [onlineOrdersPinCodes, setOnlineOrdersPinCodes] = useState([]);
+    const [storeAcceptingOrders, setStoreAcceptingOrders] = useState(false);
+    const [currDayTimings, setCurrDayTimings] = useState([]);
+    const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
+    const [deliveryNotSupported, setDeliveryNotSupported] = useState(false);
+    let w = window ? window.weekdays = new Array(7) : false;
+    w = window ? window.weekdays[0] = "Sunday" : false;
+    w = window ? window.weekdays[1] = "Monday" : false;
+    w = window ? window.weekdays[2] = "Tuesday" : false;
+    w = window ? window.weekdays[3] = "Wednesday" : false;
+    w = window ? window.weekdays[4] = "Thursday" : false;
+    w = window ? window.weekdays[5] = "Friday" : false;
+    w = window ? window.weekdays[6] = "Saturday" : false;
+
 
     useEffect (() => {
       const openBtn = document.getElementById('checkoutBtn');
@@ -116,12 +132,61 @@ const ProductList = ({products}) => {
         document.getElementById('checkoutCount').innerHTML = Object.keys(JSON.parse(currBasketData)).length;
         setBasketData(currBasketData);
       }*/
+
+      if(onlineOrdersPinCodes && onlineOrdersPinCodes.length == 0) {
+        let storeId = 0;
+        try {
+            storeId = storeConfig.storeId;
+        } catch(e) {
+            console.log('error');
+        }
+        axios.get(`/store/get-all/${storeId}`)
+        .then(function (response) {
+          if(response.data != 'auth error') {
+              console.log('--store availability data--', JSON.stringify(response.data));
+              setOnlineOrdersTimings(response.data[0].online_orders_timings);
+              setStoreAcceptingOrders(response.data[0].accepting_online_orders == 'Y' ? true: false);
+              setOnlineOrdersPinCodes(response.data[0].online_orders_pincodes);
+          }
+        }.bind(this));
+      }
     }, []);
+
+    const getCurrentTimeInFormat = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const isPM = hours >= 12;
+      if (hours > 12) {
+          hours -= 12;
+      } else if (hours === 0) {
+          hours = 12;
+      }
+      const period = isPM ? "pm" : "am";
+      return hours;
+    } 
 
     if (basketData != null)
       console.log('--Object.keys(basketData).length--', Object.keys(basketData).length);
 
-    const next = () => {
+      const checkDeliveryOptions = () => {
+        if (onlineOrdersPinCodes && onlineOrdersPinCodes.indexOf(document.getElementById('dPincode').value)>=0) {
+            var curDay = window ? window.weekdays[new Date().getDay()].toLowerCase() : '';
+            if (onlineOrdersTimings.hasOwnProperty(curDay) && onlineOrdersTimings[curDay].length > 0) {
+                console.log('--schedule--', onlineOrdersTimings[curDay]);
+                setCurrDayTimings(onlineOrdersTimings[curDay].filter((slotStr)=>{return parseInt(slotStr.substr(0,slotStr.indexOf('pm'))) > getCurrentTimeInFormat()}));
+                setShowDeliveryOptions(true);
+                setDeliveryNotSupported(false);
+            } else {
+                setShowDeliveryOptions(false);
+                setDeliveryNotSupported(true);
+            }
+        } else {
+            setShowDeliveryOptions(false);
+            setDeliveryNotSupported(true);
+        }
+      }
+    
+      const next = () => {
       if(currStep == 1) {
         document.getElementById('step1').classList.add('done');
         document.getElementById('step1Circle').classList.remove('active');
@@ -186,7 +251,59 @@ const ProductList = ({products}) => {
                 }
                 {
                   currStep == 2 && 
-                    <div>Step 2</div>
+                      <div className="card-container" style={{ marginTop: '4px', height: '480px'}}>
+                      <div className="section-one">
+                          <div className="top">
+                              <div className="top-right">
+                              <img src="../../assets/images/shipment.png" className="delivery-icon" style={{marginTop: '0px',width: '48px'}}/>
+
+                              <span className="title-ff" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>Share your pincode to check delivery options:</span>
+
+                              </div>
+                          </div>
+                          <div className="top-right step-2" style={{left: '0px',marginTop: '70px'}}>
+                        
+                        <div className="usp-title" style={{left: '0',right: '0',margin: '0 auto'}}>
+                            <div className="usp-title">
+                                      <input id="dPincode" type="text" className="step-input" placeholder="Your pincode" style={{left: '20px',top: '0px'}}/>
+                                      <input type="button" class="pincode-btn" value="Check Options" onClick={checkDeliveryOptions} />
+                                  </div>
+                            <div className="delivery-section" style={{top:'124px',paddingTop: '20px', display: `${showDeliveryOptions == true ? 'block' : 'none'}`}}>
+                              {storeAcceptingOrders == true && <div class="radios">
+                                  <input type="radio" style={{width: '30px'}} id="deliverNow" name="deliveryTime" value="deliverNow" checked/>
+                                  <label for="deliverNow" style={{color:'green'}}>Deliver Now (Delivery in 90 minutes)</label><br/>
+                                  <input type="radio" id="deliverSchedule" name="deliveryTime" value="deliverSchedule" style={{width: '30px', marginTop: '14px'}} selected />
+                                  <label for="deliverSchedule">Deliver Later</label>
+                              </div>}
+                              {storeAcceptingOrders == true && <div className="deliver-cell" style={{marginTop: '12px', marginLeft: '40px'}}>
+                                    <span>Select your time slot for delivery today:</span>
+                                    
+                                </div>}
+                                {storeAcceptingOrders == true && <div className="deliver-cell" style={{marginTop: '12px', marginLeft: '30px'}}>
+                                    <select name="slot" id="slot" style={{height:'48px',marginLeft: '10px', width: '172px'}} className="slot-dropdown" onChange={(e)=>{sessionStorage.setItem('deliverySlot',e.target.options[e.target.selectedIndex].text);}}>
+                                        {currDayTimings && currDayTimings.map((item)=> {
+                                          return (<option value={item}>{item}</option>)
+                                        })}
+                                      </select>
+                                </div>}
+                                <div className="slot"></div>
+                            </div>
+                            {storeAcceptingOrders}
+                            <div className="delivery-section msg" style={{top:'123px', display: `${deliveryNotSupported == true || storeAcceptingOrders == false ? 'block' : 'none'}`}}>
+                              
+                                <div className="deliver-cell" style={{marginTop: '12px', marginLeft: '6px'}}>
+                                    <span>Sorry! Our store isn't servicing this locality at the moment.</span>
+                                    
+                                </div>
+                                
+                                <div className="slot"></div>
+                            </div>
+                            <br/>
+                        </div>
+                        </div>
+                    </div>
+
+                  </div>
                 }
                 <div class="summary-total">
                     Total:  <span class="rupee">₹</span><span id="price">{totalPrice}</span>
@@ -320,11 +437,13 @@ const ViewProductsApp = ({url,storeConfig}) => {
     const [categories, setCategories] = useState({});
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    
     console.log('--store c1111--', storeConfig);
     /*const categories = {
         "mens": {"shirts" : { "formals": {"xl": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}},
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
     };*/
+
 
     const handlePrimaryTabSelect = (type, tabId) => {
         let tabUpdateNew = tabUpdate + 1;
@@ -404,6 +523,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
         }.bind(this));
       }
 
+
     window.onFilter = (selected, filters) => {
         console.log('-selected-', selected);
         console.log('-filters-'+ filters+'-');
@@ -427,7 +547,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
                     {tabUpdate >=0 && <NestedTabs categories={categories} />}
                     </div>
                 </div>
-                {!isLoading && <ProductList products={products} />}
+                {!isLoading && <ProductList products={products} storeConfig={storeConfig} />}
                 {isLoading && <LoadingShimmer/>}
             </div>
         </div>

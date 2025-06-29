@@ -260,6 +260,30 @@ app.get("/products/:storeId", (req, res) => {
   }});
 });
 
+app.get("/store/get-all/:storeId", (req, res) => {
+  const client = new Client(dbConfig);
+  let storeId = req.params.storeId;
+  console.log('---store api storeId--', storeId);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select online_orders_timings,accepting_online_orders,online_orders_pincodes from am_store where id = "+storeId,
+      [], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              res.send(response.rows);
+              client.end();
+            }
+      });
+  }});
+});
+
 app.get("/products/:storeId/:type", (req, res) => {
   const client = new Client(dbConfig);
   let type = req.params.type;
