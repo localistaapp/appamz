@@ -6,7 +6,7 @@ const MainView = ({storeConfig}) => {
     let view = '';
     let storeConfigVal = {};
     //if(typeof window !== 'undefined' && window.location.href) {
-        let t = window ? window.storeConfig = storeConfig : '';
+        let t = typeof window !== 'undefined' ? window.storeConfig = storeConfig : '';
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9'},
             'snugglefitsjpnagar': {storeId: '13'}
