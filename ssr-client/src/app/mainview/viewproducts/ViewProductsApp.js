@@ -94,6 +94,7 @@ const ProductList = ({products, storeConfig}) => {
     const [basketData, setBasketData] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
     const [currStep, setCurrStep] = useState(1);
+    const [isClient, setIsClient] = useState(false);
 
     const [onlineOrdersTimings, setOnlineOrdersTimings] = useState({});
     const [onlineOrdersPinCodes, setOnlineOrdersPinCodes] = useState([]);
@@ -112,6 +113,7 @@ const ProductList = ({products, storeConfig}) => {
 
 
     useEffect (() => {
+      setIsClient(true);
       const openBtn = document.getElementById('checkoutBtn');
       const modal = document.getElementById('modal');
       const closeBtn = document.getElementById('closeBtn');
@@ -329,8 +331,10 @@ const ProductList = ({products, storeConfig}) => {
 
 const NestedTabs = (categories) => {
   const [selectedKeys, setSelectedKeys] = useState({}); 
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(()=> {
+    setIsClient(true);
     handleSelect(0, 'categories');
   },[]);
   // Traverse using selectedKeys to build visible levels
@@ -361,7 +365,9 @@ const NestedTabs = (categories) => {
     if (key !== 'categories') {
         console.log('--levelIndex--', levelIndex);
         
-        window.filterStr = typeof window.filterStr == 'undefined' ? key : window.filterStr+','+key;
+        if (isClient) {
+          window.filterStr = typeof window.filterStr == 'undefined' ? key : window.filterStr+','+key;
+        }
 
         if (levelIndex < window.filterStr.split(',').length) {
             let arr = window.filterStr.split(',');

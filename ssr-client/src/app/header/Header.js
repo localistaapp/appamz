@@ -1,11 +1,12 @@
 import "./Header.css";
+import {useEffect, useState} from "react";
 
 const onLogoutClick = () => {
     console.log('--clicked log out--');
     alert('Log out');
 }
 
-const getLogoSrcWithSubdomain = () => {
+/*const getLogoSrcWithSubdomain = () => {
     let url = '';
     if (typeof window !== 'undefined' && window.location.href.indexOf('www.amuzely.com') == -1 && window.location.href.indexOf('.amuzely.com') != -1) {
         const storeFolder = window.location.href.substring(window.location.href.indexOf('https://')+'https://'.length,window.location.href.indexOf('.amuzely.com'));
@@ -15,7 +16,7 @@ const getLogoSrcWithSubdomain = () => {
         url = '../../app/blr/swirlyojpnagar/images/logo.png';
     }
     return url;
-}
+}*/
 
 const getLogoSrc = (locationHref) => {
     let url = '';
@@ -37,11 +38,20 @@ const getLogoSrc = (locationHref) => {
 }
 
 const Header = (props) => {
+    const [isClient, setIsClient] = useState(false);
+    let homeLocation = '/';
+    useEffect(() => {
+        setIsClient(true);
+      }, []);
+
     console.log('--props.locationHref--', props.locationHref);
-    let homeLocation = typeof window !== 'undefined' ? window.location.href : '';
-    if (homeLocation.indexOf('?') >= 0) {
-        homeLocation = window.location.href .substring(0,window.location.href.indexOf('?'));
-    } 
+    if (isClient) {
+        homeLocation = window.location.href;
+        if (homeLocation.indexOf('?') >= 0) {
+            homeLocation = window.location.href .substring(0,window.location.href.indexOf('?'));
+        } 
+    }
+   
     const logoSrc = getLogoSrc(props.locationHref);
 
     return <div
