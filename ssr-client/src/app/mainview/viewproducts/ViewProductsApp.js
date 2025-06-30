@@ -388,7 +388,7 @@ const NestedTabs = (categories) => {
   return (
     <div>
       {levels.map((level, index) => {
-        window.scrollTo(0,index*55);
+        //window.scrollTo(0,index*55);
         if (index > 0) {
             return <div key={index}>
             <div className="tabs">

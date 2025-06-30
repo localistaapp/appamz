@@ -14,7 +14,7 @@ const AppSidebarComponent = lazy(() =>
 );
 
 const MainViewComponent = lazy(() =>
-    import("./mainview/MainView.js")
+delay(500).then(() => import("./mainview/MainView.js"))
 );
 
 const CarsComponent = lazy(() =>
@@ -80,7 +80,7 @@ function AppDashboard({storeConfig, locationHref}) {
                 {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
                     <AppSidebarComponent />
                 </Suspense>}
-                <div><Suspense fallback={<></>}>
+                <div><Suspense fallback={<LoadingSidebarScreen />}>
                     <MainViewComponent storeConfig={storeConfig} />
                 </Suspense></div>
             </div>
