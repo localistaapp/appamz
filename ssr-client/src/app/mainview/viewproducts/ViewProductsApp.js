@@ -153,7 +153,7 @@ const ProductList = ({products, storeConfig}) => {
     }, []);
 
     const getCurrentTimeInFormat = () => {
-      const now = new Date();
+      const now = window ? new Date() : '';
       let hours = now.getHours();
       const isPM = hours >= 12;
       if (hours > 12) {
