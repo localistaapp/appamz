@@ -14,7 +14,7 @@ const AppSidebarComponent = lazy(() =>
 );
 
 const MainViewComponent = lazy(() =>
-delay(500).then(() => import("./mainview/MainView.js"))
+    import("./mainview/MainView.js")
 );
 
 const CarsComponent = lazy(() =>
@@ -32,7 +32,7 @@ const LoadingSidebarScreen = () => <div className="loading-screen"><div classNam
 const LoadingFooterScreen = () => <div>Loading Footer...</div>;
 const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 
-/*const initializeStats = (email) => {
+const initializeStats = (email) => {
     let enquiriesArr = [];
     typeof window !== 'undefined' && window.sessionStorage.setItem('user-profile', email);
     axios.get(`/stats/${email}`)
@@ -45,7 +45,7 @@ const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
                   statTotalSales: response.data.eventSales && response.data.storeSales?  new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(response.data.eventSales + response.data.storeSales): 0,
                   statEventSales: response.data.eventSales? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(response.data.eventSales) : 0,
                   statStoreSales: response.data.storeSales? new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0 }).format(response.data.storeSales) : 0,
-                });
+                });*/
             }
             document.getElementById('dash-content').style.display='block';
             document.getElementById('logout').style.display='block';
@@ -57,7 +57,7 @@ const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
       .then(function (response) {
         console.log('---content-lookup-response---', response.data);
       }.bind(this));
-}*/
+}
 
 function AppDashboard({storeConfig, locationHref}) {
     const [selectedCar, setSelectedCar] = useState(null);
@@ -75,12 +75,12 @@ function AppDashboard({storeConfig, locationHref}) {
 
     return (
         <>
-            <HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />
+            <Suspense fallback={<LoadingSidebarScreen />}><HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} /></Suspense>
             <div className="app-layout">
                 {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
                     <AppSidebarComponent />
                 </Suspense>}
-                <div><Suspense fallback={<LoadingSidebarScreen />}>
+                <div><Suspense fallback={<></>}>
                     <MainViewComponent storeConfig={storeConfig} />
                 </Suspense></div>
             </div>

@@ -102,15 +102,17 @@ const ProductList = ({products, storeConfig}) => {
     const [currDayTimings, setCurrDayTimings] = useState([]);
     const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
     const [deliveryNotSupported, setDeliveryNotSupported] = useState(false);
-    let w = window ? window.weekdays = new Array(7) : false;
-    w = window ? window.weekdays[0] = "Sunday" : false;
-    w = window ? window.weekdays[1] = "Monday" : false;
-    w = window ? window.weekdays[2] = "Tuesday" : false;
-    w = window ? window.weekdays[3] = "Wednesday" : false;
-    w = window ? window.weekdays[4] = "Thursday" : false;
-    w = window ? window.weekdays[5] = "Friday" : false;
-    w = window ? window.weekdays[6] = "Saturday" : false;
 
+    if (isClient) {
+      window.weekdays = new Array(7);
+      window.weekdays[0] = "Sunday";
+      window.weekdays[1] = "Monday";
+      window.weekdays[2] = "Tuesday";
+      window.weekdays[3] = "Wednesday";
+      window.weekdays[4] = "Thursday";
+      window.weekdays[5] = "Friday";
+      window.weekdays[6] = "Saturday";
+    }
 
     useEffect (() => {
       setIsClient(true);
@@ -155,7 +157,11 @@ const ProductList = ({products, storeConfig}) => {
     }, []);
 
     const getCurrentTimeInFormat = () => {
-      const now = window ? new Date() : '';
+      let now = '';
+      if(isClient) {
+        now = window ? new Date() : '';
+      }
+      
       let hours = now.getHours();
       const isPM = hours >= 12;
       if (hours > 12) {
@@ -171,7 +177,7 @@ const ProductList = ({products, storeConfig}) => {
       console.log('--Object.keys(basketData).length--', Object.keys(basketData).length);
 
       const checkDeliveryOptions = () => {
-        if (onlineOrdersPinCodes && onlineOrdersPinCodes.indexOf(document.getElementById('dPincode').value)>=0) {
+        if (isClient && onlineOrdersPinCodes && onlineOrdersPinCodes.indexOf(document.getElementById('dPincode').value)>=0) {
             var curDay = window ? window.weekdays[new Date().getDay()].toLowerCase() : '';
             if (onlineOrdersTimings.hasOwnProperty(curDay) && onlineOrdersTimings[curDay].length > 0) {
                 console.log('--schedule--', onlineOrdersTimings[curDay]);
@@ -361,24 +367,25 @@ const NestedTabs = (categories) => {
   const levels = buildLevels(categories, Object.values(selectedKeys));
   
   const handleSelect = (levelIndex, key) => {
-    document.getElementById('sub-tabs').style.display = 'inline-block';
+    if (isClient) {
+      document.getElementById('sub-tabs').style.display = 'inline-block';
+    }
     if (key !== 'categories') {
         console.log('--levelIndex--', levelIndex);
         
         if (isClient) {
-          window.filterStr = typeof window.filterStr == 'undefined' ? key : window.filterStr+','+key;
-        }
-
-        if (levelIndex < window.filterStr.split(',').length) {
-            let arr = window.filterStr.split(',');
-            arr.splice(levelIndex-1, 0, key);
-            arr.length = levelIndex;
-            window.filterStr = arr.toString();
-        } 
-            console.log('--filterStr--', window.filterStr);
-        
-        
-        window.onFilter(key, window.filterStr);
+          window.filterStr = window.filterStr+','+key;
+          if (levelIndex < window.filterStr.split(',').length) {
+              let arr = window.filterStr.split(',');
+              arr.splice(levelIndex-1, 0, key);
+              arr.length = levelIndex;
+              window.filterStr = arr.toString();
+          } 
+              console.log('--filterStr--', window.filterStr);
+          
+          
+          window.onFilter(key, window.filterStr);
+      }
     }
     setSelectedKeys((prev) => {
       const updated = { ...prev };
@@ -443,6 +450,11 @@ const ViewProductsApp = ({url,storeConfig}) => {
     const [categories, setCategories] = useState({});
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+      setIsClient(true);
+    }, []);
     
     console.log('--store c1111--', storeConfig);
     /*const categories = {
@@ -530,13 +542,15 @@ const ViewProductsApp = ({url,storeConfig}) => {
       }
 
 
-    window.onFilter = (selected, filters) => {
-        console.log('-selected-', selected);
-        console.log('-filters-'+ filters+'-');
-        let filterPattern =filters;
-        const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
-        console.log('--newArr--', newArr);
-        setProducts(newArr);
+      if(isClient) {
+        window.onFilter = (selected, filters) => {
+          console.log('-selected-', selected);
+          console.log('-filters-'+ filters+'-');
+          let filterPattern =filters;
+          const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
+          console.log('--newArr--', newArr);
+          setProducts(newArr);
+        }
       }
     
     return (

@@ -29,10 +29,6 @@ const MainView = ({storeConfig}) => {
         
     //}
     const [message, setMessage] = useState("");
-    const AddProductsComponent = lazy(() =>
-        //delay(100).then(() => import("./addproducts/AddProducts.js"))
-        import("./addproducts/AddProducts.js")
-    );
 
     const ViewProductsComponent = lazy(() =>
         //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
@@ -52,13 +48,6 @@ const MainView = ({storeConfig}) => {
             {view == 'default' &&  <Suspense fallback={<></>}>
                     <ViewProductsComponent storeConfig={storeConfigVal} />
                 </Suspense>}
-            {view == 'add-products' && <Suspense fallback={<></>}>
-                    <AddProductsComponent />
-                </Suspense>}
-            {view == 'view-products' && <Suspense fallback={<></>}>
-                <ViewProductsComponent />
-            </Suspense>}
-            
         </div>
     );
 }

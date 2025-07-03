@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkssr_client=self.webpackChunkssr_client||[]).push([[320],{320:(s,e,c)=>{c.r(e),c.d(e,{default:()=>r});var l=c(507);const r=()=>(0,l.jsx)("div",{className:"footer",children:(0,l.jsx)("p",{children:"\xa9 2024 Amuzely"})})}}]);
+//# sourceMappingURL=320.c73fe5b5.chunk.js.map
