@@ -102,6 +102,10 @@ const ProductList = ({products, storeConfig}) => {
     const [currDayTimings, setCurrDayTimings] = useState([]);
     const [showDeliveryOptions, setShowDeliveryOptions] = useState(false);
     const [deliveryNotSupported, setDeliveryNotSupported] = useState(false);
+    const [showOrderConfirmationMsg, setShowOrderConfirmationMsg] = useState(false);
+    const [trackingLink, setTrackingLink] = useState('');
+    const [payStatus, setPayStatus] = useState('');
+    const [orderCompleted, setOrderCompleted] = useState(false);
 
     if (isClient) {
       window.weekdays = new Array(7);
@@ -154,23 +158,26 @@ const ProductList = ({products, storeConfig}) => {
           }
         }.bind(this));
       }
+
+      setInterval(axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+                .then(function (response) {
+                    console.log('tracking data-----', response.data);
+                    setTrackingLink(response.data.tracking_link);
+                    setPayStatus(response.data.status);
+                }.bind(this)), 5000);
     }, []);
 
     const getCurrentTimeInFormat = () => {
-      let now = '';
-      if(isClient) {
-        now = window ? new Date() : '';
-      }
-      
-      let hours = now.getHours();
-      const isPM = hours >= 12;
-      if (hours > 12) {
-          hours -= 12;
-      } else if (hours === 0) {
-          hours = 12;
-      }
-      const period = isPM ? "pm" : "am";
-      return hours;
+      const now = new Date();
+        let hours = now.getHours();
+        const isPM = hours >= 12;
+        if (hours > 12) {
+            hours -= 12;
+        } else if (hours === 0) {
+            hours = 12;
+        }
+        const period = isPM ? "pm" : "am";
+        return hours;
     } 
 
     if (basketData != null)
@@ -192,14 +199,156 @@ const ProductList = ({products, storeConfig}) => {
             setShowDeliveryOptions(false);
             setDeliveryNotSupported(true);
         }
+        document.getElementById('checkoutNextBtn').style.display = 'block';
+      }
+
+      const initiatePayment = async (amount, customerDetails) => {
+        try {
+            const response = await fetch('https://www.slimcrust.com/api/my-initiate-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    amount,
+                    customerDetails
+                })
+            });
+    
+            const result = await response.json();
+            
+            if (result.success) {
+                // Redirect to PhonePe payment page
+                window.location.href = result.data.instrumentResponse.redirectInfo.url;
+            } else {
+                throw new Error(result.message || 'Transaction failed');
+            }
+            
+            return result;
+        } catch (error) {
+            console.error('Payment initiation failed:', error);
+            throw error;
+        }
+    };
+  
+      const startPayment = (name, mobile, price, orderId) => {
+          const customerDetails = {
+              userId: name,
+              mobileNumber: mobile,
+              orderId: orderId
+          };
+          
+          initiatePayment(price, customerDetails) // Amount in rupees
+              .then(response => {
+                  console.log('Transaction initiated:', response);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+      };
+  
+      const payOrderNow = () => {
+        let oName = localStorage.getItem('onlineOrderName');
+        let oMobile = localStorage.getItem('onlineOrderMobile');
+        let oPrice = localStorage.getItem('onlineOrderPrice');
+        let orderId = localStorage.getItem('onlineOrderId');
+        startPayment(oName,oMobile,oPrice,orderId);
       }
     
       const next = () => {
+        console.log('--currStep--', currStep);
       if(currStep == 1) {
         document.getElementById('step1').classList.add('done');
         document.getElementById('step1Circle').classList.remove('active');
         document.getElementById('step2Circle').classList.add('active');
+        document.getElementById('checkoutNextBtn').style.display = 'none';
         setCurrStep(2);
+      } else if(currStep == 2) {
+        document.getElementById('step2').classList.add('done');
+        document.getElementById('step2Circle').classList.remove('active');
+        document.getElementById('step3Circle').classList.add('active');
+
+        let pincode = document.getElementById('dPincode').value;
+        let deliverySchedule = 'unknown';
+        let deliveryTimeSlot = 'unknown';
+        if (document.getElementById('deliverNow').checked) {
+            deliverySchedule = 'now';
+        } else if (document.getElementById('deliverSchedule').checked) {
+            deliverySchedule = 'later';
+            deliveryTimeSlot = document.getElementById('slot').options[document.getElementById('slot').selectedIndex].value;
+        }
+        sessionStorage.setItem('delivery-pincode',pincode);
+        sessionStorage.setItem('delivery-schedule',deliverySchedule);
+        sessionStorage.setItem('delivery-timeslot',deliveryTimeSlot);
+
+        setCurrStep(3);
+      } else if(currStep == 3) {
+        let address = document.getElementById('dAddress').value;
+        console.log('--delivery add--', address);
+
+        let deliveryPincode = sessionStorage.getItem('delivery-pincode');
+        let deliverySchedule = sessionStorage.getItem('delivery-schedule');
+        let deliveryTimeslot = sessionStorage.getItem('delivery-timeslot');
+        let deliveryAddress = document.getElementById('dAddress').value;
+        let deliveryMobile = document.getElementById('dMobile').value;
+        let deliveryName = document.getElementById('dName').value;
+        let storeId = sessionStorage.getItem('storeId');
+        
+        sessionStorage.setItem('dAddress',deliveryAddress);
+        sessionStorage.setItem('dMobile',deliveryMobile);
+        sessionStorage.setItem('dName',deliveryName);
+        let price = totalPrice;
+        let summary = JSON.stringify(basketData);
+
+        setShowOrderConfirmationMsg(true);
+        //document.getElementById('checkoutBtnStep11').style.display = 'none';
+        //document.getElementById('checkoutBtnStep12').style.display='block';
+
+        summary = summary != null ? summary : '';
+
+        var inputVal = window.confirm("You will be notified to make payment once the order is dispatched.");
+        if (inputVal) {
+            //show the confirmation with food is being prepared screen
+        }
+
+        //create order
+        var http = new XMLHttpRequest();
+        var url = '/store/web-order';
+        var params = 'storeId='+storeId+'&price='+price+'&mobile='+deliveryMobile+'&name='+deliveryName+'&slot='+deliveryTimeslot+'&items='+summary+'&pincode='+deliveryPincode+'&schedule='+deliverySchedule+'&address='+deliveryAddress;
+        http.open('POST', url, true);
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        
+        http.onreadystatechange = function() {//Call a function when the state changes.
+            if(http.readyState == 4 && http.status == 200) {
+                console.log('order creation post response:', http.responseText);
+                var res = http.responseText;
+                if(res.indexOf('error')>=0) {
+                    alert('There was an error creating your order! Please try again.');
+                } else {
+                    if(res != null) {
+                        console.log('---order created---', res);
+                        var onlineOrderId = JSON.parse(res).onlineOrderId;
+                        var onlineOrderName = JSON.parse(res).onlineOrderName;
+                        var onlineOrderMobile = JSON.parse(res).onlineOrderMobile;
+                        var onlineOrderPrice = JSON.parse(res).onlineOrderPrice;
+                        localStorage.setItem('onlineOrderId', onlineOrderId);
+                        localStorage.setItem('onlineOrderName', onlineOrderName);
+                        localStorage.setItem('onlineOrderMobile', onlineOrderMobile);
+                        localStorage.setItem('onlineOrderPrice', onlineOrderPrice);
+                        localStorage.setItem('order-created', 'true');
+                    }
+                }
+                
+            }
+        }.bind(this);
+        http.send(params);
+        document.getElementById('checkoutNextBtn').style.display = 'none';
+        document.getElementById('backHomeBtn').style.display = 'block';
+        document.getElementsByClassName('summary-total')[0].style.display = 'none';
+        document.getElementById('step3').classList.add('done');
+        setCurrStep(3);
+      } else {
+        document.getElementById('checkoutNextBtn').style.display = 'block';
       }
     }
   
@@ -313,17 +462,84 @@ const ProductList = ({products, storeConfig}) => {
 
                   </div>
                 }
+                {
+                  currStep == 3 && 
+                  <div>
+                    <div className="card-container small" style={{position:'absolute',left:'20px',padding: '0px 12px 0px 12px', minHeight: '266px',width: 'calc(100% - 64px)', display: `${!showOrderConfirmationMsg ? 'block' : 'none'}`}}>
+                        <div className="section-one">
+                        <div className="top">
+                                      <div className="top-right" style={{width: '90%'}}>
+                                          <div className="usp-title" style={{left: '0px', top: '-68px',width: '100%'}}>
+                                              <textarea id="dAddress"  style={{top: '78px'}}  className="checkout-step-input step-input step-textarea" placeholder="Delivery address (with landmark)" />
+                                              <input id="dMobile" type="text" className="checkout-step-input step-input" placeholder="Mobile number" style={{top:'194px',width: '100%'}}/>
+                                              <input id="dName" type="text" className="checkout-step-input step-input" placeholder="Your full name" style={{top:'248px',width: '100%'}}/>
+                                          </div>
+                                      </div>
+                                  </div>
+                        </div>
+                        
+                    </div>
+
+                    <div className="card-container small" style={{display: `${showOrderConfirmationMsg ? 'block' : 'none'}`,padding: '0px 12px 0px 12px', minHeight: '246px'}}>
+                        <div className="section-one">
+                        <div className="deliver-cell" style={{marginLeft: '6px', fontSize: '17px', paddingBottom: '24px', color:'#2b2b2b', margin: '0 auto',width: '220px', marginTop: '36px',textAlign: 'center'}}>
+                                            <img src="../../assets/images/tickvo.gif" style={{width: '78px'}} />  
+                                            <span className="order-conf-msg" style={{display: 'block'}}>Thank you for your order! Our agent will notify you once the order is dispatched.</span>
+                                            
+                                        </div>
+                      </div>
+                    </div>
+                        <div id="checkoutBtnStep12" className="card-btn checkout home-btn" style={{top: '548px', marginTop: 'auto', width: '190px', display: 'none'}} onClick={()=>{window.location.href='/app';}}>←&nbsp;Back Home
+                            <div className=""></div>
+                        </div>
+                    </div>
+
+
+                }
                 <div class="summary-total">
                     Total:  <span class="rupee">₹</span><span id="price">{totalPrice}</span>
                     <div style={{fontSize: '13px', marginTop: '5px', marginLeft: '2px'}}>(incl GST + delivery apprx.)</div>
                 </div>
-                <div id="checkoutBtn" class="card-btn checkout-next" style={{bottom: '120px', marginTop: 'auto'}} onClick={next}>
+                <div id="checkoutNextBtn" class="card-btn checkout-next" style={{bottom: '120px', marginTop: 'auto'}} onClick={next}>
                     Next&nbsp;→
+                    <div class=""></div>
+                </div>
+                <div id="backHomeBtn" class="card-btn checkout-next" style={{display: 'none', width: '180px', margin: '0 auto', left: '0', right: '0'}} onClick={()=>window.location.reload()}>
+                    ← Back Home
                     <div class=""></div>
                 </div>
               </div>
           </div>
         </div>
+
+        {orderCompleted == false && localStorage.getItem('order-created') != null && localStorage.getItem('order-created') == 'true' && trackingLink != '' && trackingLink != 'null' &&
+                    <div className="card-container notify-card-track" style={{position: 'fixed', bottom: '0', left: '0', width: '100%'}}>
+                        <div className="section-one-notify">
+                        </div>
+                        <div className="title notify-title-track"><img src="../../assets/images/trk.gif" style={{width: '42px'}}/><span className='track-icon-title'>Track your order</span></div>
+                        
+                        <div className="section-two">
+                            <div className="top">
+                                <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%'}} />
+                                <br/>
+                                {payStatus != 'PAYMENT_SUCCESS' && <div className='pay-card'>
+                                    <span>Your payment is pending. Please pay now to complete your order.</span>
+                                </div>}
+                                {payStatus != 'PAYMENT_SUCCESS' && <span className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
+
+                                {payStatus == 'PAYMENT_FAILED' && <div className='pay-card'>
+                                    <span>Your payment FAILED! Please TRY AGAIN to complete your order.</span>
+                                </div>}
+                                {payStatus == 'PAYMENT_FAILED' && <span className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
+
+                                {payStatus == 'PAYMENT_SUCCESS' && <div className='pay-card'>
+                                    <span style={{color: '#407f40'}}>Your payment is successful. Thanks for ordering with Slimcrust!</span>
+                                </div>}
+                                
+                            </div>
+                        </div>
+                    </div>
+                }
 
         {products.map((p, index) => {
           return (<ProductCard product={p} index={index} basketData={basketData} setBasketData={setBasketData} setTotalPrice={setTotalPrice} />)
@@ -462,7 +678,6 @@ const ViewProductsApp = ({url,storeConfig}) => {
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
     };*/
 
-
     const handlePrimaryTabSelect = (type, tabId) => {
         let tabUpdateNew = tabUpdate + 1;
         setTabUpdate(tabUpdateNew);
@@ -502,6 +717,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
     let storeId = 0;
     try {
         storeId = storeConfig.storeId;
+        sessionStorage.setItem('storeId', storeId);
     } catch(e) {
         console.log('error');
     }

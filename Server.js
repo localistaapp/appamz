@@ -361,6 +361,116 @@ app.post('/createProduct', function(req, res) {
  });
  });
 
+ app.use(express.urlencoded({ extended: true }));
+ app.post('/store/web-order', function(req, res) {
+  
+  const price = req.body.price;
+  const mobile = req.body.mobile;
+  const name = req.body.name;
+  const slot = req.body.slot;
+  const items = req.body.items;
+  const pincode = req.body.pincode;
+  const schedule = req.body.schedule;
+  const address = req.body.address;
+  const storeId = req.body.storeId;
+
+  console.log('--price--', price);
+  console.log('--items--', items);
+
+  const client = new Client(dbConfig)
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+    } else {
+      console.log('connected');
+
+      client.query("INSERT INTO \"public\".\"am_online_order\"(name, mobile, address, delivery_pincode, delivery_schedule, delivery_timeslot, \"order\", price, store_id) VALUES('"+name+"', '"+mobile+"', '"+address+"', '"+pincode+"', '"+schedule+"', '"+slot+"', '"+items+"', '"+price+"', "+storeId+")",
+          [], (err, response) => {
+                if (err) {
+                  console.log(err)
+                  res.send("error");
+                  client.end();
+                } else {
+                    client.query("select id,name,mobile,price from am_online_order where mobile=$1 order by created_at desc",
+                      [mobile], (err, responseSelect) => {
+                            if (err) {
+                              console.log(err)
+                              res.send("error");
+                            } else {
+                              if(responseSelect.rows && responseSelect.rows.length > 0) {
+                                  let onlineOrderId = responseSelect.rows[0].id;
+                                  let onlineOrderName = responseSelect.rows[0].name;
+                                  let onlineOrderMobile = responseSelect.rows[0].mobile;
+                                  let onlineOrderPrice = responseSelect.rows[0].price;
+                                  res.send('{"onlineOrderId":"'+onlineOrderId+'", "onlineOrderName":"'+onlineOrderName+'", "onlineOrderMobile":"'+onlineOrderMobile+'", "onlineOrderPrice":"'+onlineOrderPrice+'"}');
+                                } else {
+                                  res.send("error");
+                                }
+                            }
+                            client.end();
+                    })
+                    //res.send("success--");
+                    /*const mailOptions = {
+                      from: "slimcrustbskowner@gmail.com",
+                      to: "slimcrustbsk@gmail.com",
+                      cc: 'sampath.oops@gmail.com',
+                      subject: "New Web Order",
+                      text: "There is a new Web Order. Please check your dashboard.",
+                    };
+                    transporter.sendMail(mailOptions, (error, info) => {
+                      if (error) {
+                        console.error("Error sending email: ", error);
+                      } else {
+                        console.log("Email sent: ", info.response);
+                      }
+                    });*/
+                    
+                }
+
+              });
+              }
+          });
+        }
+);
+
+app.get("/store/web-order/:onlineOrderId", function(req, res) {
+  let onlineOrderId = req.params.onlineOrderId;
+  const client = new Client(dbConfig)
+
+    client.connect(err => {
+        if (err) {
+          console.error('error connecting', err.stack)
+          res.send('{}');
+          client.end();
+        } else {
+            client.query("Select id, name, mobile, price, tracking_link, status from am_online_order where id = "+onlineOrderId,
+              [], (err, response) => {
+                    if (err) {
+                      console.log(err);
+                      res.send("error");
+                      client.end();
+                    } else {
+                        //res.send(response.rows);
+                        if (response.rows.length == 0) {
+                          res.send("error");
+                          client.end();
+                        } else {
+                        let onlineOrderId = response.rows[0].id;
+                        let onlineOrderName = response.rows[0].name;
+                        let onlineOrderMobile = response.rows[0].mobile;
+                        let onlineOrderPrice = response.rows[0].price;
+                        let trackingLink = response.rows[0].tracking_link;
+                        let status = response.rows[0].status;
+                        res.send('{"tracking_link":"'+trackingLink+'","onlineOrderId":"'+onlineOrderId+'", "onlineOrderName":"'+onlineOrderName+'", "onlineOrderMobile":"'+onlineOrderMobile+'", "onlineOrderPrice":"'+onlineOrderPrice+'", "status": "'+status+'"}');
+                    
+                          client.end();
+                        }
+                    }
+                  });
+         }
+    });
+});
+
 app.get("/example", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
