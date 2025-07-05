@@ -18,7 +18,7 @@ const Sidebar = () => {
             <div className="links">
                 <a style={{marginRight: '24px', display: 'inline'}} href={`${window.location.pathname}?view=view-products`}>Products</a><span style={{fontWeight: '100'}}>|</span><a style={{marginLeft: '24px', display: 'inline'}} href={`${window.location.pathname}?view=add-products`}>Add  ✚</a>
                 <hr class="line-light"></hr>
-                <a href="/">Online Orders</a>
+                <a href={`${window.location.pathname}?view=online-orders`}>Online Orders</a>
                 <hr class="line-light" ></hr>
                 <a href="/">Bookings</a>
                 <hr class="line-light" ></hr>

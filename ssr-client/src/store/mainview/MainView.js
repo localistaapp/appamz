@@ -20,6 +20,11 @@ const MainView = () => {
         import("./viewproducts/ViewProducts.js")
     );
 
+    const OnlineOrdersComponent = lazy(() =>
+        //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
+        import("./onlineorders/OnlineOrders.js")
+    );
+
     const showMessage = (msg) => {
         setMessage(msg);
     };
@@ -37,7 +42,9 @@ const MainView = () => {
             {view == 'view-products' && <Suspense fallback={<></>}>
                 <ViewProductsComponent />
             </Suspense>}
-            
+            {view == 'online-orders' && <Suspense fallback={<></>}>
+                <OnlineOrdersComponent />
+            </Suspense>}
         </div>
     );
 }

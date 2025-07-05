@@ -471,6 +471,39 @@ app.get("/store/web-order/:onlineOrderId", function(req, res) {
     });
 });
 
+app.get("/web-orders/:storeId", function(req, res) {
+  let storeId = req.params.storeId;
+  const client = new Client(dbConfig)
+
+    client.connect(err => {
+        if (err) {
+          console.error('error connecting', err.stack)
+          res.send('{}');
+          client.end();
+        } else {
+            client.query("Select o.id, o.name, o.mobile, o.status, o.address, o.delivery_pincode, o.delivery_schedule, o.delivery_timeslot, o.price, o.created_at, o.order, o.tracking_link from am_online_order o where o.store_id = $1 order by o.created_at desc",
+                        [storeId], (err, response) => {
+                              if (err) {
+                                console.log(err);
+                                res.send("error");
+                                client.end();
+                              } else {
+                                 //res.send(response.rows);
+                                 if (response.rows.length == 0) {
+                                    res.send("error");
+                                    client.end();
+                                 } else {
+                                    res.send(response.rows);
+                                    client.end();
+                                 }
+                              }
+                            });
+         }
+    });
+
+
+});
+
 app.get("/example", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
