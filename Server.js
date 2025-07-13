@@ -191,6 +191,7 @@ app.get("/dashboard/:store", (req, res) => {
 app.get("/stats/:email", (req, res) => {
   const client = new Client(dbConfig);
   let email = req.params.email;
+  let supportMobile = '';
   email = email.replace('owner@','@');
   let franchiseId = '';
   let storeId = '';
@@ -220,7 +221,7 @@ app.get("/stats/:email", (req, res) => {
                     client.end();
                   } else {
                     storeId = responseInner.rows[0]['id'];
-                    supportNumber = responseInner.rows[0]['support_mobile'];
+                    supportMobile = responseInner.rows[0]['support_mobile'];
                     res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+'}');
                   }
                 });
