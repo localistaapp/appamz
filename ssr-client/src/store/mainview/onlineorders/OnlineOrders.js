@@ -48,7 +48,7 @@ const OrdersList = ({orders}) => {
     const onAccept = () => {
       const prof = sessionStorage.getItem('user-profile');
       const supportMob = JSON.parse(prof).supportMobile;
-      axios.post(`/store/web-order/update`, {onlineOrderId: orderId, trackingLink: 'www.slimcrust.com/yp.html?oid='+orderId+'&amt='+orderPrice+'&mob='+orderMobile+'&supportMob='+supportMob}).then((response) => {
+      axios.post(`/store/web-order/update`, {onlineOrderId: orderId, trackingLink: 'www.slimcrust.com/yp.html?oid='+orderId+'&amt='+orderPrice+'&mob='+orderMobile+'&supportMob='+supportMob+'&fromUrl='+orderFromUrl}).then((response) => {
         console.log(response.status);
         window.open(`https://wa.me/+91${orderMobile}?text=Hello!%20Your%20order%20has%20been%20accepted%20by%20${storeName}!%20Please%20make%20your%20payment%20on%20the%20app%20to%20confirm%20at%20${orderFromUrl}`,'_blank');
       });
