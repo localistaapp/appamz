@@ -213,14 +213,15 @@ app.get("/stats/:email", (req, res) => {
                 client.end();
               } else {
                 franchiseId = response.rows[0]['id'];
-                client.query("Select id from am_store where franchise_id IN ('"+franchiseId+"') ",
+                client.query("Select id, support_mobile from am_store where franchise_id IN ('"+franchiseId+"') ",
                 [], (errInner, responseInner) => {
                   if (errInner) {
                     res.send('{"status":"inner-connect-error"}');
                     client.end();
                   } else {
                     storeId = responseInner.rows[0]['id'];
-                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+'}');
+                    supportNumber = responseInner.rows[0]['support_mobile'];
+                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+'}');
                   }
                 });
               }
@@ -373,6 +374,7 @@ app.post('/createProduct', function(req, res) {
   const schedule = req.body.schedule;
   const address = req.body.address;
   const storeId = req.body.storeId;
+  const fromUrl = req.body.fromUrl;
 
   console.log('--price--', price);
   console.log('--items--', items);
@@ -384,7 +386,7 @@ app.post('/createProduct', function(req, res) {
     } else {
       console.log('connected');
 
-      client.query("INSERT INTO \"public\".\"am_online_order\"(name, mobile, address, delivery_pincode, delivery_schedule, delivery_timeslot, \"order\", price, store_id) VALUES('"+name+"', '"+mobile+"', '"+address+"', '"+pincode+"', '"+schedule+"', '"+slot+"', '"+items+"', '"+price+"', "+storeId+")",
+      client.query("INSERT INTO \"public\".\"am_online_order\"(name, mobile, address, delivery_pincode, delivery_schedule, delivery_timeslot, \"order\", price, store_id, from_url, status) VALUES('"+name+"', '"+mobile+"', '"+address+"', '"+pincode+"', '"+schedule+"', '"+slot+"', '"+items+"', '"+price+"', "+storeId+", '"+fromUrl+"', 'PENDING')",
           [], (err, response) => {
                 if (err) {
                   console.log(err)
@@ -481,7 +483,7 @@ app.get("/web-orders/:storeId", function(req, res) {
           res.send('{}');
           client.end();
         } else {
-            client.query("Select o.id, o.name, o.mobile, o.status, o.address, o.delivery_pincode, o.delivery_schedule, o.delivery_timeslot, o.price, o.created_at, o.order, o.tracking_link from am_online_order o where o.store_id = $1 order by o.created_at desc",
+            client.query("Select o.id, o.name, o.mobile, o.status, o.address, o.delivery_pincode, o.delivery_schedule, o.delivery_timeslot, o.price, o.created_at, o.order, o.tracking_link, o.from_url from am_online_order o where o.store_id = $1 order by o.created_at desc",
                         [storeId], (err, response) => {
                               if (err) {
                                 console.log(err);
@@ -502,6 +504,32 @@ app.get("/web-orders/:storeId", function(req, res) {
     });
 
 
+});
+
+app.post('/store/web-order/update', function(req, res) {
+  const trackingLink = req.body.trackingLink;
+  const onlineOrderId = req.body.onlineOrderId;
+  
+  const client = new Client(dbConfig)
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+    } else {
+      client.query("UPDATE \"public\".\"am_online_order\" SET tracking_link = $1 where id = $2",
+          [trackingLink, onlineOrderId], (err, response) => {
+                if (err) {
+                  console.log(err)
+                    res.send("error");
+                    client.end();
+                } else {
+                    //res.send(response);
+                    res.send('success');
+                    client.end();
+                }
+
+              });
+  }
+ })
 });
 
 app.get("/example", (req, res) => {

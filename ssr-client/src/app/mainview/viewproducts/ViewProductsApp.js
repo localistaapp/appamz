@@ -159,12 +159,15 @@ const ProductList = ({products, storeConfig}) => {
         }.bind(this));
       }
 
-      setInterval(axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
-                .then(function (response) {
-                    console.log('tracking data-----', response.data);
-                    setTrackingLink(response.data.tracking_link);
-                    setPayStatus(response.data.status);
-                }.bind(this)), 5000);
+      if (localStorage.getItem('onlineOrderId') != null) {
+        setInterval(axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+        .then(function (response) {
+            console.log('tracking data-----', response.data);
+            setTrackingLink(response.data.tracking_link);
+            setPayStatus(response.data.status);
+        }.bind(this)), 5000);
+      }
+      
     }, []);
 
     const getCurrentTimeInFormat = () => {
@@ -203,6 +206,11 @@ const ProductList = ({products, storeConfig}) => {
       }
 
       const initiatePayment = async (amount, customerDetails) => {
+        //make display block for another iframe with src as https://www.slimcrust.com/v2/pay
+        //in the url pass amount and customerDetails (userId, mobileNumber & orderId) params
+
+        //create a GET endpoint that shows the new v2 pay page
+        //this page will trigger the below fetch call on load
         try {
             const response = await fetch('https://www.slimcrust.com/api/my-initiate-payment', {
                 method: 'POST',
@@ -314,7 +322,7 @@ const ProductList = ({products, storeConfig}) => {
         //create order
         var http = new XMLHttpRequest();
         var url = '/store/web-order';
-        var params = 'storeId='+storeId+'&price='+price+'&mobile='+deliveryMobile+'&name='+deliveryName+'&slot='+deliveryTimeslot+'&items='+summary+'&pincode='+deliveryPincode+'&schedule='+deliverySchedule+'&address='+deliveryAddress;
+        var params = 'storeId='+storeId+'&price='+price+'&mobile='+deliveryMobile+'&name='+deliveryName+'&slot='+deliveryTimeslot+'&items='+summary+'&pincode='+deliveryPincode+'&schedule='+deliverySchedule+'&address='+deliveryAddress+'&fromUrl='+window.location.href;
         http.open('POST', url, true);
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         
@@ -516,24 +524,29 @@ const ProductList = ({products, storeConfig}) => {
                     <div className="card-container notify-card-track" style={{position: 'fixed', bottom: '0', left: '0', width: '100%'}}>
                         <div className="section-one-notify">
                         </div>
+                        {trackingLink.indexOf('slimcrust.com') >= 0 ?
+                        <div className="title notify-title-track"><img src="../../assets/images/tickvo.gif" style={{width: '42px'}}/><span className='track-icon-title'>Order received!</span></div> :
                         <div className="title notify-title-track"><img src="../../assets/images/trk.gif" style={{width: '42px'}}/><span className='track-icon-title'>Track your order</span></div>
-                        
+                        }
                         <div className="section-two">
                             <div className="top">
-                                <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%'}} />
+                                {trackingLink.indexOf('slimcrust.com') >= 0 ?
+                                   <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%', height: typeof window !== 'undefined' ? window.screen.height-280+'px' : '100%'}} />
+                                   : <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%'}} />
+                                } 
                                 <br/>
-                                {payStatus != 'PAYMENT_SUCCESS' && <div className='pay-card'>
+                                {payStatus != 'PAYMENT_SUCCESS' && <div style={{visibility: 'hidden'}} className='pay-card'>
                                     <span>Your payment is pending. Please pay now to complete your order.</span>
                                 </div>}
-                                {payStatus != 'PAYMENT_SUCCESS' && <span className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
+                                {payStatus != 'PAYMENT_SUCCESS' && <span style={{visibility: 'hidden'}} className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
 
                                 {payStatus == 'PAYMENT_FAILED' && <div className='pay-card'>
                                     <span>Your payment FAILED! Please TRY AGAIN to complete your order.</span>
                                 </div>}
-                                {payStatus == 'PAYMENT_FAILED' && <span className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
+                                {payStatus == 'PAYMENT_FAILED' && <span style={{visibility: 'hidden'}} className='card-btn pay-now card-btn checkout-next' onClick={()=>{payOrderNow()}}>Pay Now</span>}
 
-                                {payStatus == 'PAYMENT_SUCCESS' && <div className='pay-card'>
-                                    <span style={{color: '#407f40'}}>Your payment is successful. Thanks for ordering with Slimcrust!</span>
+                                {payStatus == 'PAYMENT_SUCCESS' && setOrderCompleted(true) && <div className='pay-card'>
+                                    <span style={{color: '#407f40'}}>Your payment is successful! You will recieve a whatsapp notification once your order is dispacthed!</span>
                                 </div>}
                                 
                             </div>
