@@ -169,7 +169,7 @@ const ProductList = ({products, storeConfig}) => {
     }, []);
 
     useEffect(()=> {
-      if (trackingLink.indexOf('slimcrust.com') >= 0 && localStorage.getItem('onlineOrderId') != null && payStatus != 'PAYMENT_SUCCESS') {
+      if (typeof trackingLink !== 'undefined' && trackingLink.indexOf('slimcrust.com') >= 0 && localStorage.getItem('onlineOrderId') != null && payStatus != 'PAYMENT_SUCCESS') {
         setInterval(() => { if(trackingLink != '' && payStatus != 'PAYMENT_SUCCESS') { axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
