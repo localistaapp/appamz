@@ -170,7 +170,7 @@ const ProductList = ({products, storeConfig}) => {
             } else {
 
             } 
-        })}}, 5000);
+        })}}.bind(this), 5000);
       }
 
       axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
