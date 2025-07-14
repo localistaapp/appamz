@@ -159,6 +159,16 @@ const ProductList = ({products, storeConfig}) => {
         }.bind(this));
       }
 
+      axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+        .then(function (response) {
+            console.log('--web order data-----', response.data);
+            setTrackingLink(response.data.tracking_link);
+            setPayStatus(response.data.status);
+        })
+      
+    }, []);
+
+    useEffect(()=> {
       if (localStorage.getItem('onlineOrderId') != null) {
         setInterval(() => { if(trackingLink != '' && payStatus != 'PAYMENT_SUCCESS') { axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
@@ -171,15 +181,7 @@ const ProductList = ({products, storeConfig}) => {
             } 
         })}}, 5000);
       }
-
-      axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
-        .then(function (response) {
-            console.log('--web order data-----', response.data);
-            setTrackingLink(response.data.tracking_link);
-            setPayStatus(response.data.status);
-        })
-      
-    }, []);
+    }, [trackingLink]);
 
     const getCurrentTimeInFormat = () => {
       const now = new Date();
