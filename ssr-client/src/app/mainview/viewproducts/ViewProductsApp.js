@@ -541,7 +541,7 @@ const ProductList = ({products, storeConfig}) => {
                         }
                         <div className="section-two">
                             <div className="top">
-                                {trackingLink.indexOf('slimcrust.com') >= 0 ?
+                                {!orderCompleted && trackingLink.indexOf('slimcrust.com') >= 0 ?
                                    <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%', height: typeof window !== 'undefined' ? window.screen.height-280+'px' : '100%'}} />
                                    : <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%'}} />
                                 } 
