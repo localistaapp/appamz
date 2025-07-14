@@ -160,12 +160,10 @@ const ProductList = ({products, storeConfig}) => {
       }
 
       if (localStorage.getItem('onlineOrderId') != null) {
-        setInterval(axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+        setInterval(function(){ axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
-            console.log('tracking data-----', response.data);
-            setTrackingLink(response.data.tracking_link);
-            setPayStatus(response.data.status);
-        }.bind(this)), 5000);
+            console.log('--web order data-----', response.data);
+        })}, 5000);
       }
       
     }, []);
