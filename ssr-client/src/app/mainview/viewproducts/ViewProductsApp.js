@@ -160,23 +160,23 @@ const ProductList = ({products, storeConfig}) => {
       }
 
       if (localStorage.getItem('onlineOrderId') != null) {
-        setInterval(function(){ if(trackingLink != '' && payStatus != 'PAYMENT_SUCCESS') { axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+        setInterval(() => { if(trackingLink != '' && payStatus != 'PAYMENT_SUCCESS') { axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
             setTrackingLink(response.data.tracking_link);
             if (response.data.status == 'PAYMENT_SUCCESS') {
-              setTrackingLink('');
               setPayStatus('PAYMENT_SUCCESS')
             } else {
 
             } 
-        })}}.bind(this), 5000);
+        })}}, 5000);
       }
 
       axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
             setTrackingLink(response.data.tracking_link);
+            setPayStatus(response.data.status);
         })
       
     }, []);
