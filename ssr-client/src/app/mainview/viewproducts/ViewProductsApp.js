@@ -163,6 +163,7 @@ const ProductList = ({products, storeConfig}) => {
         setInterval(function(){ axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
+            setTrackingLink(response.data.tracking_link);
         })}, 5000);
       }
       
