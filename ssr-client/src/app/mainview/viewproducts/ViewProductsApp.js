@@ -176,6 +176,7 @@ const ProductList = ({products, storeConfig}) => {
             setTrackingLink(response.data.tracking_link);
             if (response.data.status == 'PAYMENT_SUCCESS') {
               setPayStatus('PAYMENT_SUCCESS')
+              window.location.reload();
             } else {
 
             } 
