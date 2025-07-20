@@ -12,6 +12,14 @@
     left: 70px;
     top: 19px;
 }
+.store-logo-sm {
+    position: absolute;
+    left: 70px;
+    top: 19px;
+    width: 70px;
+    margin-top: 30px;
+    margin-left: 93px;
+}
 .header .logout {
     position: relative;
     right: 0px;

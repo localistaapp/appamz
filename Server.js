@@ -590,9 +590,11 @@ app.use(
   express.static(path.join(__dirname, 'assets'))
 );
 
-app.use(
-  "/store/",
-  express.static(path.join(__dirname, 'store'))
+app.get(
+  "/store/"
+  , function(req, res) {
+    res.redirect('/store.html');
+  }
 );
 
 app.use(
