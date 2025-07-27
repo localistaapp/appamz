@@ -56,10 +56,10 @@ ReadDirectoryContentToArray(`${staticPathRoot}/js`, bootstrapScripts);
 ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
 
 
-app.use(vhost('kindjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.amuzely.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('snugglefitsjpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/snugglefitsjpnagar'))))
-.use(vhost('swirlyojpnagar.amuzely.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
+app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('snugglefitsjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/snugglefitsjpnagar'))))
+.use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 //create vhost to new ssr-client route
 
