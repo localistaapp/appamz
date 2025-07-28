@@ -74,7 +74,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
   }
 
   return (
-    <div key={index} className="card shop-card">
+    <div key={index} className="card">
       <img src={product.image_url} alt={product.title} />
       <div className="card-content">
         <div className="highlights">{product.highlights}</div>

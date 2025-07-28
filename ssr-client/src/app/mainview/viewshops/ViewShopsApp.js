@@ -38,7 +38,7 @@ const ProductCard = ({product, index}) => {
     return null;
   }
   return (
-    <div key={index} className="card shop-card">
+    <div key={index} className="card shop-card" onClick={() => {window.location.href = `/app/shop/place/${product.place_id}`}}>
       <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400
             &photo_reference=${product.photos[0].photo_reference.replace(/[\n\r\t]/g, '').replace(/\s{2,}/g, '').replace(/&amp;/g, '&').replace(/"/g, '').trim()}&key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`} alt={product.name} />
       <div className="card-content">
