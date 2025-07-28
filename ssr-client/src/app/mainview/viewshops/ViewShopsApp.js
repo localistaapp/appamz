@@ -1,7 +1,7 @@
 import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 
-const GeolocationComponent = () => {
+const GeolocationComponent = ({searchPlaces}) => {
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -11,6 +11,7 @@ const GeolocationComponent = () => {
           document.getElementById('locMsg').style.display = 'none';
           window.selectedLat = position.coords.latitude;
           window.selectedLong = position.coords.longitude;
+          searchPlaces('fashion', window.placeQuery);
         },
         (error) => {
           console.error('Error getting location:', error.message);
@@ -33,12 +34,175 @@ const GeolocationComponent = () => {
   );
 };
 
-const ProductCard = ({product, index}) => {
+const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
+  console.log('--product on display--', product);
+
+  return (
+<div id="webcrumbs" className={`box ${slideRight ? 'slide-right' : ''}`} style={{display: showView ? 'block' : 'none'}}> 
+        	<div className="flex flex-col min-h-screen bg-gray-50">
+	  {/* Sticky Header */}
+	  <header className="sticky top-0 z-50 bg-white shadow-md p-4 flex justify-between items-center">
+    <div className="flex-1">
+	      <img className="modal-left-arrow" src="../../assets/images/left-arrow.png" onClick={onBackClick} />
+	    </div>
+	    <div className="flex-1">
+	      <p className="text-sm md:text-base">
+	        Share this page with a friend to earn 
+	        <a href="#" className="text-[#f81134] font-medium hover:underline ml-1">viral cashback</a>
+	      </p>
+	    </div>
+	    <div>
+	      <a href="https://wa.me/" className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10">
+	        <i className="fa-brands fa-whatsapp text-xl"></i>
+	      </a>
+	    </div>
+	  </header>
+	
+	  {/* Main Content */}
+	  <main className="flex-1 p-4 md:p-6 lg:p-8">
+	    <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
+	      
+	      {/* Top Section - Map */}
+	      <div className="w-full md:w-1/2">
+        <span class="store-title">{product && product.name}</span>
+	        <div style={{marginTop: '12px'}} className="bg-white shadow-lg rounded-xl overflow-hidden h-[400px] md:h-[500px]">
+	          <iframe 
+	            src={`//maps.google.com/maps?q=${product && product.geometry.location.lat},${product && product.geometry.location.lng}&amp;z=14&amp;output=embed`}
+	            className="w-full h-full border-0"
+	            loading="lazy"
+	            referrerPolicy="no-referrer-when-downgrade"
+	            title="Google Maps"
+	            allowFullScreen
+	            keywords="map, location, store location, google maps"
+	          ></iframe>
+	        </div>
+	      </div>
+	      
+	      {/* Bottom Section - Tabs */}
+	      <div className="w-full md:w-1/2">
+	        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+	          {/* Tabs Navigation */}
+	          <div className="flex border-b">
+	            <button className="px-4 py-3 border-b-2 border-[#f81134] text-[#f81134] font-medium flex-1">
+	              What's the rush about
+	            </button>
+	            <button className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
+	              Viral Deals
+	            </button>
+	            <button className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
+	              About the Store
+	            </button>
+	          </div>
+	          
+	          {/* Tab Content - What's the rush about */}
+	          <div className="p-5">
+	            <h2 className="text-xl font-bold mb-4">What's the rush about?</h2>
+	            <p className="text-gray-700 mb-4">
+	              Our rush program offers exclusive deals and limited-time offers that you won't want to miss. We curate the best products and services to ensure you get the most value for your money.
+	            </p>
+	            <p className="text-gray-700 mb-4">
+	              Join thousands of satisfied customers who have already taken advantage of our amazing rush deals. New offers are added daily, so check back often!
+	            </p>
+	            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">local_offer</span>
+	                  <h3 className="font-medium">Limited Time Offers</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Exclusive deals that expire quickly!</p>
+	              </div>
+	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">verified</span>
+	                  <h3 className="font-medium">Quality Guaranteed</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">All products verified by our experts</p>
+	              </div>
+	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">payments</span>
+	                  <h3 className="font-medium">Cashback Rewards</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Earn while you shop!</p>
+	              </div>
+	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">redeem</span>
+	                  <h3 className="font-medium">Referral Program</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Share and earn more rewards</p>
+	              </div>
+	            </div>
+	            {/* Next: "Add testimonials section with customer reviews" */}
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+	  </main>
+	
+	  <footer className="bg-gray-800 text-white py-6 px-4">
+	    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+	      <div>
+	        <h3 className="font-bold text-lg mb-4">About Us</h3>
+	        <p className="text-gray-300 text-sm">
+	          We bring you the best deals from around the web, curated for quality and value.
+	        </p>
+	        {/* Next: "Add social media icons" */}
+	      </div>
+	      <div>
+	        <h3 className="font-bold text-lg mb-4">Quick Links</h3>
+	        <ul className="space-y-2">
+	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
+	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Deals</a></li>
+	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">How It Works</a></li>
+	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+	        </ul>
+	      </div>
+	      <div>
+	        <h3 className="font-bold text-lg mb-4">Contact</h3>
+	        <ul className="space-y-2 text-gray-300">
+	          <li className="flex items-center">
+	            <span className="material-symbols-outlined mr-2 text-sm">call</span>
+	            <span>+1 (555) 123-4567</span>
+	          </li>
+	          <li className="flex items-center">
+	            <span className="material-symbols-outlined mr-2 text-sm">mail</span>
+	            <span>support@viraldeals.com</span>
+	          </li>
+	          <li className="flex items-center">
+	            <span className="material-symbols-outlined mr-2 text-sm">location_on</span>
+	            <span>123 Deal Street, NY, USA</span>
+	          </li>
+	        </ul>
+	      </div>
+	      <div>
+	        <h3 className="font-bold text-lg mb-4">Newsletter</h3>
+	        <p className="text-gray-300 text-sm mb-4">Subscribe to get updates on new deals</p>
+	        <div className="flex">
+	          <input type="email" placeholder="Your email" className="px-3 py-2 rounded-l-md w-full text-gray-800 text-sm focus:outline-none" />
+	          <button className="bg-[#f81134] hover:bg-[#d70d2b] px-4 rounded-r-md transition-colors">
+	            <span className="material-symbols-outlined text-sm">send</span>
+	          </button>
+	        </div>
+	      </div>
+	    </div>
+	    <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
+	      <p>© 2023 Viral Deals. All rights reserved.</p>
+	      {/* Next: "Add privacy policy and terms links" */}
+	    </div>
+	  </footer>
+	</div> 
+        </div>
+  )
+}; 
+
+const ProductCard = ({product, index, onDetailClick}) => {
   if (product['business_status'] !== "OPERATIONAL" || (product.photos && product.photos.length == 0) || typeof product.photos === 'undefined') {
     return null;
   }
+  //onClick -> window.location.href = `/app/shop/place/${product.place_id}`
   return (
-    <div key={index} className="card shop-card" onClick={() => {window.location.href = `/app/shop/place/${product.place_id}`}}>
+    <div key={index} className="card shop-card" onClick={onDetailClick}>
       <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400
             &photo_reference=${product.photos[0].photo_reference.replace(/[\n\r\t]/g, '').replace(/\s{2,}/g, '').replace(/&amp;/g, '&').replace(/"/g, '').trim()}&key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`} alt={product.name} />
       <div className="card-content">
@@ -57,6 +221,10 @@ const ProductList = ({products, storeConfig}) => {
 
     const [basketData, setBasketData] = useState(null);
     const [isClient, setIsClient] = useState(false);
+    const [showDetailView, setShowDetailView] = useState(false);
+    const [productToShow, setProductToShow] = useState(null);
+    const [showProdutList, setShowProdutList] = useState(true);
+    const [slideRight, setSlideRight] = useState(false);
 
     useEffect (() => {
       setIsClient(true);
@@ -68,14 +236,33 @@ const ProductList = ({products, storeConfig}) => {
       
     }, []);
 
+    const onDetailClick = (product) => {
+      console.log('--onDetailClick--', product);
+      window.scrollTo(0,0);
+      setProductToShow(product);
+      setShowDetailView(true);
+      setTimeout(()=>{setSlideRight(true);},200);
+      setTimeout(()=>{setShowProdutList(false);},400);
+    }
+
+    const onBackClick = () => {
+      //window.scrollTo(0,0);
+      setShowProdutList(true);
+      setTimeout(()=>{setSlideRight(false);setShowDetailView(false);},200);
+    }
+
   
     return (
-      <div className="product-list shop-product-list">
+      <>
+      <div className="product-list shop-product-list" style={{display: showProdutList ? 'grid': 'none'}}>
         
         {products.map((p, index) => {
-          return (<ProductCard product={p} index={index} />)
+          return (<ProductCard product={p} index={index} onDetailClick={()=>onDetailClick(p)} />)
         })}
+        
       </div>
+      <StoreDetail showView={showDetailView} product={productToShow} slideRight={slideRight} onBackClick={onBackClick} />
+      </>
     );
   };
 
@@ -341,7 +528,7 @@ const ViewShopProductsApp = ({url,storeConfig}) => {
     
     return (
         <div className="main">
-           <GeolocationComponent />
+           <GeolocationComponent searchPlaces={searchPlaces} />
            <div class="container">
                 <h1 style={{marginLeft: '16px', display: 'none'}}>Shops near you:</h1>
                 <div class="shop-search-c">
