@@ -67,7 +67,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
         <span class="store-title">{product && product.name}</span>
 	        <div style={{marginTop: '12px'}} className="bg-white shadow-lg rounded-xl overflow-hidden h-[400px] md:h-[500px]">
 	          <iframe 
-	            src={`https://maps.google.com/maps?q=${product && product.geometry.location.lat},${product && product.geometry.location.lng}&amp;z=14&amp;output=embed`}
+	            src={`https://www.google.com/maps?q=${product && product.geometry.location.lat},${product && product.geometry.location.lng}&amp;z=14&amp;output=embed`}
 	            className="w-full h-full border-0"
 	            loading="lazy"
 	            referrerPolicy="no-referrer-when-downgrade"
