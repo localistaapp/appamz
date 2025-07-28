@@ -503,10 +503,10 @@ app.get("/store/web-order/:onlineOrderId", function(req, res) {
 app.get('/shops/search/:cat/:q', async (req, res) => {
   const query = encodeURIComponent(req.params.q);
   const cat = encodeURIComponent(req.params.cat);
-  let catValue = encodeURIComponent('all stores');
+  let catValue = cat;
   const apiKey = process.env.GOOGLE_API_KEY;
 
-  if (cat == 'fashion') {
+  /*if (cat == 'fashion') {
     catValue = encodeURIComponent('fashion boutique');
   } else if (cat == 'essentials') {
     catValue = encodeURIComponent('essential stores');
@@ -514,7 +514,7 @@ app.get('/shops/search/:cat/:q', async (req, res) => {
     catValue = encodeURIComponent('cafes');
   } else if (cat == 'saloons') {
     catValue = encodeURIComponent('saloons');
-  }
+  }*/
   const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&query=${catValue}%in%20${query}&inputtype=textquery&key=%20AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
   
   const response = await fetch(url);
