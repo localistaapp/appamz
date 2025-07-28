@@ -154,6 +154,10 @@
     flex-direction: column;
   }
 
+  .shop-card {
+    box-shadow: 0 30px 60px rgba(0,0,0,.1);
+  }
+
   .card img {
     width: 100%;
     height: auto;
@@ -174,6 +178,13 @@
     font-size: 0.85rem;
     color: #777;
     margin-bottom: 6px;
+  }
+
+  .store-highlights {
+      color: #686464;
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+      font-weight: 500;
   }
 
   .description {

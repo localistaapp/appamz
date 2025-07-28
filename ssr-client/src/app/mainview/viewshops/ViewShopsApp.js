@@ -1,6 +1,38 @@
 import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 
+const GeolocationComponent = () => {
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log('GLatitude:', position.coords.latitude);
+          console.log('GLongitude:', position.coords.longitude);
+          document.getElementById('locMsg').style.display = 'none';
+          window.selectedLat = position.coords.latitude;
+          window.selectedLong = position.coords.longitude;
+        },
+        (error) => {
+          console.error('Error getting location:', error.message);
+        },
+        {
+          enableHighAccuracy: true, // optional
+          timeout: 10000,           // optional
+          maximumAge: 0             // optional
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  }, []);
+
+  return (
+    <div id="locMsg" className="loc-msg">
+      <p style={{marginBottom: '0px'}}>Requesting location access (optional)...</p>
+    </div>
+  );
+};
+
 const ProductCard = ({product, index}) => {
   if (product['business_status'] !== "OPERATIONAL" || (product.photos && product.photos.length == 0) || typeof product.photos === 'undefined') {
     return null;
@@ -11,10 +43,10 @@ const ProductCard = ({product, index}) => {
             &photo_reference=${product.photos[0].photo_reference.replace(/[\n\r\t]/g, '').replace(/\s{2,}/g, '').replace(/&amp;/g, '&').replace(/"/g, '').trim()}&key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`} alt={product.name} />
       <div className="card-content">
         <div className="highlights">{product.name}</div>
-        <div className="description">{product.formatted_address}</div>
+        <div className="description shop-description">{product.formatted_address}</div>
         <div className="price">
-          <div className="price-current">₹product.price</div>
-          <div className="price-original">₹originalPrice</div>
+          <div className="shop-price-current">{product.rating}⭐</div>
+          <div className="shop-price-original">({product.user_ratings_total})</div>
         </div>
       </div>
     </div>
@@ -287,7 +319,7 @@ const ViewShopProductsApp = ({url,storeConfig}) => {
         //setIsLoading(false);
         //comment below for testing
         setIsLoading(true);
-        axios.get(`/shops/search/${cat}/${encodeURI(q)}`)
+        axios.get(`/shops/search/${cat != '' ? cat : 'undefined'}/${q != '' ? encodeURI(q) : 'undefined'}/${window.selectedLat}/${window.selectedLong}`)
         .then(function (response) {
             const jsonResponse = response.data;
             setProducts(jsonResponse.results);
@@ -309,6 +341,7 @@ const ViewShopProductsApp = ({url,storeConfig}) => {
     
     return (
         <div className="main">
+           <GeolocationComponent />
            <div class="container">
                 <h1 style={{marginLeft: '16px', display: 'none'}}>Shops near you:</h1>
                 <div class="shop-search-c">

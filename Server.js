@@ -500,11 +500,18 @@ app.get("/store/web-order/:onlineOrderId", function(req, res) {
     });
 });
 
-app.get('/shops/search/:cat/:q', async (req, res) => {
+app.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
   const query = encodeURIComponent(req.params.q);
   const cat = encodeURIComponent(req.params.cat);
   let catValue = cat;
   const apiKey = process.env.GOOGLE_API_KEY;
+
+  let lat = req.params.lat;
+  let long = req.params.long;
+
+  console.log('--lat--', lat);
+  console.log('--long--', long);
+  console.log('--req.params.q--', req.params.q);
 
   /*if (cat == 'fashion') {
     catValue = encodeURIComponent('fashion boutique');
@@ -515,8 +522,12 @@ app.get('/shops/search/:cat/:q', async (req, res) => {
   } else if (cat == 'saloons') {
     catValue = encodeURIComponent('saloons');
   }*/
-  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&query=${catValue}%in%20${query}&inputtype=textquery&key=%20AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
+  let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&query=${catValue}%in%20${query}&inputtype=textquery&key=%20AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
   
+  if (lat != 'undefined' && long != 'undefined' && req.params.q == 'undefined') {
+    url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&query=${catValue}&inputtype=textquery&key=%20AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec&location=${lat},${long}&radius=7000`;
+  }
+
   const response = await fetch(url);
   const data = await response.json();
   res.json(data); // Send back to browser

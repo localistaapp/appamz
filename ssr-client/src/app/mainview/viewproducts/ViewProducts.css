@@ -154,6 +154,14 @@
     flex-direction: column;
   }
 
+  .shop-card {
+    box-shadow: 0 30px 60px rgba(0,0,0,.1);
+  }
+
+  .loc-msg {
+    margin-left: 16px;
+  }
+
   .card img {
     width: 100%;
     height: auto;
@@ -201,8 +209,19 @@
     color: #d32f2f;
   }
 
+  .shop-price-current {
+    color: #cf8913;
+    font-weight: 700;
+  }
+
   .price-original {
     text-decoration: line-through;
+    color: #888;
+    font-size: 0.9rem;
+  }
+
+  .shop-price-original {
+    text-decoration: none;
     color: #888;
     font-size: 0.9rem;
   }
