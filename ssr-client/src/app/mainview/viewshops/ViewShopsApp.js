@@ -63,7 +63,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
 	    <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
 	      
 	      {/* Top Section - Map */}
-	      <div className="w-full md:w-1/2">
+	      <div className="w-full md:w-1/2" style={{marginTop: '36px'}}>
         <span class="store-title">{product && product.name}</span>
 	        <div style={{marginTop: '12px'}} className="bg-white shadow-lg rounded-xl overflow-hidden h-[400px] md:h-[500px]">
 	          <iframe 
