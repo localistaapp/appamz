@@ -78,7 +78,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
       <img src={product.image_url} alt={product.title} />
       <div className="card-content">
         <div className="highlights">{product.highlights}</div>
-        <div className="description">{product.description}</div>
+        <div className="description shop-description">{product.description}</div>
         <div className="price">
           <div className="price-current">₹{product.price}</div>
           <div className="price-original">₹{originalPrice}</div>
