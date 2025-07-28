@@ -9,6 +9,10 @@ const HeadersComponent = lazy(() =>
     import("./header/Header.js")
 );
 
+const HeadersShopComponent = lazy(() =>
+    import("./header/HeaderShop.js")
+);
+
 const AppSidebarComponent = lazy(() =>
     delay(500).then(() => import("./sidebar/AppSidebar.js"))
 );
@@ -73,13 +77,16 @@ function AppDashboard({storeConfig, locationHref}) {
         }
     }, []);
 
+    console.log('--my locationHref--', locationHref);
+
     return (
         <>
-            <Suspense fallback={<LoadingSidebarScreen />}><HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} /></Suspense>
+            <Suspense fallback={<LoadingSidebarScreen />}>
+            { <HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />}
+
+                </Suspense>
+                
             <div className="app-layout">
-                {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
-                    <AppSidebarComponent />
-                </Suspense>}
                 <div><Suspense fallback={<></>}>
                     <MainViewComponent storeConfig={storeConfig} />
                 </Suspense></div>

@@ -39,9 +39,14 @@ const getLogoSrc = (locationHref) => {
 
 const Header = (props) => {
     const [isClient, setIsClient] = useState(false);
+    const [isShopFlow, setIsShopFlow] = useState(false);
     let homeLocation = '/';
     useEffect(() => {
         setIsClient(true);
+        homeLocation = window.location.href;
+        if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
+            setIsShopFlow(true);
+        }
       }, []);
 
     console.log('--props.locationHref--', props.locationHref);
@@ -56,10 +61,10 @@ const Header = (props) => {
 
     return <div
         className="header">
-            <svg onClick={props.showSideBar} className="menu-bar text-indigo-600" width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>
-            <img onClick={()=> window.location.href=homeLocation} className="store-logo-sm" src={logoSrc} />
-            <img class="store-logo" src="../../assets/images/qlogo.png"></img>
-            {props.loggedOut &&
+            {!isShopFlow && <svg onClick={props.showSideBar} className="menu-bar text-indigo-600" width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>}
+            {!isShopFlow && <img onClick={()=> window.location.href=homeLocation} className="store-logo-sm" src={logoSrc} />}
+            <img class={isShopFlow ? 'store-logo-shop' :'store-logo'} src="../../assets/images/qlogo.png"></img>
+            {props.loggedOut && !isShopFlow &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}
         </div>
 }

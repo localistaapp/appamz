@@ -72,6 +72,40 @@
     border-bottom: 1px solid #ddd;
   }
 
+  .tabs-container.shop {
+    min-height: 66px;
+  }
+
+  .shop-search-c {
+    min-height: 80px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    position: relative;
+  }
+
+  .shop-search-c > input {
+    width: calc(100% - 54px);
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    margin-top: 17px;
+  }
+
+  .shop-search-c > input:focus, .shop-search-c > input:focus-visible {
+    border: 1px solid grey !important;
+    outline: none;
+  }
+
+  .shop-search-c > img {
+    width: 32px;
+    position: absolute;
+    right: 16px;
+    top: 23px;
+    opacity: 0.7;
+  }
+
   .tabs, .sub-tabs {
     display: flex;
     gap: 8px;
@@ -106,6 +140,11 @@
     background: #f9f9f9;
   }
 
+  .shop-product-list {
+    padding: 18px;
+    gap: 34px;
+  }
+
   .card {
     background: #fff;
     border-radius: 12px;
@@ -119,6 +158,10 @@
     width: 100%;
     height: auto;
     object-fit: cover;
+  }
+
+  .shop-card > img  {
+    max-height: 240px;
   }
 
   .card-content {

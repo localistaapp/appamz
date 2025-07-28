@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOMServer from "react-dom/server";
 import path from "path";
 import AppSSR from "./ssr-client/src/app/AppSSR";
+import ShopSSR from "./ssr-client/src/shop/ShopSSR";
 import StoreSSR from "./ssr-client/src/store/StoreSSR";
 import express from "express";
 import fs from "fs";
@@ -25,6 +26,8 @@ const port = 3009;
 
 const bootstrapScripts = [];
 const bootstrapCSS = [];
+const bootstrapCSSShop = [];
+const bootstrapScriptsShop = [];
 const staticPathRoot = "ssr-client/build/static";
 
 const imagekit = new ImageKit({
@@ -53,7 +56,9 @@ const ReadDirectoryContentToArray = (folderPath, array) => {
 };
 
 ReadDirectoryContentToArray(`${staticPathRoot}/js`, bootstrapScripts);
+ReadDirectoryContentToArray(`${staticPathRoot}/js`, bootstrapScriptsShop);
 ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
+ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 
 
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
@@ -131,6 +136,27 @@ app.get("/app", (req, res) => {
   let didError = false;
   const stream = ReactDOMServer.renderToPipeableStream(
     <AppSSR bootStrapCSS={bootstrapCSS} appName="Snugglyf" />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+app.get("/shop/:a", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <ShopSSR bootStrapCSS={bootstrapCSSShop} appName="Snugglyf" />,
     {
       bootstrapScripts,
       onShellReady: () => {
@@ -474,6 +500,28 @@ app.get("/store/web-order/:onlineOrderId", function(req, res) {
     });
 });
 
+app.get('/shops/search/:cat/:q', async (req, res) => {
+  const query = encodeURIComponent(req.params.q);
+  const cat = encodeURIComponent(req.params.cat);
+  let catValue = encodeURIComponent('all stores');
+  const apiKey = process.env.GOOGLE_API_KEY;
+
+  if (cat == 'fashion') {
+    catValue = encodeURIComponent('fashion boutique');
+  } else if (cat == 'essentials') {
+    catValue = encodeURIComponent('essential stores');
+  } else if (cat == 'cafes') {
+    catValue = encodeURIComponent('cafes');
+  } else if (cat == 'saloons') {
+    catValue = encodeURIComponent('saloons');
+  }
+  const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?fields=formatted_address%2Cname%2Crating%2Copening_hours%2Cgeometry&query=${catValue}%in%20${query}&inputtype=textquery&key=%20AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
+  
+  const response = await fetch(url);
+  const data = await response.json();
+  res.json(data); // Send back to browser
+});
+
 app.get("/web-orders/:storeId", function(req, res) {
   let storeId = req.params.storeId;
   const client = new Client(dbConfig)
@@ -570,13 +618,33 @@ app.use(
 );
 
 app.use(
+  "/store/dashboard/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/store/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
   "/app/*/ssr-client/build/static",
+  express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/shop/*/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
 app.use(
   "/app/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
+);
+
+app.use(
+  "/shop/ssr-client/build/static",
+  express.static(__dirname + "/shop/ssr-client/build/static")
 );
 
 
