@@ -1212,6 +1212,216 @@ iframe {
     font-size: 1.25rem;
   }
 
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .tag {
+    align-items: center;
+    background-color: #e8efec9c;
+    border: 0;
+    border-radius: 9999px;
+    color: #111827;
+    display: inline-flex;
+    font-size: 14px;
+    padding: 6px 12px;
+    white-space: nowrap;
+    margin-bottom: 5px;
+  }
+
+  .tag:hover {
+    background-color: #e5e7eb;
+  }
+
+  .pulse-box {
+    float: left;
+    width: 50%;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* pulse in SVG */
+  svg.pulse-svg {
+    overflow: visible;
+  }
+  svg.pulse-svg .first-circle, svg.pulse-svg .third-circle, svg.pulse-svg .second-circle {
+    fill: #f00;
+    transform: scale(0.5);
+    transform-origin: center center;
+    animation: pulse-me 3s linear infinite;
+  }
+  svg.pulse-svg .second-circle {
+    animation-delay: 1s;
+  }
+  svg.pulse-svg .third-circle {
+    animation-delay: 2s;
+  }
+  .sticky-btn {
+    position: fixed;
+    bottom: -16px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+  }
+  .ticket3 {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    margin: 12px;
+    filter: drop-shadow(2px 5px 5px rgba(0, 0, 0, 0.15));
+  }
+  .ticket3__details {
+    display: table;
+    flex: 3;
+    background-color: #fff;
+    min-height: 150px;
+    padding: 1rem;
+    border-radius: 5px 0 0 5px;
+  }
+  .ticket3__details .ticket3__title {
+    display: table-cell;
+    margin-top: 0;
+    vertical-align: middle;
+    font-family: 'Montserrat';
+    font-size: 1.1rem;
+    font-weight: 480;
+  }
+  .ticket3__details ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .ticket3__details ul li {
+    margin: 0.7rem 0;
+  }
+  .ticket3__rip {
+    position: relative;
+    background-color: #fff;
+    background-image: linear-gradient(90deg, #fff 49%, tomato 50%);
+    margin: 10px 0;
+    width: 20px;
+  }
+  .ticket3__rip::before, .ticket3__rip::after {
+    position: absolute;
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 5px solid transparent;
+    border-top-color: #fff;
+    left: 50%;
+    transform: translateX(-50%) rotate(135deg);
+    border-radius: 50%;
+  }
+  .ticket3__rip::before {
+    top: -25px;
+    border-top-color: tomato;
+    border-right-color: #fff;
+  }
+  .ticket3__rip::after {
+    border-right-color: tomato;
+    border-top-color: #fff;
+    bottom: -25px;
+    transform: translateX(-50%) rotate(-45deg);
+  }
+  .ticket3__price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    background-color: tomato;
+    min-height: 150px;
+    padding: 1rem;
+    border-radius: 0 5px 5px 0;
+    color: #fff;
+  }
+  .ticket3__price .heading {
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    color: #ffcdde;
+    margin-left: -5px;
+  }
+  .ticket3__price .price {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: -5px;
+  }
+  
+  /* pulse in CSS */
+  .pulse-css {
+    background: #f81134;
+    border-radius: 10px;
+    color: #fff;
+    font-family: Avenir;
+    font-size: 22px;
+    font-weight: 700;
+    height: 31px;
+    line-height: 100px;
+    margin-top: 12px;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+    width: 43px;
+  }
+  .pulse-css:before, .pulse-css:after {
+    content: "";
+    width: 34px;
+    height: 34px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    background-color: tomato;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    transform: scale(0.5);
+    transform-origin: center center;
+    animation: pulse-me 3s linear infinite;
+  }
+  .pulse-css:after {
+    animation-delay: 2s;
+  }
+  
+  @keyframes pulse-me {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.1;
+    }
+    70% {
+      opacity: 0.09;
+    }
+    100% {
+      transform: scale(5);
+      opacity: 0;
+    }
+  }
+
+  .btn-shop-online {
+    background: rgb(248, 17, 52);
+    color: rgb(255, 255, 255);
+    border-radius: 10px !important;
+    border: none;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    position: fixed !important;
+    width: 90% !important;
+    bottom: 14px;
+    padding: 12px !important;
+  }
+
   #webcrumbs {
     position: absolute;
     margin: 0 auto;
@@ -1405,6 +1615,7 @@ iframe {
   #webcrumbs .py-3 {
     padding-bottom: 12px;
     padding-top: 12px;
+    font-size: 0.95rem;
   }
   #webcrumbs .py-6 {
     padding-bottom: 24px;
@@ -1424,15 +1635,19 @@ iframe {
     font-size: 14px;
     line-height: 21px;
   }
+  h3.font-medium {
+    margin: 0px !important;
+  }
   #webcrumbs .text-xl {
     font-size: 20px;
     line-height: 28px;
   }
   #webcrumbs .font-bold {
-    font-weight: 700;
+    font-weight: 600;
   }
   #webcrumbs .font-medium {
     font-weight: 500;
+    font-family: Montserrat,sans-serif !important;
   }
   #webcrumbs .text-\[\#f81134\] {
     --tw-text-opacity: 1;
@@ -1487,13 +1702,14 @@ iframe {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   #webcrumbs .transition-colors {
+    font-family: Montserrat,sans-serif!important;
     transition-duration: 0.15s;
     transition-property:
       color, background-color, border-color, text-decoration-color, fill, stroke;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
   #webcrumbs {
-    font-family: Open Sans !important;
+    font-family: Montserrat,sans-serif !important;
     font-size: 16px !important;
   }
   #webcrumbs .hover\:bg-\[\#d70d2b\]:hover {

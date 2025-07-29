@@ -12,7 +12,7 @@ const ShopSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=
 
     const storePathNameConfig = {
         'swirlyojpnagar': {storeId: '9'},
-        'snugglefitsjpnagar': {storeId: '13'}
+        'kidsaurajpnagar': {storeId: '13'}
     }
     
     return (
@@ -22,6 +22,8 @@ const ShopSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+                <link rel="stylesheet" href="assets/css/tailwind/tailwind.min.css"></link>
+                <link rel="stylesheet" href="assets/css/main.css"></link>
                 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
                 <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet"></link>
                 <title>quickrush - shop now</title>

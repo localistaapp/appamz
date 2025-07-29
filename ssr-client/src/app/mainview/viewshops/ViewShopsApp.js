@@ -34,8 +34,11 @@ const GeolocationComponent = ({searchPlaces}) => {
   );
 };
 
-const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
+const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viralDeals}) => {
   console.log('--product on display--', product);
+  console.log('--reviews--', reviews);
+  const [showWhatsTheRush, setShowWhatsTheRush] = useState(true);
+  const [showViralDeals, setShowViralDeals] = useState(false);
 
   return (
 <div id="webcrumbs" className={`box ${slideRight ? 'slide-right' : ''}`} style={{display: showView ? 'block' : 'none'}}> 
@@ -83,26 +86,42 @@ const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
 	        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
 	          {/* Tabs Navigation */}
 	          <div className="flex border-b">
-	            <button className="px-4 py-3 border-b-2 border-[#f81134] text-[#f81134] font-medium flex-1">
+	            <button id="btnWhatsTheRush" className="px-4 py-3 border-b-2 border-[#f81134] text-[#f81134] font-medium flex-1" style={{width: '100%'}} onClick={()=>{document.getElementById('btnWhatsTheRush').classList.remove('border-transparent');document.getElementById('btnWhatsTheRush').classList.add('border-[#f81134]');document.getElementById('btnViralDeals').classList.add('border-transparent');setShowViralDeals(false);setShowWhatsTheRush(true)}}>
 	              What's the rush about
 	            </button>
-	            <button className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
-	              Viral Deals
-	            </button>
-	            <button className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
-	              About the Store
+	            {viralDeals.length > 0 && <button id="btnViralDeals"  onClick={()=>{document.getElementById('btnViralDeals').classList.remove('border-transparent');document.getElementById('btnViralDeals').classList.add('border-[#f81134]');document.getElementById('btnWhatsTheRush').classList.add('border-transparent');document.getElementById('btnWhatsTheRush').classList.remove('border-[#f81134]');setShowViralDeals(true);setShowWhatsTheRush(false)}} className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors" style={{width: '100%'}}>
+              <div class="pulse-container">
+                  <div class="pulse-box">
+                    <div class="pulse-css"><svg style={{marginLeft: '10px', marginTop: '4px'}} fill="#fff" width="24px" height="24px" version="1.1" id="Capa_1" viewBox="0 0 30 30">
+                <g>
+                  <path d="M11.001,30l2.707-16.334H5L11.458,0l9.25,0.123L16.667,8H25L11.001,30z"/>
+                </g>
+                </svg></div>
+                  </div>
+              </div>
+              Viral Deals
+              
+	            </button>}
+	            <button style={{display: 'none',width: '100%'}} className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
+	              Shop Now
 	            </button>
 	          </div>
 	          
 	          {/* Tab Content - What's the rush about */}
-	          <div className="p-5">
+	          {showWhatsTheRush && <div className="p-5">
 	            <h2 className="text-xl font-bold mb-4">What's the rush about?</h2>
-	            <p className="text-gray-700 mb-4">
-	              Our rush program offers exclusive deals and limited-time offers that you won't want to miss. We curate the best products and services to ensure you get the most value for your money.
-	            </p>
-	            <p className="text-gray-700 mb-4">
-	              Join thousands of satisfied customers who have already taken advantage of our amazing rush deals. New offers are added daily, so check back often!
-	            </p>
+              <p className="text-gray-700 mb-4" style={{maxWidth: '90%', overflow: 'auto'}}>
+                {
+                  reviews.map((review) => {
+                    return (
+                      <div class="tag">{review}</div>
+                    )
+
+                  })
+                }
+              </p>
+
+	            
 	            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
 	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
 	                <div className="flex items-center mb-2">
@@ -134,63 +153,42 @@ const StoreDetail = ({showView, product, slideRight, onBackClick}) => {
 	              </div>
 	            </div>
 	            {/* Next: "Add testimonials section with customer reviews" */}
-	          </div>
+	          </div>}
+            {showViralDeals && <div className="p-5" style={{padding: '12px'}}>
+              <p className="text-gray-700 mb-4" >
+                {
+                  viralDeals.map((deal) => {
+                    return (
+                      <div class="ticket3">
+                        <div class="ticket3__details">
+                          <h3 class="ticket3__title">{deal.title}</h3>
+                        </div>
+                        <div class="ticket3__rip"></div>
+                        <div class="ticket3__price">
+                          <span class="heading">Cashback upto</span>
+                          <span class="price">₹{deal.max_cashback_value}</span>
+                        </div>
+                      </div>
+                    )
+
+                  })
+                }
+              </p>
+	          </div>}
 	        </div>
 	      </div>
 	    </div>
+      {viralDeals.length > 0 && <div class="w-full md:w-1/2 p-8 sticky-btn">
+                 <div class="flex flex-wrap ml-auto md:w-56 -m-2">
+                    <div class="w-full p-2">            <button onClick={()=>{window.location.href=window.shopOnlineUrl;}} class="btn-shop-online py-4 px-6 w-full font-medium rounded-xl shadow-6xl focus:ring focus:ring-gray-300 bg-white hover:bg-gray-100 transition ease-in-out duration-200" style={{background: '#f81134', color: '#fff'}} type="button" onclick="window.location.href='/app/kidsaurajpnagar/'">Shop Online</button>          </div>
+                    <div class="w-full p-2">
+                       
+                    </div>
+                 </div>
+              </div>}
 	  </main>
 	
-	  <footer className="bg-gray-800 text-white py-6 px-4">
-	    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-	      <div>
-	        <h3 className="font-bold text-lg mb-4">About Us</h3>
-	        <p className="text-gray-300 text-sm">
-	          We bring you the best deals from around the web, curated for quality and value.
-	        </p>
-	        {/* Next: "Add social media icons" */}
-	      </div>
-	      <div>
-	        <h3 className="font-bold text-lg mb-4">Quick Links</h3>
-	        <ul className="space-y-2">
-	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
-	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Deals</a></li>
-	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">How It Works</a></li>
-	          <li><a href="#" className="text-gray-300 hover:text-white transition-colors">Contact</a></li>
-	        </ul>
-	      </div>
-	      <div>
-	        <h3 className="font-bold text-lg mb-4">Contact</h3>
-	        <ul className="space-y-2 text-gray-300">
-	          <li className="flex items-center">
-	            <span className="material-symbols-outlined mr-2 text-sm">call</span>
-	            <span>+1 (555) 123-4567</span>
-	          </li>
-	          <li className="flex items-center">
-	            <span className="material-symbols-outlined mr-2 text-sm">mail</span>
-	            <span>support@viraldeals.com</span>
-	          </li>
-	          <li className="flex items-center">
-	            <span className="material-symbols-outlined mr-2 text-sm">location_on</span>
-	            <span>123 Deal Street, NY, USA</span>
-	          </li>
-	        </ul>
-	      </div>
-	      <div>
-	        <h3 className="font-bold text-lg mb-4">Newsletter</h3>
-	        <p className="text-gray-300 text-sm mb-4">Subscribe to get updates on new deals</p>
-	        <div className="flex">
-	          <input type="email" placeholder="Your email" className="px-3 py-2 rounded-l-md w-full text-gray-800 text-sm focus:outline-none" />
-	          <button className="bg-[#f81134] hover:bg-[#d70d2b] px-4 rounded-r-md transition-colors">
-	            <span className="material-symbols-outlined text-sm">send</span>
-	          </button>
-	        </div>
-	      </div>
-	    </div>
-	    <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-700 text-center text-gray-400 text-sm">
-	      <p>© 2023 Viral Deals. All rights reserved.</p>
-	      {/* Next: "Add privacy policy and terms links" */}
-	    </div>
-	  </footer>
+	  
 	</div> 
         </div>
   )
@@ -224,6 +222,8 @@ const ProductList = ({products, storeConfig}) => {
     const [showDetailView, setShowDetailView] = useState(false);
     const [productToShow, setProductToShow] = useState(null);
     const [showProdutList, setShowProdutList] = useState(true);
+    const [reviews, setReviews] = useState([]);
+    const [viralDeals, setViralDeals] = useState([]);
     const [slideRight, setSlideRight] = useState(false);
 
     useEffect (() => {
@@ -236,11 +236,36 @@ const ProductList = ({products, storeConfig}) => {
       
     }, []);
 
+    const fetchStoreDetail = (placeId) => {
+      axios.get(`/shops/place/${placeId}`)
+        .then(function (response) {
+            console.log('--place data-----', response.data);
+            if(response.data != null) {
+              let reviewsArr = response.data.split(',');
+              setReviews(reviewsArr);
+            }
+        })
+    }
+
+    const fetchViralDeals = (placeId) => {
+      axios.get(`/shops/deals/${placeId}`)
+        .then(function (response) {
+            console.log('--deals data-----', response.data);
+            if(response.data != null && response.data != 'error') {
+              let dealsArr = response.data.viralDeals;
+              window.shopOnlineUrl = response.data.appUrl;
+              setViralDeals(dealsArr);
+            }
+        })
+    }
+
     const onDetailClick = (product) => {
       console.log('--onDetailClick--', product);
       window.scrollTo(0,0);
       setProductToShow(product);
       setShowDetailView(true);
+      fetchStoreDetail(product.place_id);
+      fetchViralDeals(product.place_id);
       setTimeout(()=>{setSlideRight(true);},200);
       setTimeout(()=>{setShowProdutList(false);},400);
     }
@@ -261,7 +286,7 @@ const ProductList = ({products, storeConfig}) => {
         })}
         
       </div>
-      <StoreDetail showView={showDetailView} product={productToShow} slideRight={slideRight} onBackClick={onBackClick} />
+      <StoreDetail showView={showDetailView} product={productToShow} slideRight={slideRight} onBackClick={onBackClick} reviews={reviews} viralDeals={viralDeals} />
       </>
     );
   };

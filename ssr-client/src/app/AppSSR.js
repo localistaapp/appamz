@@ -11,7 +11,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=[
 
     const storePathNameConfig = {
         'swirlyojpnagar': {storeId: '9'},
-        'snugglefitsjpnagar': {storeId: '13'}
+        'kidsaurajpnagar': {storeId: '13'}
     }
     
     return (

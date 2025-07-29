@@ -6,6 +6,7 @@ import ShopSSR from "./ssr-client/src/shop/ShopSSR";
 import StoreSSR from "./ssr-client/src/store/StoreSSR";
 import express from "express";
 import fs from "fs";
+const { OpenAI } = require('openai');
 var { Client } = require('pg');
 import HomeStoreSSR from "./ssr-client/src/web/home-store/HomeStoreSSR";
 const vhost = require('vhost');
@@ -23,6 +24,10 @@ let dbConfig = {
 
 const app = express();
 const port = 3009;
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 const bootstrapScripts = [];
 const bootstrapCSS = [];
@@ -63,7 +68,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('snugglefitsjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/snugglefitsjpnagar'))))
+.use(vhost('kidsaurajpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kidsaurajpnagar'))))
 .use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 //create vhost to new ssr-client route
@@ -531,6 +536,72 @@ app.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
   const response = await fetch(url);
   const data = await response.json();
   res.json(data); // Send back to browser
+});
+
+app.get('/shops/place/:placeId', async (req, res) => {
+  const apiKey = process.env.GOOGLE_API_KEY;
+  let placeId = req.params.placeId;
+
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,review,rating,user_ratings_total,geometry&key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
+
+  const response = await fetch(url);
+  response.json().then(async (data) => {
+    let reviewIndex = 1;
+    let reviewStr = '';
+    let reviewPrompt = 'Can you share upto top 5 topics as comma-separated (with emojis) these reviews are sharing about to add to the section "whats the rush about" (only consider positive comments) - ';
+    data.result.reviews.forEach((review) => {
+      reviewStr += `${reviewIndex}.${review.text}`;
+      reviewIndex++;
+    });
+    reviewPrompt += reviewStr;
+
+    try {
+      const prompt = reviewPrompt;
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: prompt }],
+      });
+  
+      const messages = response.choices[0].message.content;
+      res.json(messages);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error generating review summary");
+    }
+    //res.json(data); // Send back to browser
+  });
+  
+});
+
+app.get('/shops/deals/:placeId', async (req, res) => {
+  let placeId = req.params.placeId;
+  const client = new Client(dbConfig)
+
+  client.connect(err => {
+      if (err) {
+        console.error('error connecting', err.stack)
+        res.send('{}');
+        client.end();
+      } else {
+          client.query("Select title, max_cashback_value, app_url, accepting_online_orders from am_store_viral_deals v, am_store s where v.store_id=s.id and v.place_id = $1 order by expiry desc",
+                      [placeId], (err, response) => {
+                            if (err) {
+                              console.log(err);
+                              res.send("error");
+                              client.end();
+                            } else {
+                               //res.send(response.rows);
+                               if (response.rows.length == 0) {
+                                  res.send("error");
+                                  client.end();
+                               } else {
+                                  res.send({appUrl: response.rows[0].app_url, viralDeals: response.rows});
+                                  client.end();
+                               }
+                            }
+                          });
+       }
+      });
 });
 
 app.get("/web-orders/:storeId", function(req, res) {

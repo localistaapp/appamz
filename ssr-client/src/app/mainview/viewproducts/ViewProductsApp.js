@@ -811,7 +811,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
     return (
         <div className="main">
            <div class="container">
-                <h1 style={{marginLeft: '16px'}}>View Products</h1>
+                {/*<h1 style={{marginLeft: '16px'}}>View Products</h1>*/}
                 <div class="tabs-container">
                     <div class="tabs" id="main-tabs">
                     <div id="tabDefault" class="tab active" onClick={() => handlePrimaryTabSelect('tags_default', 'tabDefault')}>All</div>
