@@ -43,7 +43,10 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
   const getShareLink = (product) => {
     let shareLink = '';
     if (product != null && reviews.length > 0) {
-      shareLink = "https://wa.me/?text="+encodeURIComponent('I had a great experience visiting '+ product['name']+". They're known for "+reviews.join(','))+". Please use this link to check them out.. They've some great deals running - "+encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id']);
+
+      shareLink = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
+
+
     } else {
       shareLink = 'https://wa.me/?text=';
     }
