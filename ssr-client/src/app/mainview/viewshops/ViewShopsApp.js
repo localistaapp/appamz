@@ -53,6 +53,33 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
     return shareLink;
   }
 
+  const triggerShare = async (product) => {
+    let shareText = '';
+    if (product != null && reviews.length > 0) {
+
+      shareText = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
+
+
+    } else {
+      shareText = '';
+    }
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Special offer on Quikrush 🎉',
+          text: shareText,
+          url: encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id'])
+        });
+        console.log('Shared successfully');
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+    } else {
+      // fallback: show WhatsApp/Twitter share links
+      alert('Sharing not supported on this browser.');
+    }
+  }
+
   return (
 <div id="webcrumbs" className={`box ${slideRight ? 'slide-right' : ''}`} style={{display: showView ? 'block' : 'none'}}> 
         	<div className="flex flex-col min-h-screen bg-gray-50">
@@ -68,7 +95,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	      </p>
 	    </div>
 	    <div>
-	      <a href={getShareLink(product, reviews)} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
+	      <a onClick={()=>{triggerShare(product, reviews)}} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
 	        <i className="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px'}}></i>
 	      </a>
 	    </div>
