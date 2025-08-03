@@ -1290,6 +1290,16 @@ iframe {
     margin-bottom: 50px;
     border-radius: 14px;
   }
+  .info-card {
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: hsla(0, 0%, 100%, .1);
+    border: 1px solid hsla(0, 0%, 100%, .3);
+    bottom: 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .1);
+    margin-bottom: 0px;
+    border-radius: 14px;
+  }
   .ticket-c {
     display: inline-flex;
     max-width: 100%;
@@ -1665,8 +1675,10 @@ iframe {
     line-height: 27px;
   }
   #webcrumbs .text-sm {
-    font-size: 14px;
+    font-size: 1rem;
     line-height: 21px;
+    padding-left: 10px;
+    display: inline-block;
   }
   h3.font-medium {
     margin: 0px !important;

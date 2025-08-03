@@ -65,8 +65,8 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	      </p>
 	    </div>
 	    <div>
-	      <a href={getShareLink(product, reviews)} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10">
-	        <i className="fa-brands fa-whatsapp text-xl"></i>
+	      <a href={getShareLink(product, reviews)} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
+	        <i className="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px'}}></i>
 	      </a>
 	    </div>
 	  </header>
@@ -136,7 +136,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
               
 	            </div>}
 
-            {<div className="p-5 ticket-card" style={{padding: '12px',marginBottom: '50px'}}>
+            {viralDeals.length > 0 && <div className="p-5 ticket-card" style={{padding: '12px',marginBottom: '20px'}}>
               <p className="text-gray-700 mb-4 ticket-c" >
                 {
                   viralDeals.map((deal) => {
@@ -157,6 +157,37 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
                 }
               </p>
 	          </div>}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6" style={{marginBottom: '120px'}}>
+	              <div className="info-card p-4 hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">local_offer</span>
+	                  <h3 className="font-medium">Limited Time Offers</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Exclusive deals that expire quickly!</p>
+	              </div>
+	              <div className="info-card p-4 hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">verified</span>
+	                  <h3 className="font-medium">Quality Guaranteed</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">All products verified by our experts</p>
+	              </div>
+	              <div className="info-card p-4 hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">payments</span>
+	                  <h3 className="font-medium">Cashback Rewards</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Earn while you shop!</p>
+	              </div>
+	              <div className="info-card p-4 hover:shadow-md transition-all">
+	                <div className="flex items-center mb-2">
+	                  <span className="material-symbols-outlined text-[#f81134] mr-2">redeem</span>
+	                  <h3 className="font-medium">Referral Program</h3>
+	                </div>
+	                <p className="text-sm text-gray-600">Share and earn more rewards</p>
+	              </div>
+	            </div>
 	        </div>
 	      </div>
 	    </div>
