@@ -1675,10 +1675,9 @@ iframe {
     line-height: 27px;
   }
   #webcrumbs .text-sm {
-    font-size: 1rem;
+    display: inline;
+    font-size: 0.95rem;
     line-height: 21px;
-    padding-left: 10px;
-    display: inline-block;
   }
   h3.font-medium {
     margin: 0px !important;
