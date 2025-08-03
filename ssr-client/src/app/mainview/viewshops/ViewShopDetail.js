@@ -255,7 +255,7 @@ const ProductList = ({products, storeConfig}) => {
     const [isClient, setIsClient] = useState(false);
     const [showDetailView, setShowDetailView] = useState(false);
     const [productToShow, setProductToShow] = useState(null);
-    const [showProdutList, setShowProdutList] = useState(true);
+    const [showProdutList, setShowProdutList] = useState(false);
     const [reviews, setReviews] = useState([]);
     const [viralDeals, setViralDeals] = useState([]);
     const [slideRight, setSlideRight] = useState(false);
@@ -270,13 +270,24 @@ const ProductList = ({products, storeConfig}) => {
       
     }, []);
 
-    const fetchStoreDetail = (placeId) => {
+    const fetchStoreReviews = (placeId) => {
       axios.get(`/shops/place/${placeId}`)
         .then(function (response) {
-            console.log('--place data-----', response.data);
+            console.log('--reviews-----', response.data);
             if(response.data != null) {
               let reviewsArr = response.data.split(',');
               setReviews(reviewsArr);
+            }
+        })
+    }
+
+    const fetchStoreDetail = (placeId) => {
+      axios.get(`/shops/place-detail/${placeId}`)
+        .then(function (response) {
+            console.log('--place data-----', response.data);
+            if(response.data != null) {
+              let product = response.data;
+              setProductToShow(product);
             }
         })
     }
@@ -293,16 +304,17 @@ const ProductList = ({products, storeConfig}) => {
         })
     }
 
-    const onDetailClick = (product) => {
-      console.log('--onDetailClick--', product);
-      window.scrollTo(0,0);
-      setProductToShow(product);
+    useEffect(()=> {
+      
+      //setProductToShow(product);
       setShowDetailView(true);
-      fetchStoreDetail(product.place_id);
-      fetchViralDeals(product.place_id);
-      setTimeout(()=>{setSlideRight(true);},200);
-      setTimeout(()=>{setShowProdutList(false);},400);
-    }
+
+      let placeId = window.location.pathname.split('=')[1];
+      fetchStoreReviews(placeId);
+      fetchStoreDetail(placeId);
+      fetchViralDeals(placeId);
+      setSlideRight(true);
+    }, []);
 
     const onBackClick = () => {
       //window.scrollTo(0,0);
@@ -314,10 +326,6 @@ const ProductList = ({products, storeConfig}) => {
     return (
       <>
       <div className="product-list shop-product-list" style={{display: showProdutList ? 'grid': 'none'}}>
-        
-        {products.map((p, index) => {
-          return (<ProductCard product={p} index={index} onDetailClick={()=>onDetailClick(p)} />)
-        })}
         
       </div>
       <StoreDetail showView={showDetailView} product={productToShow} slideRight={slideRight} onBackClick={onBackClick} reviews={reviews} viralDeals={viralDeals} />

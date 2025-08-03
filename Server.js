@@ -594,6 +594,19 @@ app.get('/shops/place/:placeId', async (req, res) => {
   
 });
 
+app.get('/shops/place-detail/:placeId', async (req, res) => {
+  const apiKey = process.env.GOOGLE_API_KEY;
+  let placeId = req.params.placeId;
+
+  let url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,place_id,formatted_address,rating,user_ratings_total,geometry&key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec`;
+
+  const response = await fetch(url);
+  response.json().then(async (data) => {
+    res.json(data.result);
+  });
+  
+});
+
 app.get('/shops/deals/:placeId', async (req, res) => {
   let placeId = req.params.placeId;
   const client = new Client(dbConfig)
