@@ -1230,6 +1230,8 @@ iframe {
     padding: 6px 12px;
     white-space: nowrap;
     margin-bottom: 5px;
+    display: inline;
+    margin-right: 10px;
   }
 
   .tag:hover {
@@ -1237,12 +1239,15 @@ iframe {
   }
 
   .pulse-box {
-    float: left;
-    width: 50%;
-    height: 24px;
-    display: flex;
-    justify-content: center;
     align-items: center;
+    display: flex;
+    float: left;
+    height: 24px;
+    justify-content: center;
+    margin-right: 12px;
+    width: 50%;
+    width: 30px;
+    margin-top: -4px;
   }
   
   /* pulse in SVG */
@@ -1262,15 +1267,39 @@ iframe {
     animation-delay: 2s;
   }
   .sticky-btn {
-    position: fixed;
-    bottom: -16px;
-    margin: 0 auto;
     left: 0;
+    margin: 0 auto;
+    position: fixed;
     right: 0;
+    height: 78px;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    bottom: 0px;
+  }
+  .ticket-card {
+    margin-top: 23px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    background: hsla(0, 0%, 100%, .1);
+    border: 1px solid hsla(0, 0%, 100%, .3);
+    bottom: 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, .1);
+    margin-bottom: 50px;
+    border-radius: 14px;
+  }
+  .ticket-c {
+    display: inline-flex;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    margin-top: 0px;
   }
   .ticket3 {
     position: relative;
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
     width: 300px;
     margin: 12px;
@@ -1420,6 +1449,10 @@ iframe {
     width: 90% !important;
     bottom: 14px;
     padding: 12px !important;
+    font-family: 'Montserrat';
+    font-weight: 600;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
   }
 
   #webcrumbs {

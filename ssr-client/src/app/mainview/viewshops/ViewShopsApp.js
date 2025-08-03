@@ -76,9 +76,9 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	    <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
 	      
 	      {/* Top Section - Map */}
-	      <div className="w-full md:w-1/2" style={{marginTop: '36px'}}>
+	      <div className="w-full md:w-1/2" style={{marginTop: '2px'}}>
         <span class="store-title">{product && product.name}</span>
-	        <div style={{marginTop: '12px'}} className="bg-white shadow-lg rounded-xl overflow-hidden h-[400px] md:h-[500px]">
+	        <div style={{marginTop: '12px', height: '200px'}} className="bg-white shadow-lg rounded-xl overflow-hidden h-[400px] md:h-[500px]">
 	          <iframe 
 	            src={`https://www.google.com/maps?key=AIzaSyA38gnkeYsgyTgs4vAXt2r10Vlgg1R2-ec&q=${product && product.geometry.location.lat},${product && product.geometry.location.lng}&z=15&output=embed`}
 	            className="w-full h-full border-0"
@@ -93,34 +93,18 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	      
 	      {/* Bottom Section - Tabs */}
 	      <div className="w-full md:w-1/2">
-	        <div className="bg-white shadow-lg rounded-xl overflow-hidden">
+	        <div className="">
 	          {/* Tabs Navigation */}
 	          <div className="flex border-b">
-	            <button id="btnWhatsTheRush" className="px-4 py-3 border-b-2 border-[#f81134] text-[#f81134] font-medium flex-1" style={{width: '100%'}} onClick={()=>{document.getElementById('btnWhatsTheRush').classList.remove('border-transparent');document.getElementById('btnWhatsTheRush').classList.add('border-[#f81134]');document.getElementById('btnViralDeals').classList.add('border-transparent');setShowViralDeals(false);setShowWhatsTheRush(true)}}>
-	              What's the rush about
-	            </button>
-	            {viralDeals.length > 0 && <button id="btnViralDeals"  onClick={()=>{document.getElementById('btnViralDeals').classList.remove('border-transparent');document.getElementById('btnViralDeals').classList.add('border-[#f81134]');document.getElementById('btnWhatsTheRush').classList.add('border-transparent');document.getElementById('btnWhatsTheRush').classList.remove('border-[#f81134]');setShowViralDeals(true);setShowWhatsTheRush(false)}} className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors" style={{width: '100%'}}>
-              <div class="pulse-container">
-                  <div class="pulse-box">
-                    <div class="pulse-css"><svg style={{marginLeft: '10px', marginTop: '4px'}} fill="#fff" width="24px" height="24px" version="1.1" id="Capa_1" viewBox="0 0 30 30">
-                <g>
-                  <path d="M11.001,30l2.707-16.334H5L11.458,0l9.25,0.123L16.667,8H25L11.001,30z"/>
-                </g>
-                </svg></div>
-                  </div>
-              </div>
-              Viral Deals
-              
-	            </button>}
 	            <button style={{display: 'none',width: '100%'}} className="px-4 py-3 border-b-2 border-transparent hover:text-gray-700 flex-1 transition-colors">
 	              Shop Now
 	            </button>
 	          </div>
 	          
 	          {/* Tab Content - What's the rush about */}
-	          {showWhatsTheRush && <div className="p-5">
-	            <h2 className="text-xl font-bold mb-4">What's the rush about?</h2>
-              <p className="text-gray-700 mb-4" style={{maxWidth: '90%', overflow: 'auto'}}>
+	          {showWhatsTheRush && <div className="">
+	            <h2 className="text-xl font-bold mb-4" style={{marginBottom: '-8px'}}>What's the rush about?</h2>
+              <p className="text-gray-700 mb-4" style={{maxWidth: '100%', display: 'inline-block',overflowX: 'scroll', height: '33px', paddingTop: '5px'}}>
                 {
                   reviews.map((review) => {
                     return (
@@ -131,41 +115,29 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
                 }
               </p>
 
-	            
-	            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
-	                <div className="flex items-center mb-2">
-	                  <span className="material-symbols-outlined text-[#f81134] mr-2">local_offer</span>
-	                  <h3 className="font-medium">Limited Time Offers</h3>
-	                </div>
-	                <p className="text-sm text-gray-600">Exclusive deals that expire quickly!</p>
-	              </div>
-	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
-	                <div className="flex items-center mb-2">
-	                  <span className="material-symbols-outlined text-[#f81134] mr-2">verified</span>
-	                  <h3 className="font-medium">Quality Guaranteed</h3>
-	                </div>
-	                <p className="text-sm text-gray-600">All products verified by our experts</p>
-	              </div>
-	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
-	                <div className="flex items-center mb-2">
-	                  <span className="material-symbols-outlined text-[#f81134] mr-2">payments</span>
-	                  <h3 className="font-medium">Cashback Rewards</h3>
-	                </div>
-	                <p className="text-sm text-gray-600">Earn while you shop!</p>
-	              </div>
-	              <div className="bg-gray-50 p-4 rounded-lg hover:shadow-md transition-all">
-	                <div className="flex items-center mb-2">
-	                  <span className="material-symbols-outlined text-[#f81134] mr-2">redeem</span>
-	                  <h3 className="font-medium">Referral Program</h3>
-	                </div>
-	                <p className="text-sm text-gray-600">Share and earn more rewards</p>
-	              </div>
-	            </div>
 	            {/* Next: "Add testimonials section with customer reviews" */}
 	          </div>}
-            {showViralDeals && <div className="p-5" style={{padding: '12px'}}>
-              <p className="text-gray-700 mb-4" >
+
+            {viralDeals.length > 0 && 
+            
+            
+            <div>
+              
+              <div class="pulse-container">
+                  <div class="pulse-box">
+                    <div class="pulse-css"><svg style={{marginLeft: '3px', marginTop: '0px'}} fill="#fff" width="24px" height="24px" version="1.1" id="Capa_1" viewBox="0 0 30 30">
+                <g>
+                  <path d="M11.001,30l2.707-16.334H5L11.458,0l9.25,0.123L16.667,8H25L11.001,30z"/>
+                </g>
+                </svg></div>
+                  </div>
+              </div>
+              <h2 className="text-xl font-bold mb-4" style={{marginBottom: '-8px',marginTop: '8px'}}>Viral Deals for you</h2>
+              
+	            </div>}
+
+            {<div className="p-5 ticket-card" style={{padding: '12px',marginBottom: '50px'}}>
+              <p className="text-gray-700 mb-4 ticket-c" >
                 {
                   viralDeals.map((deal) => {
                     return (
@@ -188,17 +160,8 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	        </div>
 	      </div>
 	    </div>
-      {viralDeals.length > 0 && <div class="w-full md:w-1/2 p-8 sticky-btn">
-                 <div class="flex flex-wrap ml-auto md:w-56 -m-2">
-                    <div class="w-full p-2">            <button onClick={()=>{window.location.href=window.shopOnlineUrl;}} class="btn-shop-online py-4 px-6 w-full font-medium rounded-xl shadow-6xl focus:ring focus:ring-gray-300 bg-white hover:bg-gray-100 transition ease-in-out duration-200" style={{background: '#f81134', color: '#fff'}} type="button" onclick="window.location.href='/app/kidsaurajpnagar/'">Shop Online</button>          </div>
-                    <div class="w-full p-2">
-                       
-                    </div>
-                 </div>
-              </div>}
+      
 	  </main>
-	
-	  
 	</div> 
         </div>
   )
@@ -297,6 +260,14 @@ const ProductList = ({products, storeConfig}) => {
         
       </div>
       <StoreDetail showView={showDetailView} product={productToShow} slideRight={slideRight} onBackClick={onBackClick} reviews={reviews} viralDeals={viralDeals} />
+      {viralDeals.length > 0 && <div class="w-full md:w-1/2 p-8 sticky-btn">
+                 <div class="flex flex-wrap ml-auto md:w-56 -m-2">
+                    <div class="w-full p-2">            <button onClick={()=>{window.location.href=window.shopOnlineUrl;}} class="btn-shop-online py-4 px-6 w-full font-medium rounded-xl shadow-6xl focus:ring focus:ring-gray-300 bg-white hover:bg-gray-100 transition ease-in-out duration-200" style={{background: '#f81134', color: '#fff',fontSize: '1rem'}} type="button" onclick="window.location.href='/app/kidsaurajpnagar/'">Shop Online</button>          </div>
+                    <div class="w-full p-2">
+                       
+                    </div>
+                 </div>
+              </div>}
       </>
     );
   };
