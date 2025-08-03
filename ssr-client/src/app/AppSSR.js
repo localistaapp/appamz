@@ -25,7 +25,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=[
                 <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet"></link>
                 <meta property="og:title" content="Special offer on Quikrush 🎉"/>
                 <meta property="og:type" content="website"/>
-                <meta property="og:image" content="https://quikrush.com/assets/images/main.png"/>
+                <meta property="og:image" content="https://quikrush.com/assets/images/deal.png"/>
                 <title>{`${appName} Store`}</title>
                 
                 {

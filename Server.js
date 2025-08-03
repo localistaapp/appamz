@@ -198,6 +198,27 @@ app.get("/app/:store", (req, res) => {
   );
 });
 
+app.get("/app/:store/:id", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName={'Snuggly'} bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
 app.get("/dashboard/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 

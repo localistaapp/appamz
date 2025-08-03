@@ -22,6 +22,8 @@ const MainView = ({storeConfig}) => {
             storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
             if (window && window?.location.href.indexOf('?') >= 0) {
                 view = window?.location.href.substring(window?.location.href.indexOf('?view=')+6, window.location.href.length);
+            } else if (window && window?.location.href.indexOf('/app/shop/id=') >= 0) {
+                view = 'shop-detail';
             } else if (window && window?.location.href.indexOf('/app/shop') >= 0) {
                 view = 'shop-stores';
             } else {
@@ -42,6 +44,11 @@ const MainView = ({storeConfig}) => {
         import("./viewshops/ViewShopsApp.js")
     );
 
+    const ViewShopDetailComponent = lazy(() =>
+        //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
+        import("./viewshops/ViewShopDetail.js")
+    );
+
     const showMessage = (msg) => {
         setMessage(msg);
     };
@@ -55,6 +62,9 @@ const MainView = ({storeConfig}) => {
             {view == 'default' &&  <Suspense fallback={<></>}>
                     <ViewProductsComponent storeConfig={storeConfigVal} />
                 </Suspense>}
+            {view == 'shop-detail' &&  <Suspense fallback={<></>}>
+                <ViewShopDetailComponent storeConfig={storeConfigVal} />
+            </Suspense>}
             {view == 'shop-stores' &&  <Suspense fallback={<></>}>
                 <ViewShopsComponent storeConfig={storeConfigVal} />
             </Suspense>}

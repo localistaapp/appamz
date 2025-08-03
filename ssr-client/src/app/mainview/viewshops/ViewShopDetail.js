@@ -44,7 +44,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
     let shareLink = '';
     if (product != null && reviews.length > 0) {
 
-      shareLink = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/id='+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
+      shareLink = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
 
 
     } else {
@@ -57,7 +57,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
     let shareText = '';
     if (product != null && reviews.length > 0) {
 
-      shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+      shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/"+product['place_id']+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
 
 
     } else {
@@ -68,7 +68,7 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
         await navigator.share({
           title: 'Special offer on Quikrush 🎉',
           text: shareText,
-          url: 'https://www.quikrush.com/app/shop/id='+product['place_id']
+          url: 'https://www.quikrush.com/app/shop/'+product['place_id']
         });
         console.log('Shared successfully');
       } catch (err) {
@@ -443,7 +443,7 @@ const LoadingShimmer = () => <div className="loading-screen"><div className="shi
   
 
 
-const ViewShopProductsApp = ({url,storeConfig}) => {
+const ViewShopDetail = ({url,storeConfig}) => {
 
     const [message, setMessage] = useState("");
     const [products, setProducts] = useState([]);
@@ -621,4 +621,4 @@ const ViewShopProductsApp = ({url,storeConfig}) => {
     );
 }
 
-export default ViewShopProductsApp;
+export default ViewShopDetail;
