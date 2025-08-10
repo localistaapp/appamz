@@ -52,6 +52,7 @@ const Header = (props) => {
             if (response.data != null && response.data.cashBackValue > 0) {
                 setCashbackExists(true);
                 setCashbackValue(response.data.cashBackValue);
+                localStorage.setItem('cashback-value', response.data.cashBackValue);
             }
         })
     }

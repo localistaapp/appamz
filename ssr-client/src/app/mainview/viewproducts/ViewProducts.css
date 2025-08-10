@@ -807,7 +807,7 @@ margin-right:20px;
   position: absolute;
   bottom: 64px;
   color: #454545;
-  font-size: 24px;
+  font-size: 22px;
   left: 34px;
   font-family: Quicksand;
   font-weight: 500;
@@ -1787,6 +1787,19 @@ iframe {
   #webcrumbs .focus\:outline-none:focus {
     outline: 2px solid transparent;
     outline-offset: 2px;
+  }
+  .cashback-applied {
+    position: absolute;
+    bottom: 126px;
+    background: #4caf50;
+    padding: 7px;
+    color: white;
+    border-radius: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .txt-strike {
+    text-decoration: line-through;
   }
   @media (min-width: 768px) {
     #webcrumbs .md\:h-\[500px\] {

@@ -39,7 +39,13 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         let total = 0;
         let shippingCharges = 750;
         Object.keys(basketData).forEach((key)=>{total += basketData[key].price});
-        setTotalPrice(total + shippingCharges);
+
+        let cashback = 0;
+        if (parseInt(localStorage.getItem('cashback-value'),10) > 0) {
+          cashback = parseInt(localStorage.getItem('cashback-value'),10);
+        }
+        cashback = parseInt(localStorage.getItem('cashback-value'),10)
+        setTotalPrice(total + shippingCharges - cashback);
         console.log('--basketData--', basketData);
     }
     var basketStr = JSON.stringify(basketData);
@@ -106,6 +112,7 @@ const ProductList = ({products, storeConfig}) => {
     const [trackingLink, setTrackingLink] = useState('');
     const [payStatus, setPayStatus] = useState('');
     const [orderCompleted, setOrderCompleted] = useState(false);
+    const [cashbackValue, setCashbackValue] = useState(0);
 
     if (isClient) {
       window.weekdays = new Array(7);
@@ -165,6 +172,11 @@ const ProductList = ({products, storeConfig}) => {
             setTrackingLink(response.data.tracking_link);
             setPayStatus(response.data.status);
         })
+
+
+        if(localStorage.getItem('cashback-value') != null && parseInt(localStorage.getItem('cashback-value'),10) > 0) {
+          setCashbackValue(parseInt(localStorage.getItem('cashback-value'),10));
+        }
       
     }, []);
 
@@ -280,6 +292,7 @@ const ProductList = ({products, storeConfig}) => {
       const next = () => {
         console.log('--currStep--', currStep);
       if(currStep == 1) {
+        setCashbackValue(0);
         document.getElementById('step1').classList.add('done');
         document.getElementById('step1Circle').classList.remove('active');
         document.getElementById('step2Circle').classList.add('active');
@@ -518,8 +531,10 @@ const ProductList = ({products, storeConfig}) => {
 
 
                 }
+                {cashbackValue > 0 && <span className="cashback-applied">🎉 Cashback of ₹{cashbackValue} applied!</span>}
                 <div class="summary-total">
-                    Total:  <span class="rupee">₹</span><span id="price">{totalPrice}</span>
+                    Total:  <span class="rupee">₹</span><span class={cashbackValue > 0 ? 'txt-strike' : ''} id="price">{totalPrice + cashbackValue}</span>
+                    {cashbackValue > 0 && <span id="price" style={{marginLeft: '8px'}}>{totalPrice}</span> }
                     <div style={{fontSize: '13px', marginTop: '5px', marginLeft: '2px'}}>(incl GST + delivery apprx.)</div>
                 </div>
                 <div id="checkoutNextBtn" class="card-btn checkout-next" style={{bottom: '120px', marginTop: 'auto'}} onClick={next}>
