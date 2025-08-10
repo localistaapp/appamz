@@ -730,6 +730,30 @@ app.post('/store/web-order/update', function(req, res) {
  })
 });
 
+app.get('/clear', function(req, res) {
+  
+  const client = new Client(dbConfig)
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+    } else {
+      client.query("DELETE from \"public\".\"am_store_user\" where store_id = 13",
+          [], (err, response) => {
+                if (err) {
+                  console.log(err)
+                    res.send("error");
+                    client.end();
+                } else {
+                    //res.send(response);
+                    res.send('success');
+                    client.end();
+                }
+
+              });
+  }
+ })
+});
+
 app.post('/store/user/update/', function(req, res) {
   const storeId = req.body.storeId;
   const nanoId = req.body.nanoId;
