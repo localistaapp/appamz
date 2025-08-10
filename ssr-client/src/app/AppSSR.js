@@ -1,7 +1,7 @@
 import AppDashboard from "./AppDashboard";
 import PropTypes from 'prop-types';
 
-const AppSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=[], locationHref='' }) => {
+const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS=[], locationHref='' }) => {
     console.log('Rendering Store App component on server-side');
     console.log('--bootstrapCSS--', bootStrapCSS);
     let cssPaths = [];
@@ -26,7 +26,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'Amuzely', bootStrapCSS=[
                 <meta property="og:title" content="Special offer on Quikrush 🎉"/>
                 <meta property="og:type" content="website"/>
                 <meta property="og:image" content="https://quikrush.com/assets/images/deals.png"/>
-                <title>{`${appName} Store`}</title>
+                <title>{`quickrush | hyperlocal deals marketplace`}</title>
                 
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})

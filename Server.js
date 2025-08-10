@@ -140,7 +140,7 @@ app.get("/app", (req, res) => {
 
   let didError = false;
   const stream = ReactDOMServer.renderToPipeableStream(
-    <AppSSR bootStrapCSS={bootstrapCSS} appName="Snugglyf" />,
+    <AppSSR bootStrapCSS={bootstrapCSS} appName="" />,
     {
       bootstrapScripts,
       onShellReady: () => {
@@ -181,8 +181,9 @@ app.get("/app/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
   let didError = false;
+  
   const stream = ReactDOMServer.renderToPipeableStream(
-    <AppSSR pathName={pathName} appName={'Snuggly'} bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
     {
       bootstrapScripts,
       onShellReady: () => {
@@ -332,6 +333,38 @@ app.get("/store/get-all/:storeId", (req, res) => {
                 client.end();
             } else {
               res.send(response.rows);
+              client.end();
+            }
+      });
+  }});
+});
+
+app.get("/user/cashback/:nanoId/:webPathName", (req, res) => {
+  const client = new Client(dbConfig);
+  let nanoId = req.params.nanoId;
+  let webPathName = req.params.webPathName;
+  console.log('---nanoId--', nanoId);
+  console.log('---webPathName--', webPathName);
+  let cashBackValue = 0;
+
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select v.collected_over, u.cashback_pc, v.max_cashback_value from am_store_viral_deals v, am_store_user u where v.store_id=u.store_id and v.deal_type = 'viral_cashback' and u.nanoid = $1 and v.app_url LIKE $2",
+      [nanoId, webPathName], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              if (response.rows && response.rows.length > 0) {
+                cashBackValue = response.rows[0]['cashback_pc'];
+                cashBackValue = cashBackValue * response.rows[0]['max_cashback_value']/response.rows[0]['collected_over'];
+              } 
+              res.send('{"cashBackValue": '+cashBackValue+'}');
               client.end();
             }
       });
@@ -617,7 +650,7 @@ app.get('/shops/deals/:placeId', async (req, res) => {
         res.send('{}');
         client.end();
       } else {
-          client.query("Select title, max_cashback_value, app_url, accepting_online_orders from am_store_viral_deals v, am_store s where v.store_id=s.id and v.place_id = $1 order by expiry desc",
+          client.query("Select s.id, title, max_cashback_value, app_url, accepting_online_orders from am_store_viral_deals v, am_store s where v.store_id=s.id and v.place_id = $1 order by expiry desc",
                       [placeId], (err, response) => {
                             if (err) {
                               console.log(err);
@@ -629,7 +662,7 @@ app.get('/shops/deals/:placeId', async (req, res) => {
                                   res.send("error");
                                   client.end();
                                } else {
-                                  res.send({appUrl: response.rows[0].app_url, viralDeals: response.rows});
+                                  res.send({appUrl: response.rows[0].app_url, viralDeals: response.rows, storeId:response.rows[0].id });
                                   client.end();
                                }
                             }
@@ -693,6 +726,125 @@ app.post('/store/web-order/update', function(req, res) {
                 }
 
               });
+  }
+ })
+});
+
+app.post('/store/user/update/', function(req, res) {
+  const storeId = req.body.storeId;
+  const nanoId = req.body.nanoId;
+  let cashbackPc = 0.05;
+  const client = new Client(dbConfig)
+
+    client.connect(err => {
+        if (err) {
+          console.error('error connecting', err.stack)
+          res.send('{}');
+          client.end();
+        } else {
+            client.query("Select cashback_pc from am_store_user where store_id = $1 and nanoid = $2",
+                        [storeId, nanoId], (err, response) => {
+                              if (err) {
+                                console.log(err);
+                                res.send("error");
+                                client.end();
+                              } else {
+                                 //res.send(response.rows);
+                                 if (response.rows.length == 0) {
+                                    res.send("error");
+                                    client.end();
+                                 } else {
+                                  cashbackPc = response.rows[0].cashback_pc;
+                                    console.log('--curr cashback_pc--', cashbackPc);
+                                    if (cashbackPc == 0.05) {
+                                      cashbackPc = 0.2;
+                                    } else {
+                                      if (cashbackPc < 1) {
+                                        cashbackPc = cashbackPc + 0.2;
+                                      }
+                                    }
+                                    console.log('--to cashback_pc--', cashbackPc);
+
+                                    if (cashbackPc <= 1) {
+                                      client.query("UPDATE \"public\".\"am_store_user\" SET cashback_pc = $1 where nanoid = $2 and store_id = $3",
+                                        [cashbackPc, nanoId, storeId], (err1, response1) => {
+                                              if (err1) {
+                                                console.log(err1)
+                                                res.send("error");
+                                                  client.end();
+                                              } else {
+                                                  //res.send(response);
+                                                  res.send('success');
+                                                  client.end();
+                                              }
+
+                                            });
+                                    } else {
+                                      res.send(response.rows);
+                                      client.end();
+                                    }
+                                 }
+                              }
+                            });
+         }
+    });
+});
+
+app.post('/store/user/create', function(req, res) {
+  const storeId = req.body.storeId;
+  const nanoId = req.body.nanoId;
+  const cashbackPc = req.body.cashbackPc;
+  const storeUrl = req.body.storeUrl;
+  
+  const client = new Client(dbConfig)
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+    } else {
+      const query = `
+      INSERT INTO am_store_user (store_id, nanoid, cashback_pc)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (store_id, nanoid) 
+      DO UPDATE SET
+      store_id = EXCLUDED.store_id,
+      cashback_pc = EXCLUDED.cashback_pc
+      RETURNING *;
+    `;
+
+    const values = [storeId, nanoId, cashbackPc];
+
+      client.query(query, values, (err, response) => {
+        if (err) {
+          console.log(err)
+        } else {
+            //res.send(response);
+        }
+      });
+
+
+      const query1 = `
+      INSERT INTO am_store_user_follows (store_id, nanoid, store_url)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (store_id, nanoid) 
+      DO UPDATE SET
+      store_id = EXCLUDED.store_id,
+      store_url = EXCLUDED.store_url
+      RETURNING *;
+    `;
+
+    const values1 = [storeId, nanoId, storeUrl];
+
+      client.query(query1, values1, (err, response) => {
+        if (err) {
+          console.log(err)
+            res.send("error");
+            client.end();
+        } else {
+            //res.send(response);
+            res.send('success');
+            client.end();
+        }
+      });
   }
  })
 });

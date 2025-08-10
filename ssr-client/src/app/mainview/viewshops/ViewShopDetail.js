@@ -1,5 +1,6 @@
 import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 
 const GeolocationComponent = ({searchPlaces}) => {
   useEffect(() => {
@@ -39,12 +40,13 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
   console.log('--reviews--', reviews);
   const [showWhatsTheRush, setShowWhatsTheRush] = useState(true);
   const [showViralDeals, setShowViralDeals] = useState(false);
+  const [shareLoading, setShareLoading] = useState(false);
 
   const getShareLink = (product) => {
     let shareLink = '';
     if (product != null && reviews.length > 0) {
 
-      shareLink = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/'+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
+      shareLink = "https://wa.me/?text="+encodeURIComponent('Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting '+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for "+reviews.join('\n\n'))+".\n\nVisit them on Quikrush now!\n🔗 - "+encodeURIComponent('https://www.quikrush.com/app/store/id='+product['place_id']+"\n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*");
 
 
     } else {
@@ -55,25 +57,40 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 
   const triggerShare = async (product) => {
     let shareText = '';
-    if (product != null && reviews.length > 0) {
-
-      shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
-
-
-    } else {
-      shareText = '';
-    }
+    
     if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Special offer on Quikrush 🎉',
-          text: shareText,
-          url: 'https://www.quikrush.com/app/shop/id='+product['place_id']
-        });
-        console.log('Shared successfully');
-      } catch (err) {
-        console.error('Share failed:', err);
+
+      let nanoId = localStorage.getItem('nanoId');
+
+      if (nanoId == null) {
+        nanoId = nanoid();
+        localStorage.setItem('nanoId', nanoId);
       }
+      let cashbackPc = 0.05; //0.1 if from=store 
+      setShareLoading(true);
+      axios.post(`/store/user/create/`, {nanoId: nanoId, storeId: window.storeId, cashbackPc: cashbackPc, storeUrl: window.shopOnlineUrl}).then(async (response) => {
+        console.log(response.status);
+        try {
+          if (product != null && reviews.length > 0) {
+
+            shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+      
+      
+          } else {
+            shareText = '';
+          }
+          await navigator.share({
+            title: 'Special offer on Quikrush 🎉',
+            text: shareText,
+            url: 'https://www.quikrush.com/app/shop/id='+product['place_id']+'&u='+nanoId
+          });
+          setShareLoading(false);
+          console.log('Shared successfully');
+        } catch (err) {
+          console.error('Share failed:', err);
+        }
+        setTimeout(function(){setShareLoading(false);}.bind(this),2000);
+      });
     } else {
       // fallback: show WhatsApp/Twitter share links
       alert('Sharing not supported on this browser.');
@@ -96,7 +113,8 @@ const StoreDetail = ({showView, product, slideRight, onBackClick, reviews, viral
 	    </div>
 	    <div>
 	      <a onClick={()=>{triggerShare(product, reviews)}} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
-	        <i className="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px'}}></i>
+        {!shareLoading && <i className="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px'}}></i>}
+          {shareLoading && <img src="../../assets/images/6.gif" />}
 	      </a>
 	    </div>
 	  </header>
@@ -298,10 +316,26 @@ const ProductList = ({products, storeConfig}) => {
             console.log('--deals data-----', response.data);
             if(response.data != null && response.data != 'error') {
               let dealsArr = response.data.viralDeals;
+              window.storeId = response.data.storeId;
               window.shopOnlineUrl = response.data.appUrl;
               setViralDeals(dealsArr);
+              if(window.userShare == 1) {
+                let userId = window.location.pathname.split('=')[2];
+                if (localStorage.getItem('cashback-updated') == null || (localStorage.getItem('cashback-updated') != null && localStorage.getItem('cashback-updated').indexOf(userId) == -1)) {
+                  updateUserCashback(userId);
+                  window.userShare = window.userShare+1;
+                }
+              }
             }
         })
+    }
+
+    const updateUserCashback = (userId) => {
+      axios.post(`/store/user/update/`, {nanoId: userId, storeId: window.storeId, storeUrl: window.shopOnlineUrl}).then(async (response) => {
+        let curList = localStorage.getItem('cashback-updated') || '';
+        localStorage.setItem('cashback-updated',curList+','+userId);
+        console.log(response);
+      });
     }
 
     useEffect(()=> {
@@ -310,9 +344,15 @@ const ProductList = ({products, storeConfig}) => {
       setShowDetailView(true);
 
       let placeId = window.location.pathname.split('=')[1];
+      window.userShare = 0;
+
+      if(placeId.indexOf('&u') != -1 && window.userShare == 0) {
+        placeId = placeId.substring(0,placeId.indexOf('&u'));
+        window.userShare = 1;
+      }
       fetchStoreReviews(placeId);
       fetchStoreDetail(placeId);
-      fetchViralDeals(placeId);
+      fetchViralDeals(placeId, window.userShare);
       setSlideRight(true);
     }, []);
 

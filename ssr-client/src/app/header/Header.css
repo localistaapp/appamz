@@ -38,6 +38,23 @@
     top: 22px;
     cursor: pointer;
 }
+span.announcement {
+    background: #4CAF50;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    font-size: 1rem;
+    padding: 12px;
+    font-weight: 500;
+}
+.top-margin {
+    margin-top: 60px;
+}
+.top-margin-sm {
+    top: 80px;
+}
 @media screen and (min-width:768px) {
     .menu-bar {
         display: block;
