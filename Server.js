@@ -23,6 +23,7 @@ let dbConfig = {
 }
 
 const app = express();
+const subApp = express();
 const port = 3009;
 
 const openai = new OpenAI({
@@ -66,10 +67,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSS);
 ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 
 
-app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.quikrush.com', express.static(path.join(__dirname, '/app/kidsaurajpnagar'))))
-.use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
+
 
 //create vhost to new ssr-client route
 
@@ -177,7 +175,7 @@ app.get("/shop/:a", (req, res) => {
   );
 });
 
-app.get("/app/:store", (req, res) => {
+subApp.get("/app/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
   let didError = false;
@@ -198,6 +196,11 @@ app.get("/app/:store", (req, res) => {
     }
   );
 });
+
+app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('kidsaurajpnagar.quikrush.com', subApp))
+.use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 app.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
