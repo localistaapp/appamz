@@ -17,8 +17,8 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
 
     const getPushScript = (pathName) => {
         switch (pathName) {
-            case 'swirlyojpnagar': return <script src="https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js?r=3566"></script>;
-            case 'kidsaurajpnagar': return <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=23535"></script>;
+            case 'swirlyojpnagar': return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js",n.parentNode.insertBefore(a,n)}(document,"script");');
+            case 'kidsaurajpnagar': return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js",n.parentNode.insertBefore(a,n)}(document,"script");');
         }
         return <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"></script>;
     }
