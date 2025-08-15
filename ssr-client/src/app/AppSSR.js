@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS=[], locationHref='' }) => {
     console.log('Rendering Store App component on server-side');
     console.log('--bootstrapCSS--', bootStrapCSS);
+    console.log('--spathName--', pathName);
     let cssPaths = [];
     bootStrapCSS.map(cssPath => {
         cssPaths.push('../dashboard/'+cssPath);
