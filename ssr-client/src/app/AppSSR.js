@@ -23,7 +23,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
             case 'kidsaurajpnagar':if (typeof window !== 'undefined'){
                  return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=1696",n.parentNode.insertBefore(a,n)}(document,"script");');
             }
-            default: return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=1696",n.parentNode.insertBefore(a,n)}(document,"script");');
+            default: if (typeof window !== 'undefined'){return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=1696",n.parentNode.insertBefore(a,n)}(document,"script");')};
         }
         
     }
