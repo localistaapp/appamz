@@ -953,6 +953,11 @@ subApp.use(
   express.static(path.join(__dirname, 'assets'))
 );
 
+subApp.use(
+  "/",
+  express.static(path.join(__dirname, 'app/js/kidsaurajpnagar/'))
+);
+
 subApp.get(
   "/store/"
   , function(req, res) {
