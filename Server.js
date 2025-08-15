@@ -203,7 +203,7 @@ app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/
 .use(vhost('kidsaurajpnagar.quikrush.com', subApp))
 .use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
-subApp.get("/app/kidsaurajpnagar/sw.js", (req, res) => {
+subApp.get("/sw.js", (req, res) => {
   res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
 });
 
