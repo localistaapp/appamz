@@ -72,7 +72,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 // 
 //create vhost to new ssr-client route
 
-/*subApp.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -94,16 +94,16 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 });*/
 
 // allow cross-origin requests
-subApp.use(function(req, res, next) {
+app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", 
     "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
-subApp.use(express.json());
+app.use(express.json());
 
-subApp.get('/auth', function (req, res) {
+app.get('/auth', function (req, res) {
   // Your application logic to authenticate the user
   // For example, you can check if the user is logged in or has the necessary permissions
   // If the user is not authenticated, you can return an error response
@@ -113,7 +113,7 @@ subApp.get('/auth', function (req, res) {
 });
 
 
-subApp.get("/dashboard", (req, res) => {
+app.get("/dashboard", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -134,7 +134,7 @@ subApp.get("/dashboard", (req, res) => {
   );
 });
 
-subApp.get("/app", (req, res) => {
+app.get("/app", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -155,7 +155,7 @@ subApp.get("/app", (req, res) => {
   );
 });
 
-subApp.get("/shop/:a", (req, res) => {
+app.get("/shop/:a", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -242,7 +242,7 @@ swirlyoSubApp.get("/sw.js", (req, res) => {
 
 app.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
 
-subApp.get("/app/:store/:id", (req, res) => {
+app.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
   let didError = false;
@@ -263,7 +263,7 @@ subApp.get("/app/:store/:id", (req, res) => {
   );
 });
 
-subApp.get("/dashboard/:store", (req, res) => {
+app.get("/dashboard/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -284,7 +284,7 @@ subApp.get("/dashboard/:store", (req, res) => {
   );
 });
 
-subApp.get("/stats/:email", (req, res) => {
+app.get("/stats/:email", (req, res) => {
   const client = new Client(dbConfig);
   let email = req.params.email;
   let supportMobile = '';
@@ -328,7 +328,7 @@ subApp.get("/stats/:email", (req, res) => {
   }});
 });
 
-subApp.get("/products/:storeId", (req, res) => {
+app.get("/products/:storeId", (req, res) => {
   const client = new Client(dbConfig);
   let storeId = req.params.storeId;
   console.log('---products api storeId--', storeId);
@@ -358,7 +358,7 @@ subApp.get("/products/:storeId", (req, res) => {
   }});
 });
 
-subApp.get("/store/get-all/:storeId", (req, res) => {
+app.get("/store/get-all/:storeId", (req, res) => {
   const client = new Client(dbConfig);
   let storeId = req.params.storeId;
   console.log('---store api storeId--', storeId);
@@ -382,7 +382,7 @@ subApp.get("/store/get-all/:storeId", (req, res) => {
   }});
 });
 
-subApp.get("/user/cashback/:nanoId/:webPathName", (req, res) => {
+app.get("/user/cashback/:nanoId/:webPathName", (req, res) => {
   const client = new Client(dbConfig);
   let nanoId = req.params.nanoId;
   let webPathName = req.params.webPathName;
@@ -414,7 +414,7 @@ subApp.get("/user/cashback/:nanoId/:webPathName", (req, res) => {
   }});
 });
 
-subApp.get("/products/:storeId/:type", (req, res) => {
+app.get("/products/:storeId/:type", (req, res) => {
   const client = new Client(dbConfig);
   let type = req.params.type;
   let storeId = req.params.storeId;
@@ -445,7 +445,7 @@ subApp.get("/products/:storeId/:type", (req, res) => {
   }});
 });
 
-subApp.post('/createProduct', function(req, res) {
+app.post('/createProduct', function(req, res) {
   //response.send(pages.startYourOwn);
 
   console.log('--req.body--', req.body);
@@ -491,8 +491,8 @@ subApp.post('/createProduct', function(req, res) {
  });
  });
 
- subApp.use(express.urlencoded({ extended: true }));
- subApp.post('/store/web-order', function(req, res) {
+ app.use(express.urlencoded({ extended: true }));
+ app.post('/store/web-order', function(req, res) {
   
   const price = req.body.price;
   const mobile = req.body.mobile;
@@ -564,7 +564,7 @@ subApp.post('/createProduct', function(req, res) {
         }
 );
 
-subApp.get("/store/web-order/:onlineOrderId", function(req, res) {
+app.get("/store/web-order/:onlineOrderId", function(req, res) {
   let onlineOrderId = req.params.onlineOrderId;
   const client = new Client(dbConfig)
 
@@ -602,7 +602,7 @@ subApp.get("/store/web-order/:onlineOrderId", function(req, res) {
     });
 });
 
-subApp.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
+app.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
   const query = encodeURIComponent(req.params.q);
   const cat = encodeURIComponent(req.params.cat);
   let catValue = cat;
@@ -635,7 +635,7 @@ subApp.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
   res.json(data); // Send back to browser
 });
 
-subApp.get('/shops/place/:placeId', async (req, res) => {
+app.get('/shops/place/:placeId', async (req, res) => {
   const apiKey = process.env.GOOGLE_API_KEY;
   let placeId = req.params.placeId;
 
@@ -670,7 +670,7 @@ subApp.get('/shops/place/:placeId', async (req, res) => {
   
 });
 
-subApp.get('/shops/place-detail/:placeId', async (req, res) => {
+app.get('/shops/place-detail/:placeId', async (req, res) => {
   const apiKey = process.env.GOOGLE_API_KEY;
   let placeId = req.params.placeId;
 
@@ -683,7 +683,7 @@ subApp.get('/shops/place-detail/:placeId', async (req, res) => {
   
 });
 
-subApp.get('/shops/deals/:placeId', async (req, res) => {
+app.get('/shops/deals/:placeId', async (req, res) => {
   let placeId = req.params.placeId;
   const client = new Client(dbConfig)
 
@@ -714,7 +714,7 @@ subApp.get('/shops/deals/:placeId', async (req, res) => {
       });
 });
 
-subApp.get("/web-orders/:storeId", function(req, res) {
+app.get("/web-orders/:storeId", function(req, res) {
   let storeId = req.params.storeId;
   const client = new Client(dbConfig)
 
@@ -747,7 +747,7 @@ subApp.get("/web-orders/:storeId", function(req, res) {
 
 });
 
-subApp.post('/store/web-order/update', function(req, res) {
+app.post('/store/web-order/update', function(req, res) {
   const trackingLink = req.body.trackingLink;
   const onlineOrderId = req.body.onlineOrderId;
   
@@ -773,7 +773,7 @@ subApp.post('/store/web-order/update', function(req, res) {
  })
 });
 
-subApp.get('/clear', function(req, res) {
+app.get('/clear', function(req, res) {
   
   const client = new Client(dbConfig)
   client.connect(err => {
@@ -797,7 +797,7 @@ subApp.get('/clear', function(req, res) {
  })
 });
 
-subApp.post('/store/user/update/', function(req, res) {
+app.post('/store/user/update/', function(req, res) {
   const storeId = req.body.storeId;
   const nanoId = req.body.nanoId;
   let cashbackPc = 0.05;
@@ -857,7 +857,7 @@ subApp.post('/store/user/update/', function(req, res) {
     });
 });
 
-subApp.post('/store/user/create', function(req, res) {
+app.post('/store/user/create', function(req, res) {
   const storeId = req.body.storeId;
   const nanoId = req.body.nanoId;
   const cashbackPc = req.body.cashbackPc;
@@ -916,7 +916,7 @@ subApp.post('/store/user/create', function(req, res) {
  })
 });
 
-subApp.get("/example", (req, res) => {
+app.get("/example", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
 
   let didError = false;
@@ -937,75 +937,75 @@ subApp.get("/example", (req, res) => {
   );
 });
 
-subApp.use(
+app.use(
   "/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/dashboard/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/app/dashboard/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/store/dashboard/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/store/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/app/*/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/shop/*/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/app/ssr-client/build/static",
   express.static(__dirname + "/ssr-client/build/static")
 );
 
-subApp.use(
+app.use(
   "/shop/ssr-client/build/static",
   express.static(__dirname + "/shop/ssr-client/build/static")
 );
 
 
-subApp.use(
+app.use(
   "/app/",
   express.static(path.join(__dirname, 'app'))
 );
 
-subApp.use(
+app.use(
   "/assets/",
   express.static(path.join(__dirname, 'assets'))
 );
 
-subApp.use(
+app.use(
   "/",
   express.static(path.join(__dirname, 'app/js/kidsaurajpnagar/'))
 );
 
-subApp.get(
+app.get(
   "/store/"
   , function(req, res) {
     res.redirect('/store.html');
   }
 );
 
-subApp.use(
+app.use(
   "/",
   express.static(path.join(__dirname, ''))
 );
