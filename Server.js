@@ -24,7 +24,7 @@ let dbConfig = {
 
 const app = express();
 const subApp = express();
-const swirlyoSubApp = express();
+
 const port = 3009;
 
 const openai = new OpenAI({
@@ -198,6 +198,21 @@ subApp.get("/app/:store", (req, res) => {
   );
 });
 
+
+subApp.get("/sw.js", (req, res) => {
+  res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
+});
+
+subApp.get("/manifest.json", (req, res) => {
+  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
+});
+
+app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('kidsaurajpnagar.quikrush.com', subApp));
+
+const swirlyoSubApp = express();
+
 swirlyoSubApp.get("/app/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
@@ -221,22 +236,11 @@ swirlyoSubApp.get("/app/:store", (req, res) => {
 });
 
 
-app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.quikrush.com', subApp))
-.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
-
-subApp.get("/sw.js", (req, res) => {
-  res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
-});
-
-subApp.get("/manifest.json", (req, res) => {
-  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
-});
-
 swirlyoSubApp.get("/sw.js", (req, res) => {
   res.send('importScripts("https://cdn.pushalert.co/sw-83754.js")');
 });
+
+app.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
 
 subApp.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
