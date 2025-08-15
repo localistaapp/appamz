@@ -200,6 +200,7 @@ subApp.get("/app/:store", (req, res) => {
 
 
 subApp.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
   res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
 });
 
@@ -237,6 +238,7 @@ swirlyoSubApp.get("/app/:store", (req, res) => {
 
 
 swirlyoSubApp.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
   res.send('importScripts("https://cdn.pushalert.co/sw-83754.js");');
 });
 
