@@ -69,7 +69,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 
 
 
-
+// 
 //create vhost to new ssr-client route
 
 /*subApp.get("/", (req, res) => {
@@ -228,6 +228,10 @@ app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/
 
 subApp.get("/sw.js", (req, res) => {
   res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
+});
+
+subApp.get("/manifest.json", (req, res) => {
+  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
 });
 
 swirlyoSubApp.get("/sw.js", (req, res) => {
