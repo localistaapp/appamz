@@ -14,6 +14,14 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
         'swirlyojpnagar': {storeId: '9'},
         'kidsaurajpnagar': {storeId: '13'}
     }
+
+    const getPushScript = (pathName) => {
+        switch (pathName) {
+            case 'swirlyojpnagar': return <script src="https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"></script>;
+            case 'kidsaurajpnagar': return <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"></script>;
+        }
+        return <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"></script>;
+    }
     
     return (
         <html>
@@ -34,7 +42,8 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 }
                 
                 <script type="text/javascript" src="../../assets/scripts/pa.js"></script>
-                <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"></script>
+                {getPushScript(pathName)}
+                
 
             </head>
             <body>

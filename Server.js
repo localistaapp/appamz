@@ -237,7 +237,7 @@ swirlyoSubApp.get("/app/:store", (req, res) => {
 
 
 swirlyoSubApp.get("/sw.js", (req, res) => {
-  res.send('importScripts("https://cdn.pushalert.co/sw-83754.js")');
+  res.send('importScripts("https://cdn.pushalert.co/sw-83754.js");');
 });
 
 app.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
