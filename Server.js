@@ -24,6 +24,7 @@ let dbConfig = {
 
 const app = express();
 const subApp = express();
+const swirlyoSubApp = express();
 const port = 3009;
 
 const openai = new OpenAI({
@@ -197,14 +198,40 @@ subApp.get("/app/:store", (req, res) => {
   );
 });
 
+swirlyoSubApp.get("/app/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('kidsaurajpnagar.quikrush.com', subApp))
-.use(vhost('kidsaurajpnagar.quikrush.com', subApp))
-.use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
+.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
 
 subApp.get("/sw.js", (req, res) => {
   res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
+});
+
+swirlyoSubApp.get("/sw.js", (req, res) => {
+  res.send('importScripts("https://cdn.pushalert.co/sw-83754.js")');
 });
 
 subApp.get("/app/:store/:id", (req, res) => {
