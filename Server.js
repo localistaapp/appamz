@@ -68,7 +68,7 @@ ReadDirectoryContentToArray(`${staticPathRoot}/css`, bootstrapCSSShop);
 
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kidsaurajpnagar'))))
+.use(vhost('kidsaurajpnagar.quikrush.com', express.static(path.join(__dirname, '/app/kidsaurajpnagar'))))
 .use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
 
 //create vhost to new ssr-client route
