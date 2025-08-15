@@ -200,7 +200,12 @@ subApp.get("/app/:store", (req, res) => {
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('kidsaurajpnagar.quikrush.com', subApp))
+.use(vhost('kidsaurajpnagar.quikrush.com', subApp))
 .use(vhost('swirlyojpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/swirlyojpnagar'))));
+
+subApp.get("/app/kidsaurajpnagar/sw.js", (req, res) => {
+  res.send('importScripts("https://cdn.pushalert.co/sw-83753.js")');
+});
 
 subApp.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));

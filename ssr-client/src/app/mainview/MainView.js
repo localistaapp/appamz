@@ -57,8 +57,6 @@ const MainView = ({storeConfig}) => {
         setMessage("");
     };
 
-    console.log('--view--', view);
-
     return (
         <div className="main">
             {view == 'default' &&  <Suspense fallback={<></>}>
