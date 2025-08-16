@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import AppDashboard from "./AppDashboard";
 import PropTypes from 'prop-types';
 
@@ -27,6 +28,10 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
         }
         
     }
+
+    useEffect(() => {
+        (function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));
+    }, []);
     
     return (
         <html>
@@ -45,8 +50,6 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
                 }
-                
-
             </head>
             <body>
                 <div id="root-app">

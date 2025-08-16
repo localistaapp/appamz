@@ -75,7 +75,6 @@ function AppDashboard({storeConfig, locationHref}) {
         if (window.screen.width >= 768) {
             setShowSideBar(true);
         }
-    (function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));
     }, []);
 
     console.log('--my locationHref--', locationHref);
