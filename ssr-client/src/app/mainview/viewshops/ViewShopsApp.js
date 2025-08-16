@@ -281,18 +281,18 @@ const ProductList = ({products, storeConfig}) => {
     useEffect (() => {
       setIsClient(true);
 
-      //ToDo: Temp change
-      if(localStorage.getItem('notif-shown') != null) {
-        localStorage.removeItem('notif-shown');
-      }
-      if(localStorage.getItem('subscribed') != null) {
-        localStorage.removeItem('subscribed');
-      }
-
       axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
         })
+
+        //ToDo: Temp change
+      if(typeof localStorage !== 'undefined' && localStorage.getItem('notif-shown') != null) {
+        localStorage.removeItem('notif-shown');
+      }
+      if(typeof localStorage !== 'undefined' && localStorage.getItem('subscribed') != null) {
+        localStorage.removeItem('subscribed');
+      }
       
     }, []);
 
