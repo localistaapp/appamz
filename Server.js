@@ -205,6 +205,7 @@ subApp.get("/sw.js", (req, res) => {
 });
 
 subApp.get("/manifest.json", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
   res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
 });
 
@@ -240,6 +241,12 @@ swirlyoSubApp.get("/app/:store", (req, res) => {
 swirlyoSubApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
   res.send('importScripts("https://cdn.pushalert.co/sw-83754.js?r=5232");');
+});
+
+swirlyoSubApp.get("/manifest.json", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send('{"name":"swirlyo","short_name":"swirlyo","start_url":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","id":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
+
 });
 
 app.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
