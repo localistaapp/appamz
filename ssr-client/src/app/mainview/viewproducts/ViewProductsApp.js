@@ -41,10 +41,9 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         Object.keys(basketData).forEach((key)=>{total += basketData[key].price});
 
         let cashback = 0;
-        if (parseInt(localStorage.getItem('cashback-value'),10) > 0) {
+        if (localStorage.getItem('cashback-value') != null && parseInt(localStorage.getItem('cashback-value'),10) > 0) {
           cashback = parseInt(localStorage.getItem('cashback-value'),10);
         }
-        cashback = parseInt(localStorage.getItem('cashback-value'),10)
         setTotalPrice(total + shippingCharges - cashback);
         console.log('--basketData--', basketData);
     }
