@@ -108,7 +108,8 @@ const Header = (props) => {
     const callbackOnSuccess = (result) => {
         console.log('cb-', result.subscriber_id); //will output the user's subscriberId
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
-        localStorage.getItem('subscribed', 'true');
+        localStorage.setItem('subscribed', 'true');
+        setShowAddToHome(false);
     }
 
     const showOfferPromptStates = () => {
@@ -120,11 +121,9 @@ const Header = (props) => {
                     showAddToHomeCard();
                     localStorage.setItem('notif-shown', 'true');
                 } else {
-                    addTopCardClass();
                     showFollowCard();
                 }
             } else {
-                addTopCardClass();
                 showFollowCard();
             }
         } else {
