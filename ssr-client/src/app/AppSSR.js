@@ -15,19 +15,6 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
         'swirlyojpnagar': {storeId: '9'},
         'kidsaurajpnagar': {storeId: '13'}
     }
-
-    const getPushScript = (pathName) => {
-        switch (pathName) {
-            case 'swirlyojpnagar':  if (typeof window !== 'undefined'){
-                return eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');
-            } break;
-            case 'kidsaurajpnagar':if (typeof window !== 'undefined'){
-                 return eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');
-            } break;    
-            default: if (typeof window !== 'undefined'){eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');};
-        }
-        
-    }
     
     return (
         <html>
@@ -46,7 +33,8 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
                 }
-                <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js" />
+                { pathName == 'kidsaurajpnagar' && <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js" /> }
+                { pathName == 'swirlyojpnagar' && <script src="https://cdn.pushalert.co/integrate_a66bf8fcf59eb3111ce8da6660de1d3e.js" /> }
             </head>
             <body>
                 <div id="root-app">
