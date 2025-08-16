@@ -281,6 +281,10 @@ const ProductList = ({products, storeConfig}) => {
     useEffect (() => {
       setIsClient(true);
 
+      //ToDo: Temp change
+      localStorage.removeItem('notif-shown');
+      localStorage.removeItem('subscribed');
+
       axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
