@@ -67,6 +67,13 @@ const Header = (props) => {
         document.querySelector('#idLogo').classList.add('card-margin-logo');
     }
 
+    const removeTopCardClass = () => {
+        document.querySelector('#idHeader').classList.remove('card-margin-header');
+        document.querySelector('#idMenu').classList.remove('card-margin-menu');
+        document.querySelector('#idLogoSm').classList.remove('card-margin-logo-sm');
+        document.querySelector('#idLogo').classList.remove('card-margin-logo');
+    }
+
     const isNotSubscribed = () => {
         return !(localStorage.getItem('subscribed')!=null && localStorage.getItem('subscribed')=='true');
     }
@@ -110,6 +117,7 @@ const Header = (props) => {
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         localStorage.setItem('subscribed', 'true');
         setShowAddToHome(false);
+        removeTopCardClass();
     }
 
     const showOfferPromptStates = () => {
@@ -129,6 +137,7 @@ const Header = (props) => {
         } else {
             showCashbackCard();
             setShowAddToHome(false);
+            removeTopCardClass();
         }
         if (window.pushalertbyiw) {
             (window.pushalertbyiw).push(['onSuccess', callbackOnSuccess]);
