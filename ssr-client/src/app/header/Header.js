@@ -68,8 +68,7 @@ const Header = (props) => {
     }
 
     const isNotSubscribed = () => {
-        return !(window.PushAlertCo.getSubsInfo().status == "subscribed");
-             //&& localStorage.getItem('subscribed')!=null && localStorage.getItem('subscribed')=='true';
+        return !(localStorage.getItem('subscribed')!=null && localStorage.getItem('subscribed')=='true');
     }
 
     const isIOS = () => {
@@ -106,6 +105,12 @@ const Header = (props) => {
         }
     }
 
+    const callbackOnSuccess = (result) => {
+        console.log('cb-', result.subscriber_id); //will output the user's subscriberId
+        console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
+        localStorage.getItem('subscribed', 'true');
+    }
+
     const showOfferPromptStates = () => {
         if (isNotSubscribed()) {
             if (isIOS()) {
@@ -125,6 +130,9 @@ const Header = (props) => {
         } else {
             showCashbackCard();
             setShowAddToHome(true);
+        }
+        if (window.pushalertbyiw) {
+            (window.pushalertbyiw).push(['onSuccess', callbackOnSuccess]);
         }
      }
 
