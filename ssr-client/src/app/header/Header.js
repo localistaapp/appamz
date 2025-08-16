@@ -44,6 +44,8 @@ const Header = (props) => {
     const [isShopFlow, setIsShopFlow] = useState(false);
     const [cashbackExists, setCashbackExists] = useState(false);
     const [cashbackValue, setCashbackValue] = useState(0);
+    const [showAddToHome, setShowAddToHome] = useState(false);
+    const [showCashback, setShowCashback] = useState(false);
     let homeLocation = '/';
 
     const getCashback = () => {
@@ -58,6 +60,73 @@ const Header = (props) => {
         })
     }
 
+    const addTopCardClass = () => {
+        document.querySelector('#idHeader').classList.add('card-margin-header');
+        document.querySelector('#idMenu').classList.add('card-margin-menu');
+        document.querySelector('#idLogoSm').classList.add('card-margin-logo-sm');
+        document.querySelector('#idLogo').classList.add('card-margin-logo');
+    }
+
+    const isNotSubscribed = () => {
+        return !(window.PushAlertCo.getSubsInfo().status == "subscribed");
+             //&& localStorage.getItem('subscribed')!=null && localStorage.getItem('subscribed')=='true';
+    }
+
+    const isIOS = () => {
+        return [
+            'iPad Simulator',
+            'iPhone Simulator',
+            'iPod Simulator',
+            'iPad',
+            'iPhone',
+            'iPod'
+          ].includes(navigator.platform)
+          // iPad on iOS 13 detection
+          || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+    }
+
+    const isNotificationShown = () => {
+        return window.PushAlertCo.getSubsInfo().status == "subscribed" &&   
+                (localStorage.getItem('notif-shown') != null &&
+                localStorage.getItem('notif-shown')=='true');
+    }
+
+    const showAddToHomeCard = () => {
+        setShowAddToHome(true);
+    }
+
+    const showCashbackCard = () => {
+        setShowCashback(true);
+    }
+
+    const showFollowCard = () => {
+        if(localStorage.getItem('notif-shown') == null) {
+            localStorage.setItem('notif-shown', 'true');
+            setTimeout(()=>{window.location.reload();},1000);
+        }
+    }
+
+    const showOfferPromptStates = () => {
+        if (isNotSubscribed()) {
+            if (isIOS()) {
+                console.log('isNotificationShown: ',isNotificationShown());
+                if (!isNotificationShown()) {
+                    addTopCardClass();
+                    showAddToHomeCard();
+                    localStorage.setItem('notif-shown', 'true');
+                } else {
+                    addTopCardClass();
+                    showFollowCard();
+                }
+            } else {
+                addTopCardClass();
+                showFollowCard();
+            }
+        } else {
+            showCashbackCard();
+        }
+     }
+
     useEffect(() => {
         setIsClient(true);
         homeLocation = window.location.href;
@@ -66,6 +135,7 @@ const Header = (props) => {
         } else {
             getCashback();
         }
+        showOfferPromptStates();
       }, []);
 
     console.log('--props.locationHref--', props.locationHref);
@@ -78,15 +148,18 @@ const Header = (props) => {
    
     const logoSrc = getLogoSrc(props.locationHref);
 
-    return <div
+    return <><div
+        id="idHeader"
         className={`${!isShopFlow && cashbackExists ? 'top-margin' : ''} header`}>
             {!isShopFlow && cashbackExists && <span className="announcement">🎉 You're eligible for instant cashback of ₹{cashbackValue}. Shop now to redeem!</span>}
-            {!isShopFlow && <svg onClick={props.showSideBar} className={`${!isShopFlow && cashbackExists ? 'top-margin' : ''} menu-bar text-indigo-600`} width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>}
-            {!isShopFlow && <img onClick={()=> window.location.href=homeLocation} className={`${!isShopFlow && cashbackExists ? 'top-margin-sm' : ''} store-logo-sm`} src={logoSrc} />}
-            <img class={isShopFlow ? `${!isShopFlow && cashbackExists ? 'top-margin' : ''} store-logo-shop` :`${!isShopFlow && cashbackExists ? 'top-margin' : ''} store-logo`} src="../../assets/images/qlogo.png"></img>
+            {!isShopFlow && <svg id="idMenu" onClick={props.showSideBar} className={`${!isShopFlow && cashbackExists ? 'top-margin' : ''} menu-bar text-indigo-600`} width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>}
+            {!isShopFlow && <img id="idLogoSm" onClick={()=> window.location.href=homeLocation} className={`${!isShopFlow && cashbackExists ? 'top-margin-sm' : ''} store-logo-sm`} src={logoSrc} />}
+            <img id="idLogo" class={isShopFlow ? `${!isShopFlow && cashbackExists ? 'top-margin' : ''} store-logo-shop` :`${!isShopFlow && cashbackExists ? 'top-margin' : ''} store-logo`} src="../../assets/images/qlogo.png"></img>
             {props.loggedOut && !isShopFlow &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}
         </div>
+        {showAddToHome && <span>Add to home screen</span>}
+        </>
 }
 
 export default Header;
