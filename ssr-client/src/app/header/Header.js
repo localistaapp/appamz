@@ -102,7 +102,7 @@ const Header = (props) => {
     const showFollowCard = () => {
         if(localStorage.getItem('notif-shown') == null) {
             localStorage.setItem('notif-shown', 'true');
-            setTimeout(()=>{window.location.reload();},1000);
+            //setTimeout(()=>{window.location.reload();},1000);
         }
     }
 

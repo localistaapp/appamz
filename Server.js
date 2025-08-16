@@ -228,7 +228,7 @@ subApp.get("/sw.js", (req, res) => {
 
 subApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
+  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"qrlogo192.png","sizes":"192x192"}]}');
 });
 
 app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
@@ -267,7 +267,7 @@ swirlyoSubApp.get("/sw.js", (req, res) => {
 
 swirlyoSubApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"swirlyo","short_name":"swirlyo","start_url":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","id":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/img/pushalert-square-icon-512.png","sizes":"192x192"}]}');
+  res.send('{"name":"swirlyo","short_name":"swirlyo","start_url":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","id":"https://swirlyojpnagar.quikrush.com/app/swirlyojpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"qrlogo192.png","sizes":"192x192"}]}');
 
 });
 
