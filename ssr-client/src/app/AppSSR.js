@@ -18,12 +18,12 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
     const getPushScript = (pathName) => {
         switch (pathName) {
             case 'swirlyojpnagar':  if (typeof window !== 'undefined'){
-                return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js?r=9697",n.parentNode.insertBefore(a,n)}(document,"script");');
+                return eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');
             } break;
             case 'kidsaurajpnagar':if (typeof window !== 'undefined'){
-                 return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=1696",n.parentNode.insertBefore(a,n)}(document,"script");');
-            } break;
-            default: if (typeof window !== 'undefined'){return eval('!function(e,t){var a=e.createElement(t),n=e.getElementsByTagName(t)[0];a.src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js?r=1696",n.parentNode.insertBefore(a,n)}(document,"script");')};
+                 return eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');
+            } break;    
+            default: if (typeof window !== 'undefined'){eval('(function(d, t) { var g = d.createElement(t), s = d.getElementsByTagName(t)[0]; g.src = "https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js"; s.parentNode.insertBefore(g, s); }(document, "script"));');};
         }
         
     }
