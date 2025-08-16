@@ -86,7 +86,7 @@ const Header = (props) => {
     }
 
     const isNotificationShown = () => {
-        return window.PushAlertCo.getSubsInfo().status == "subscribed" &&   
+        return window.PushAlertCo.getSubsInfo().status == "subscribed" ||    
                 (localStorage.getItem('notif-shown') != null &&
                 localStorage.getItem('notif-shown')=='true');
     }
