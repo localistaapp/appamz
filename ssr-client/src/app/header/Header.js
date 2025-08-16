@@ -129,7 +129,7 @@ const Header = (props) => {
             }
         } else {
             showCashbackCard();
-            setShowAddToHome(true);
+            setShowAddToHome(false);
         }
         if (window.pushalertbyiw) {
             (window.pushalertbyiw).push(['onSuccess', callbackOnSuccess]);
