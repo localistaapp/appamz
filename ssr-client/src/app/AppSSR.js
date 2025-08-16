@@ -46,7 +46,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
                 }
-                <script src="https://cdn.pushalert.co/integrate_c86ff931de39cf0d79d8e9edbe367fb3.js" />
+                <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js" />
             </head>
             <body>
                 <div id="root-app">
