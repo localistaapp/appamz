@@ -34,7 +34,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
                 }
                 { pathName == 'kidsaurajpnagar' && <script src="https://cdn.pushalert.co/integrate_814b4581392c255b71888d7c8adda385.js" /> }
-                { pathName == 'swirlyojpnagar' && <script src="https://cdn.pushalert.co/integrate_a66bf8fcf59eb3111ce8da6660de1d3e.js" /> }
+                { pathName == 'swirlyojpnagar' && <script src="https://cdn.pushalert.co/integrate_7fc3afe390f150da6b0f4f200227fabe.js" /> }
             </head>
             <body>
                 <div id="root-app">
