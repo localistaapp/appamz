@@ -28,6 +28,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 <meta property="og:title" content="Special offer on Quikrush 🎉"/>
                 <meta property="og:type" content="website"/>
                 <meta property="og:image" content="https://quikrush.com/assets/images/deals.png"/>
+                <link rel="manifest" href="/manifest.json" />
                 <title>{`quickrush | hyperlocal deals marketplace`}</title>
                 
                 {
