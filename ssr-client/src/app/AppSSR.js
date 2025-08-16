@@ -46,9 +46,6 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
                 }
                 
-                <script type="text/javascript" src="../../assets/scripts/pa.js"></script>
-                {getPushScript(pathName)}
-                
 
             </head>
             <body>
