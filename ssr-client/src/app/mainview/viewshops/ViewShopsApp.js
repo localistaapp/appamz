@@ -282,8 +282,12 @@ const ProductList = ({products, storeConfig}) => {
       setIsClient(true);
 
       //ToDo: Temp change
-      localStorage.removeItem('notif-shown');
-      localStorage.removeItem('subscribed');
+      if(localStorage.getItem('notif-shown') != null) {
+        localStorage.removeItem('notif-shown');
+      }
+      if(localStorage.getItem('subscribed') != null) {
+        localStorage.removeItem('subscribed');
+      }
 
       axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
