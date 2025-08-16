@@ -124,6 +124,7 @@ const Header = (props) => {
             }
         } else {
             showCashbackCard();
+            setShowAddToHome(true);
         }
      }
 
@@ -158,7 +159,25 @@ const Header = (props) => {
             {props.loggedOut && !isShopFlow &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}
         </div>
-        {showAddToHome && <span>Add to home screen</span>}
+        {showAddToHome && 
+            <div class="notif-card-box-th notif-card-box-th-1" style={{backgroundCcolor: '#fff!important'}}>
+            <div class="notif-card-icon-container">
+                <img src="../../assets/images/dealcard.png" style={{width: '140px'}} />
+            </div>
+            <div class="notif-card-msg-box-container">
+               <div class="notif-card-title-txt-container">
+                  <p class="notif-card-title-txt" style={{color:'#333!important'}}>Unlock special offer</p>
+               </div>
+               <div class="notif-card-msg-txt-container">
+                  <p class="notif-card-msg-txt" style={{color:'#777!important'}}>Add this app to your home screen to continue. Tap Share 
+                  <svg class="notif-card-ic" viewBox="0 0 512 512" ><path d="M396.545 154.249h-51.039a18.7 18.7 0 1 0 0 37.401h51.052a18.723 18.723 0 0 1 18.7 18.7v244.55a18.723 18.723 0 0 1-18.7 18.7H115.443a18.723 18.723 0 0 1-18.7-18.7V210.35a18.723 18.723 0 0 1 18.7-18.7h51.052a18.7 18.7 0 0 0 0-37.401h-51.052a56.169 56.169 0 0 0-56.101 56.101v244.55A56.169 56.169 0 0 0 115.443 511h281.115a56.169 56.169 0 0 0 56.101-56.101V210.35a56.172 56.172 0 0 0-56.113-56.101zm-210.278-37.75l51.65-51.65v246.195a18.7 18.7 0 1 0 37.401 0V64.849l51.65 51.65a18.702 18.702 0 0 0 26.455-26.442L269.857 6.479a18.706 18.706 0 0 0-26.455 0l-83.578 83.578a18.697 18.697 0 0 0 26.442 26.442z"></path></svg>
+                   and then <p style={{display: 'inline'}}>Add to Home Screen</p>
+                   <svg class="notif-card-ic" viewBox="0 0 512 512" ><path d="M384 42.667A85.419 85.419 0 0 1 469.333 128v256A85.419 85.419 0 0 1 384 469.333H128A85.419 85.419 0 0 1 42.667 384V128A85.419 85.419 0 0 1 128 42.667zM384 0H128A127.992 127.992 0 0 0 0 128v256a127.992 127.992 0 0 0 128 128h256a127.992 127.992 0 0 0 128-128V128A127.992 127.992 0 0 0 384 0zM256 384a21.327 21.327 0 0 1-21.333-21.333V149.333a21.334 21.334 0 1 1 42.667 0v213.333A21.327 21.327 0 0 1 256 384z"></path><path d="M128 256a21.327 21.327 0 0 1 21.333-21.333h213.333a21.333 21.333 0 0 1 0 42.667H149.333A21.327 21.327 0 0 1 128 256z"></path></svg>
+                   </p>
+               </div>
+            </div>
+         </div>
+        }
         </>
 }
 

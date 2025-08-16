@@ -55,6 +55,51 @@ span.announcement {
 .top-margin-sm {
     top: 80px;
 }
+.notif-card-box-th.notif-card-box-th-1 {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    height: 145px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+    margin: 0;
+}
+.notif-card-ic {
+    fill: #5d5d5d;
+    filter: brightness(.8);
+    margin-top: 1px;
+    vertical-align: text-top;
+    width: 16px;
+    display: inline;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+.notif-card-icon-container {
+    padding: 12px;
+    margin-top: 25px;
+}
+p.notif-card-title-txt {
+    font-weight: 600;
+}
+p.notif-card-msg-txt {
+    width: 95%;
+}
+
+.card-margin-header {
+    margin-top: 144px;
+}
+.card-margin-menu {
+    top: 162px;
+}
+.card-margin-logo-sm {
+    top: 159px;
+}
+.card-margin-logo {
+    top: 159px;
+}
+
 @media screen and (min-width:768px) {
     .menu-bar {
         display: block;
