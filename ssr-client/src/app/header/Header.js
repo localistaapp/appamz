@@ -135,11 +135,16 @@ const Header = (props) => {
     const callbackOnSuccess = (result) => {
         console.log('cb-', result.subscriber_id); //will output the user's subscriberId
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
-        localStorage.setItem('subscribed', 'true');
-        confetti();
-        showCashbackCard();
-        setShowAddToHome(false);
-        removeTopCardClass();
+        if (localStorage.getItem('subscribed') == null) {
+            confetti();
+            addTopCardClass();
+            showCashbackCard();
+            setShowAddToHome(false);
+            localStorage.setItem('subscribed', 'true');
+        } else {
+            setShowAddToHome(false);
+            removeTopCardClass();
+        }
     }
 
     const showOfferPromptStates = () => {
