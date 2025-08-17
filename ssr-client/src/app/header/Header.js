@@ -56,9 +56,9 @@ const Header = (props) => {
     const [storeConfig, setStoreConfig] = useState(null);
     let homeLocation = '/';
 
-    const getCashback = () => {
-        alert(`/user/cashback/${localStorage.getItem('nanoId')}/${storeConfig.storeId}`);
-        axios.get(`/user/cashback/${localStorage.getItem('nanoId')}/${storeConfig.storeId}`)
+    const getCashback = (storeConfigVal) => {
+        alert(`/user/cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`);
+        axios.get(`/user/cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`)
         .then(function (response) {
             console.log('--user cashback data-----', response.data.cashBackValue);
             if (response.data != null && response.data.cashBackValue > 0) {
@@ -199,7 +199,7 @@ const Header = (props) => {
             setIsShopFlow(true);
         } else {
             getClientLogo();
-            getCashback();
+            getCashback(storeConfigVal);
             showOfferPromptStates();
             fetchStoreDetail(storeConfigVal);
         }
