@@ -445,6 +445,38 @@ app.get("/user/cashback/:nanoId/:webPathName", (req, res) => {
   }});
 });
 
+app.get("/user/st-cashback/:nanoId/:storeId", (req, res) => {
+  const client = new Client(dbConfig);
+  let nanoId = req.params.nanoId;
+  let storeId = req.params.storeId;
+  console.log('---nanoId--', nanoId);
+  console.log('---webPathName--', webPathName);
+  let cashBackValue = 0;
+
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select v.collected_over, u.cashback_pc, v.max_cashback_value from am_store_viral_deals v, am_store_user u where v.store_id=u.store_id and v.deal_type = 'viral_cashback' and u.nanoid = $1 and v.storeId LIKE $2",
+      [nanoId, storeId], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              if (response.rows && response.rows.length > 0) {
+                cashBackValue = response.rows[0]['cashback_pc'];
+                cashBackValue = cashBackValue * response.rows[0]['max_cashback_value']/response.rows[0]['collected_over'];
+              } 
+              res.send('{"cashBackValue": '+cashBackValue+'}');
+              client.end();
+            }
+      });
+  }});
+});
+
 app.get("/products/:storeId/:type", (req, res) => {
   const client = new Client(dbConfig);
   let type = req.params.type;
