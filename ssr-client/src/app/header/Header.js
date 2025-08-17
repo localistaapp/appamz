@@ -26,6 +26,7 @@ const getLogoSrc = (locationHref) => {
     console.log('--locationHref1--', locationHref);
     let storeFolder = '';
     if (typeof locationHref !== 'undefined' && locationHref.indexOf('/app/') != -1) {
+        debugger;
         locationHref = locationHref.split('from=')[0];
         storeFolder = locationHref.substring(locationHref.indexOf('/app/')+'/app/'.length,locationHref.length);
         if(storeFolder.indexOf('?')>=0) {
@@ -47,6 +48,7 @@ const Header = (props) => {
     const [cashbackValue, setCashbackValue] = useState(0);
     const [showAddToHome, setShowAddToHome] = useState(false);
     const [showCashback, setShowCashback] = useState(false);
+    const [logoSrc, setLogoSrc] = useState(false);
     let homeLocation = '/';
 
     const getCashback = () => {
@@ -145,6 +147,25 @@ const Header = (props) => {
             (window.pushalertbyiw).push(['onSuccess', callbackOnSuccess]);
         }
      }
+    
+     const getClientLogo = () => {
+        let locationHref = window.location.href;
+        let url = '';
+        let storeFolder = '';
+        if (typeof locationHref !== 'undefined' && locationHref.indexOf('/app/') != -1) {
+            //locationHref = locationHref.split('from=')[0];
+            storeFolder = locationHref.substring(locationHref.indexOf('/app/')+'/app/'.length,locationHref.length);
+            if(storeFolder.indexOf('?')>=0) {
+                storeFolder = storeFolder.substring(0, storeFolder.indexOf('?'));
+            }
+            url = `../../app/blr/${storeFolder}/images/logo.png`;
+        }
+        else {
+            url = '../../app/blr/swirlyojpnagar/images/logo.png';
+        }
+        console.log('--logosrc--', logoSrc);
+        setLogoSrc(url);
+    }
 
     useEffect(() => {
         setIsClient(true);
@@ -152,6 +173,7 @@ const Header = (props) => {
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
             setIsShopFlow(true);
         } else {
+            getClientLogo();
             getCashback();
             showOfferPromptStates();
         }
@@ -165,7 +187,7 @@ const Header = (props) => {
         } 
     }
    
-    const logoSrc = getLogoSrc(props.locationHref);
+    //const logoSrc = getLogoSrc(props.locationHref);
 
     return <><div
         id="idHeader"
