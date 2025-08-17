@@ -450,7 +450,7 @@ app.get("/user/st-cashback/:nanoId/:storeId", (req, res) => {
   let nanoId = req.params.nanoId;
   let storeId = req.params.storeId;
   console.log('---nanoId--', nanoId);
-  console.log('---webPathName--', webPathName);
+  console.log('---storeId--', storeId);
   let cashBackValue = 0;
 
   client.connect(err => {
@@ -459,7 +459,7 @@ app.get("/user/st-cashback/:nanoId/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-      client.query("select v.collected_over, u.cashback_pc, v.max_cashback_value from am_store_viral_deals v, am_store_user u where v.store_id=u.store_id and v.deal_type = 'viral_cashback' and u.nanoid = $1 and v.storeId LIKE $2",
+      client.query("select v.collected_over, u.cashback_pc, v.max_cashback_value from am_store_viral_deals v, am_store_user u where v.store_id=u.store_id and v.deal_type = 'viral_cashback' and u.nanoid = $1 and v.store_id = $2",
       [nanoId, storeId], (err, response) => {
             if (err) {
               console.log(err)
