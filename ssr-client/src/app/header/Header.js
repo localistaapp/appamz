@@ -57,6 +57,7 @@ const Header = (props) => {
     let homeLocation = '/';
 
     const getCashback = () => {
+        alert(`/user/cashback/${localStorage.getItem('nanoId')}/${encodeURIComponent(window.location.pathname)}`);
         axios.get(`/user/cashback/${localStorage.getItem('nanoId')}/${encodeURIComponent(window.location.pathname)}`)
         .then(function (response) {
             console.log('--user cashback data-----', response.data.cashBackValue);
