@@ -313,8 +313,8 @@ const Header = (props) => {
                </div>
                <div class="notif-card-msg-txt-container">
                   <p class="notif-card-msg-txt notif-box" style={{color:'#777!important'}}>
-                    You're eligible for instant cashback worth ₹300 collected over purchases.
-                    Share this viral deal to claim the full cashback!
+                    You're eligible for instant cashback upto ₹300 per purchase.
+                    Share this viral deal to claim full cashback!
                    </p>
                </div>
             </div>
