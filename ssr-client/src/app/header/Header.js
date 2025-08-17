@@ -1,6 +1,7 @@
 import "./Header.css";
 import {useEffect, useState} from "react";
 import axios from 'axios';
+import confetti from "https://cdn.skypack.dev/canvas-confetti";
 
 const onLogoutClick = () => {
     console.log('--clicked log out--');
@@ -116,6 +117,7 @@ const Header = (props) => {
         console.log('cb-', result.subscriber_id); //will output the user's subscriberId
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         localStorage.setItem('subscribed', 'true');
+        confetti();
         setShowAddToHome(false);
         removeTopCardClass();
     }
