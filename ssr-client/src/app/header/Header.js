@@ -1,6 +1,7 @@
 import "./Header.css";
 import {useEffect, useState} from "react";
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 import confetti from "https://cdn.skypack.dev/canvas-confetti";
 
 const onLogoutClick = () => {
@@ -49,6 +50,10 @@ const Header = (props) => {
     const [showAddToHome, setShowAddToHome] = useState(false);
     const [showCashback, setShowCashback] = useState(false);
     const [logoSrc, setLogoSrc] = useState(false);
+    const [shareLoading, setShareLoading] = useState(false);
+    const [reviews, setReviews] = useState([]);
+    const [storeName, setStoreName] = useState('');
+    const [storeConfig, setStoreConfig] = useState(null);
     let homeLocation = '/';
 
     const getCashback = () => {
@@ -80,6 +85,17 @@ const Header = (props) => {
     const isNotSubscribed = () => {
         return !(localStorage.getItem('subscribed')!=null && localStorage.getItem('subscribed')=='true');
     }
+
+    const fetchStoreDetail = (storeConfigVal) => {
+        axios.get(`/shops/place/${storeConfigVal.placeId}`)
+          .then(function (response) {
+              console.log('--place data-----', response.data);
+              if(response.data != null) {
+                let reviewsArr = response.data.split(',');
+                setReviews(reviewsArr);
+              }
+          })
+      }
 
     const isIOS = () => {
         return [
@@ -120,11 +136,13 @@ const Header = (props) => {
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         localStorage.setItem('subscribed', 'true');
         confetti();
+        //showCashbackCard();
         setShowAddToHome(false);
         removeTopCardClass();
     }
 
     const showOfferPromptStates = () => {
+        setShowCashback(true);
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
@@ -139,7 +157,6 @@ const Header = (props) => {
                 showFollowCard();
             }
         } else {
-            showCashbackCard();
             setShowAddToHome(false);
             removeTopCardClass();
         }
@@ -158,6 +175,7 @@ const Header = (props) => {
             if(storeFolder.indexOf('?')>=0) {
                 storeFolder = storeFolder.substring(0, storeFolder.indexOf('?'));
             }
+            setStoreName(storeFolder);
             url = `../../app/blr/${storeFolder}/images/logo.png`;
         }
         else {
@@ -169,6 +187,12 @@ const Header = (props) => {
 
     useEffect(() => {
         setIsClient(true);
+        const storePathNameConfig = {
+            'swirlyojpnagar': {storeId: '9', placeId: ''},
+            'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'}
+        }
+        let storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
+        setStoreConfig(storeConfigVal);
         homeLocation = window.location.href;
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
             setIsShopFlow(true);
@@ -176,6 +200,7 @@ const Header = (props) => {
             getClientLogo();
             getCashback();
             showOfferPromptStates();
+            fetchStoreDetail(storeConfigVal);
         }
       }, []);
 
@@ -186,6 +211,47 @@ const Header = (props) => {
             homeLocation = window.location.href.substring(0,window.location.href.indexOf('?'));
         } 
     }
+    const triggerShare = async (product) => {
+        let shareText = '';
+        
+        if (navigator.share) {
+    
+          let nanoId = localStorage.getItem('nanoId');
+    
+          if (nanoId == null) {
+            nanoId = nanoid();
+            localStorage.setItem('nanoId', nanoId);
+          }
+          let cashbackPc = 0.05; //0.1 if from=store 
+          setShareLoading(true);
+          axios.post(`/store/user/create/`, {nanoId: nanoId, storeId: storeConfig.storeId, cashbackPc: cashbackPc, storeUrl: window.shopOnlineUrl}).then(async (response) => {
+            console.log(response.status);
+            try {
+              if (product != null && reviews.length > 0) {
+    
+                shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+          
+          
+              } else {
+                shareText = '';
+              }
+              await navigator.share({
+                title: 'Special offer on Quikrush 🎉',
+                text: shareText,
+                url: 'https://www.quikrush.com/app/shop/id='+product['place_id']+'&u='+nanoId
+              });
+              setShareLoading(false);
+              console.log('Shared successfully');
+            } catch (err) {
+              console.error('Share failed:', err);
+            }
+            setTimeout(function(){setShareLoading(false);}.bind(this),2000);
+          });
+        } else {
+          // fallback: show WhatsApp/Twitter share links
+          alert('Sharing not supported on this browser.');
+        }
+      }
    
     //const logoSrc = getLogoSrc(props.locationHref);
 
@@ -215,6 +281,28 @@ const Header = (props) => {
                    <svg class="notif-card-ic" viewBox="0 0 512 512" ><path d="M384 42.667A85.419 85.419 0 0 1 469.333 128v256A85.419 85.419 0 0 1 384 469.333H128A85.419 85.419 0 0 1 42.667 384V128A85.419 85.419 0 0 1 128 42.667zM384 0H128A127.992 127.992 0 0 0 0 128v256a127.992 127.992 0 0 0 128 128h256a127.992 127.992 0 0 0 128-128V128A127.992 127.992 0 0 0 384 0zM256 384a21.327 21.327 0 0 1-21.333-21.333V149.333a21.334 21.334 0 1 1 42.667 0v213.333A21.327 21.327 0 0 1 256 384z"></path><path d="M128 256a21.327 21.327 0 0 1 21.333-21.333h213.333a21.333 21.333 0 0 1 0 42.667H149.333A21.327 21.327 0 0 1 128 256z"></path></svg>
                    </p>
                </div>
+            </div>
+         </div>
+        }
+        {
+            showCashback && 
+            <div class="notif-card-box-th notif-card-box-th-1" style={{backgroundCcolor: '#fff!important'}}>
+            <div class="notif-card-msg-box-container notif-box">
+               <div class="notif-card-title-txt-container">
+                  <p class="notif-card-title-txt notif-box" style={{color:'#333!important'}}>🎉 Congratulations!</p>
+               </div>
+               <div class="notif-card-msg-txt-container">
+                  <p class="notif-card-msg-txt notif-box" style={{color:'#777!important'}}>
+                    You're eligible for instant cashback worth ₹300 collected over purchases.
+                    Share this viral deal to claim the full cashback!
+                   </p>
+               </div>
+            </div>
+            <div class="notif-card-icon-container notif-sp">
+                <a onClick={()=>{triggerShare({name: storeName, place_id: storeConfig.placeId}, reviews)}} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
+                {!shareLoading && <img style={{maxWidth: '54px'}} src="../../assets/images/wi.png" />}
+                {shareLoading && <img src="../../assets/images/6.gif" />}
+                </a>
             </div>
          </div>
         }

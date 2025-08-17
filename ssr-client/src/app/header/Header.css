@@ -80,8 +80,26 @@ span.announcement {
     padding: 12px;
     margin-top: 25px;
 }
+.notif-box {
+    margin-left: 32px;
+    margin-top: -4px;
+    line-height: 20px;
+}
+.notif-sp {
+    font-size: 3rem;
+    padding: 14px;
+}
+p.notif-card-msg-txt.notif-box {
+    width: 100%;
+    margin-left: 0px;
+}
 p.notif-card-title-txt {
     font-weight: 600;
+}
+p.notif-card-title-txt.notif-box {
+    font-weight: 600;
+    margin-top: 22px;
+    margin-left: 0;
 }
 p.notif-card-msg-txt {
     width: 95%;

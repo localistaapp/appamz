@@ -82,7 +82,7 @@ function AppDashboard({storeConfig, locationHref}) {
     return (
         <>
             <Suspense fallback={<LoadingSidebarScreen />}>
-            { <HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />}
+            { <HeadersComponent storeConfig={storeConfig} loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />}
 
                 </Suspense>
                 

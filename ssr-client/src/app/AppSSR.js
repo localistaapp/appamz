@@ -12,8 +12,8 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
     });
 
     const storePathNameConfig = {
-        'swirlyojpnagar': {storeId: '9'},
-        'kidsaurajpnagar': {storeId: '13'}
+        'swirlyojpnagar': {storeId: '9', placeId: ''},
+        'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'}
     }
     
     return (
