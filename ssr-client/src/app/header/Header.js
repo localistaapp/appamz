@@ -228,6 +228,7 @@ const Header = (props) => {
             localStorage.setItem('nanoId', nanoId);
           }
           let cashbackPc = 0.05; //0.1 if from=store 
+          cashbackPc = 0.1;
           setShareLoading(true);
 
           //fetchStoreDetail(storeConfigVal)
