@@ -136,13 +136,13 @@ const Header = (props) => {
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         localStorage.setItem('subscribed', 'true');
         confetti();
-        //showCashbackCard();
+        showCashbackCard();
         setShowAddToHome(false);
         removeTopCardClass();
     }
 
     const showOfferPromptStates = () => {
-        setShowCashback(true);
+        //setShowCashback(true);
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
