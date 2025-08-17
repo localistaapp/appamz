@@ -243,9 +243,9 @@ const Header = (props) => {
                 axios.post(`/store/user/create/`, {nanoId: nanoId, storeId: storeConfig.storeId, cashbackPc: cashbackPc, storeUrl: '/app/'+storeName+'/'}).then(async (response) => {
                     console.log(response.status);
                     try {
-                      if (product != null && reviews.length > 0) {
+                      if (product != null && reviewsArr.length > 0) {
             
-                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviews.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviewsArr.join('\n')+".\n\nVisit them on Quikrush now! 🔗 - https://www.quikrush.com/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
                   
                   
                       } else {
