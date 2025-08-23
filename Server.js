@@ -342,7 +342,7 @@ app.get("/stats/:email", (req, res) => {
                 client.end();
               } else {
                 franchiseId = response.rows[0]['id'];
-                client.query("Select id, support_mobile from am_store where franchise_id IN ('"+franchiseId+"') ",
+                client.query("Select id, support_mobile, business_type from am_store where franchise_id IN ('"+franchiseId+"') ",
                 [], (errInner, responseInner) => {
                   if (errInner) {
                     res.send('{"status":"inner-connect-error"}');
