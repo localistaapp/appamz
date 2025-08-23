@@ -65,7 +65,7 @@
     opacity: 0.95;
   }
 
-  .tabs-container {
+  .notif-tabs-container {
     background: transparent !important;
     display: flex;
     align-items: center;
@@ -75,7 +75,7 @@
     font-family: 'Intel Clear', sans-serif;
 }
 
-.tabs {
+.notif-tabs {
     display: flex;
     overflow-x: hidden;
     scroll-behavior: smooth;
@@ -84,7 +84,7 @@
     gap: 2px;
 }
 
-.tab {
+.notif-tab {
     display: flex;
     padding: 10px 24px;
     flex-direction: column;
@@ -98,13 +98,15 @@
     font-family: 'Montserrat';
 }
 
-.tab.active {
+.notif-tab.active {
     display: flex;
     padding: 10px 24px;
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
     border-radius: 8px 8px 0px 0px;
+    background: #f81134;
+    color: #fff;
 }
 
 .controls {
@@ -139,6 +141,7 @@
 
 .festive {
   margin-top: 20px;
+  margin-bottom: 200px;
 }
 
 .notif-item {

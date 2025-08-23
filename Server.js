@@ -12,6 +12,8 @@ import HomeStoreSSR from "./ssr-client/src/web/home-store/HomeStoreSSR";
 const vhost = require('vhost');
 const ImageKit = require('imagekit');
 
+var axios = require('axios');
+
 let dbConfig = {
   database: 'slimcrust',
   host: 'dpg-cc6s37pgp3jupk0q3tu0-a.singapore-postgres.render.com',
@@ -313,6 +315,45 @@ app.get("/dashboard/:store", (req, res) => {
       },
     }
   );
+});
+
+app.post('/push-notif', function(req, res) {
+  let title = req.body.title;
+  let description = req.body.description;
+  let storeId = req.body.storeId;
+  let pushKey = '';
+  console.log('--Push Title--', title);
+  console.log('--Push Description--', description);
+  console.log('--Store Id--', storeId);
+
+  const client = new Client(dbConfig);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select push_key from am_store where id = "+storeId,
+      [], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              pushKey = response.rows[0]['push_key'];
+              client.end();
+              axios
+                .post('https://api.pushalert.co/rest/v1/send', 'url=https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar/&title='+title+'&message='+description, {headers: {'Authorization': 'api_key='+pushKey}})
+                .then(res => {
+                  console.log('Pushalert success: ');
+                })
+                .catch(error => {
+                  console.log('Pushalert error: ', error);
+                });
+            }
+      });
+  }});
+
 });
 
 app.get("/stats/:email", (req, res) => {
