@@ -810,7 +810,7 @@ app.get('/shops/deals/:placeId', async (req, res) => {
         res.send('{}');
         client.end();
       } else {
-          client.query("Select s.id, title, max_cashback_value, app_url, accepting_online_orders from am_store_viral_deals v, am_store s where v.store_id=s.id and v.place_id = $1 order by expiry desc",
+          client.query("Select s.id, title, max_cashback_value, s.app_url, accepting_online_orders from am_store_viral_deals v, am_store s where v.store_id=s.id and v.place_id = $1 order by expiry desc",
                       [placeId], (err, response) => {
                             if (err) {
                               console.log(err);
