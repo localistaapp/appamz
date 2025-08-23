@@ -11,6 +11,7 @@ var { Client } = require('pg');
 import HomeStoreSSR from "./ssr-client/src/web/home-store/HomeStoreSSR";
 const vhost = require('vhost');
 const ImageKit = require('imagekit');
+const runTaskRoute = require("./run-task");
 
 var axios = require('axios');
 
@@ -316,6 +317,8 @@ app.get("/dashboard/:store", (req, res) => {
     }
   );
 });
+
+runTaskRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
 
 app.post('/push-notif', function(req, res) {
   let title = req.body.title;
