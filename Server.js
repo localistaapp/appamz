@@ -329,7 +329,7 @@ app.get("/stats/:email", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select id from am_franchise where owner_email IN ('"+email+"') ",
+        client.query("Select id, business_type from am_franchise where owner_email IN ('"+email+"') ",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -342,7 +342,8 @@ app.get("/stats/:email", (req, res) => {
                 client.end();
               } else {
                 franchiseId = response.rows[0]['id'];
-                client.query("Select id, support_mobile, business_type from am_store where franchise_id IN ('"+franchiseId+"') ",
+                businessType = responseInner.rows[0]['business_type'];
+                client.query("Select id, support_mobile from am_store where franchise_id IN ('"+franchiseId+"') ",
                 [], (errInner, responseInner) => {
                   if (errInner) {
                     res.send('{"status":"inner-connect-error"}');
@@ -350,7 +351,6 @@ app.get("/stats/:email", (req, res) => {
                   } else {
                     storeId = responseInner.rows[0]['id'];
                     supportMobile = responseInner.rows[0]['support_mobile'];
-                    businessType = responseInner.rows[0]['business_type'];
                     res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+'},"businessType":'+businessType+'}');
                   }
                 });
