@@ -351,7 +351,7 @@ app.get("/stats/:email", (req, res) => {
                   } else {
                     storeId = responseInner.rows[0]['id'];
                     supportMobile = responseInner.rows[0]['support_mobile'];
-                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+',"businessType":'+businessType+'}');
+                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+',"businessType":"'+businessType+'"}');
                   }
                 });
               }
