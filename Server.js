@@ -342,7 +342,7 @@ app.get("/stats/:email", (req, res) => {
                 client.end();
               } else {
                 franchiseId = response.rows[0]['id'];
-                businessType = responseInner.rows[0]['business_type'];
+                businessType = response.rows[0]['business_type'];
                 client.query("Select id, support_mobile from am_store where franchise_id IN ('"+franchiseId+"') ",
                 [], (errInner, responseInner) => {
                   if (errInner) {
