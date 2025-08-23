@@ -42,7 +42,7 @@ const Notifications = ({url}) => {
         axios.post(`/push-notif`, {title: title, 
             description: description,
             storeId: storeId}).then((response) => {
-            console.log('--Notif Response--', response);
+            setTimeout(()=>{window.location.reload();},500);
         });       
     }
 
