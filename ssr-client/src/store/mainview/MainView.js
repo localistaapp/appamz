@@ -25,6 +25,11 @@ const MainView = () => {
         import("./onlineorders/OnlineOrders.js")
     );
 
+    const NotificationsComponent = lazy(() =>
+        //delay(100).then(() => import("./notifications/Notifications.js"))
+        import("./notifications/Notifications.js")
+    );
+
     const showMessage = (msg) => {
         setMessage(msg);
     };
@@ -44,6 +49,9 @@ const MainView = () => {
             </Suspense>}
             {view == 'online-orders' && <Suspense fallback={<></>}>
                 <OnlineOrdersComponent />
+            </Suspense>}
+            {view == 'notifications' && <Suspense fallback={<></>}>
+                <NotificationsComponent />
             </Suspense>}
         </div>
     );

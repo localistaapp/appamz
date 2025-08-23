@@ -319,6 +319,7 @@ app.get("/stats/:email", (req, res) => {
   const client = new Client(dbConfig);
   let email = req.params.email;
   let supportMobile = '';
+  let businessType = '';
   email = email.replace('owner@','@');
   let franchiseId = '';
   let storeId = '';
@@ -349,7 +350,8 @@ app.get("/stats/:email", (req, res) => {
                   } else {
                     storeId = responseInner.rows[0]['id'];
                     supportMobile = responseInner.rows[0]['support_mobile'];
-                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+'}');
+                    businessType = responseInner.rows[0]['business_type'];
+                    res.send('{"franchiseId":'+franchiseId+',"storeId":'+storeId+',"supportMobile":'+supportMobile+'},"businessType":'+businessType+'}');
                   }
                 });
               }
@@ -411,6 +413,14 @@ app.get("/store/get-all/:storeId", (req, res) => {
             }
       });
   }});
+});
+
+app.get("/notif-config/:businessType", (req, res) => {
+  const client = new Client(dbConfig);
+  let businessType = req.params.businessType;
+  const fs = require('fs');
+  let rawdata = fs.readFileSync(`./ssr-client/src/store/mainview/notifications/${businessType}/festive.json`);
+  res.send(rawdata);
 });
 
 app.get("/user/cashback/:nanoId/:webPathName", (req, res) => {

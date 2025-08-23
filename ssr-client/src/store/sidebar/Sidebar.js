@@ -24,7 +24,7 @@ const Sidebar = () => {
                 <hr class="line-light" ></hr>
                 <a href="/stats">Enquiries</a>
                 <hr class="line-light" ></hr>
-                <a href="/notifications">Push Notifications</a>
+                <a href={`${window.location.pathname}?view=notifications`}>Push Notifications</a>
                 <hr class="line-light" ></hr>
                 <a href="/about">Stats</a>
             </div>
