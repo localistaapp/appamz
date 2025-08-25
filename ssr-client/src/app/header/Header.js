@@ -3,6 +3,8 @@ import {useEffect, useState} from "react";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import confetti from "https://cdn.skypack.dev/canvas-confetti";
+import { track } from "../constants/analytics";
+import { METRICS } from "../constants";
 
 const onLogoutClick = () => {
     console.log('--clicked log out--');
@@ -140,6 +142,7 @@ const Header = (props) => {
             addTopCardClass();
             showCashbackCard();
             setShowAddToHome(false);
+            track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
             localStorage.setItem('subscribed', 'true');
         } else {
             setShowAddToHome(false);
@@ -171,7 +174,7 @@ const Header = (props) => {
         }
      }
     
-     const getClientLogo = () => {
+     const getClientLogo = (storeId) => {
         let locationHref = window.location.href;
         let url = '';
         let storeFolder = '';
@@ -186,6 +189,15 @@ const Header = (props) => {
         }
         else {
             url = '../../app/blr/swirlyojpnagar/images/logo.png';
+        }
+
+        if(url.indexOf('/from=qr')>=0) {
+            track(storeId, METRICS.QR_VISITS);
+            track(storeId, METRICS.STORE_BROWSE);
+            url = url.replace('/from=qr','');
+        } else {
+            track(storeId, METRICS.REPEAT_VISITS);
+            track(storeId, METRICS.STORE_BROWSE);
         }
         console.log('--logosrc--', logoSrc);
         setLogoSrc(url);
@@ -203,7 +215,7 @@ const Header = (props) => {
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
             setIsShopFlow(true);
         } else {
-            getClientLogo();
+            getClientLogo(storeConfigVal.storeId);
             getCashback(storeConfigVal);
             showOfferPromptStates();
         }
@@ -251,6 +263,7 @@ const Header = (props) => {
                       } else {
                         shareText = '';
                       }
+                      track(storeConfig.storeId, METRICS.SHARES);
                       await navigator.share({
                         title: 'Special offer on Quikrush 🎉',
                         text: shareText,

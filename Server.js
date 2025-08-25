@@ -484,6 +484,50 @@ app.get("/store-stats/:storeId/:type", (req, res) => {
   }});
 });
 
+app.post('/track', function(req, res) {
+  let storeId = req.body.storeId;
+  let metric = req.body.metric;
+  let metricValue = '';
+  console.log('--metric--', metric);
+  console.log('--Store Id--', storeId);
+
+  const client = new Client(dbConfig);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select value from am_store_stats where store_id = "+storeId+" and metric = '"+metric+"'",
+      [], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              metricValue = response.rows[0]['value'];
+              console.log('--metricValue--', metricValue);
+              metricValue = parseInt(metricValue,10) + 1;
+              client.query("UPDATE \"public\".\"am_store_stats\" SET value = "+metricValue+" where store_id = "+storeId+" and metric = '"+metric+"'",
+                [], (err, response) => {
+                      if (err) {
+                        console.log(err)
+                          res.send("error");
+                          client.end();
+                      } else {
+                          //res.send(response);
+                          res.send('success');
+                          client.end();
+                      }
+
+                    });
+              //client.end();
+            }
+      });
+  }});
+
+});
+
 app.get("/notif-config/:businessType", (req, res) => {
   const client = new Client(dbConfig);
   let businessType = req.params.businessType;

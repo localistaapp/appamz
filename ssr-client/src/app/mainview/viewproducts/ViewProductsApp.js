@@ -1,6 +1,8 @@
 import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 import "./ViewProducts.css";
+import { METRICS } from "../../constants";
+import { track } from "../../constants/analytics";
 
 const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice}) => {
   const originalPrice = Math.round(product.price * 1.2);
@@ -48,7 +50,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         console.log('--basketData--', basketData);
     }
     var basketStr = JSON.stringify(basketData);
-    localStorage.setItem("basket",basketStr)
+    localStorage.setItem("basket",basketStr);
 });
 
   const setCheckoutCount = (count, item, basketData) => {
@@ -69,6 +71,8 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
   const handlePlusClick = (item, basketData) => {
     setQty(qty + 1);
     setCheckoutCount(qty + 1, item, basketData);
+    let storeId = sessionStorage.getItem('storeId');
+    track(storeId, METRICS.BASKET_ADD);
   }
 
   const handleMinusClick = (item, basketData) => {
