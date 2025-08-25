@@ -30,6 +30,11 @@ const MainView = () => {
         import("./notifications/Notifications.js")
     );
 
+    const StatsComponent = lazy(() =>
+        //delay(100).then(() => import("./stats/Stats.js"))
+        import("./stats/Stats.js")
+    );
+
     const showMessage = (msg) => {
         setMessage(msg);
     };
@@ -52,6 +57,9 @@ const MainView = () => {
             </Suspense>}
             {view == 'notifications' && <Suspense fallback={<></>}>
                 <NotificationsComponent />
+            </Suspense>}
+            {view == 'stats' && <Suspense fallback={<></>}>
+                <StatsComponent />
             </Suspense>}
         </div>
     );

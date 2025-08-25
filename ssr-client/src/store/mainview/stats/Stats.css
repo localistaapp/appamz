@@ -1,0 +1,227 @@
+.container {
+    padding: 16px;
+    flex: 1;
+    padding-bottom: 120px; /* space for sticky footer */
+    width: 90%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  input, select, textarea {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding: 12px;
+    width: -webkit-fill-available;
+    font-family: "Montserrat", sans-serif;
+}
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .footer-buttons {
+    background: #fff;
+    bottom: 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, .1);
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 16px;
+    position: -webkit-sticky;
+    position: sticky;
+    width: -webkit-fill-available;
+    width: 96% !important;
+  }
+
+  .footer-buttons button {
+    align-items: center;
+    border: 1px solid #ffffff !important;
+    background: linear-gradient(180deg, #f94f50, #dc0304);
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    flex: 1 1;
+    font-size: 1rem;
+    gap: 8px;
+    justify-content: center;
+    padding: 12px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+  }
+
+  .footer-buttons button:hover {
+    opacity: 0.95;
+  }
+
+  .notif-tabs-container {
+    background: transparent !important;
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 20px auto;
+    position: relative;
+    font-family: 'Intel Clear', sans-serif;
+}
+
+.notif-tabs {
+    display: flex;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    flex: 1;
+    gap: 2px;
+}
+
+.notif-tab {
+    display: flex;
+    padding: 10px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 8px 8px 0px 0px;
+    background: var(--System-Neutral-background-lightest, #FAFAFA);
+    box-shadow: 0px 5px 9px 4px rgba(17, 52, 100, 0.05);
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Montserrat';
+}
+
+.notif-tab.active {
+    display: flex;
+    padding: 10px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    border-radius: 8px 8px 0px 0px;
+    background: #f81134;
+    color: #fff;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.chevron-btn {
+    display: flex;
+    width: 40px;
+    height: 32px;
+    padding: 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--Spacing-spacing-4, 4px);
+    border: 1px solid var(--System-Neutral-border-default, #D9D9D9);
+    background: var(--System-Neutral-Inverted-white, #FFF);
+    cursor: pointer;
+    font-family: 'Intel Clear', sans-serif;
+}
+
+.chevron-btn:disabled {
+    background: var(--System-Neutral-background-hover, #F5F5F5);
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.headline {
+  font-size: 1.25rem;
+}
+
+.festive {
+  margin-top: 20px;
+  margin-bottom: 200px;
+}
+
+.notif-item {
+  margin-top: 12px;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.notif-item-title {
+  font-weight: 500;
+}
+
+.notif-item-desc {
+  color: #666;
+  margin-top: 6px;
+}
+
+.notif-item-due {
+  text-align: right;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #666;
+}
+.funnel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+.funnel-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+}
+
+.funnel-bar-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.funnel-bar {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Stacked QR + Direct */
+.funnel-bar.stacked {
+  display: flex;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-qr {
+  background: #388e3c;
+  height: 100%;
+}
+
+.bar-direct {
+  background: #81c784;
+  height: 100%;
+  border-left: 2px solid #fff; /* separation */
+}
+
+.funnel-label {
+  width: 250px;
+  font-size: 14px;
+  padding-left: 12px;
+  color: #333;
+}
+
+.breakdown {
+  font-size: 12px;
+  color: #666;
+}
+
