@@ -459,9 +459,10 @@ app.get("/store/get-all/:storeId", (req, res) => {
   }});
 });
 
-app.get("/store-stats/:storeId", (req, res) => {
+app.get("/store-stats/:storeId/:type", (req, res) => {
   const client = new Client(dbConfig);
   let storeId = req.params.storeId;
+  let type = req.params.type;
   console.log('---store api storeId--', storeId);
   client.connect(err => {
     if (err) {
@@ -469,7 +470,7 @@ app.get("/store-stats/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-      client.query("select metric, value from am_store_stats where store_id = "+storeId,
+      client.query("select metric, value from am_store_stats where type = '"+type+"' and store_id = "+storeId,
       [], (err, response) => {
             if (err) {
               console.log(err)
