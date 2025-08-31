@@ -234,9 +234,9 @@ subApp.get("/manifest.json", (req, res) => {
   res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://quikrush.com/assets/images/kidsaurajpnagar/icon.png","sizes":"192x192"}]}');
 });
 
-app.use(vhost('kindjpnagar.quikrush.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.quikrush.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.quikrush.com', subApp));
+app.use(vhost('kindjpnagar.slashify.in', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.slashify.in', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('kidsaurajpnagar.slashify.in', subApp));
 
 const swirlyoSubApp = express();
 
