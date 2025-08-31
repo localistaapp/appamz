@@ -55,7 +55,7 @@ const ShopHeader = (props) => {
 
     return <div
         className="header">
-            <img class="store-logo-shop" src="../../assets/images/qlogo.png"></img>
+            <img class="store-logo-shop" src="../../assets/images/sflogo.png"></img>
         </div>
 }
 
