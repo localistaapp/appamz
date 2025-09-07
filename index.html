@@ -769,6 +769,9 @@ card-btn{
           }
       }
       @media (max-width: 768px) {
+        .desktop-only {
+            display: none;
+          }
         .icon-list-heading {
             top: 146vw !important;
             margin: 0 auto;
@@ -785,10 +788,13 @@ card-btn{
             padding-left: 26px;
         }
         .icon-tile > img {
-            width: 64px;
+          width: 58px;
+          height: 52px;
+          margin-left: 6px;
         }
         .icon-label {
           top: 6px;
+          margin-left: 6px;
           position: relative;
         }
         .logo {
@@ -1074,7 +1080,7 @@ card-btn{
           </div>
       </div>
      </section>
-     <section class="pt-8 bg-white overflow-hidden pb-10 ">
+     <section class="pt-8 bg-white overflow-hidden pb-10 desktop-only">
         <div class="container px-4 mx-auto pb-8">
            <h2 class="text-3xl md:text-6xl text-center font-bold font-heading font-heading tracking-px-n leading-tight mx-auto wide-headline headline" style="width: 100% !important;"><span>Local</span> finds. <span>Viral</span> deals!</h2>
         </div>
