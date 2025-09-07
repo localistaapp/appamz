@@ -2,7 +2,7 @@ import "./Header.css";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
-import confetti from "https://cdn.skypack.dev/canvas-confetti";
+//import confetti from "https://cdn.skypack.dev/canvas-confetti";
 import { track } from "../constants/analytics";
 import { METRICS } from "../constants";
 
@@ -138,7 +138,7 @@ const Header = (props) => {
         console.log('cb-', result.subscriber_id); //will output the user's subscriberId
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         if (localStorage.getItem('subscribed') == null) {
-            confetti();
+            //confetti();
             addTopCardClass();
             showCashbackCard();
             setShowAddToHome(false);
@@ -215,6 +215,10 @@ const Header = (props) => {
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
             setIsShopFlow(true);
         } else {
+            /*confetti();
+            addTopCardClass();
+            showCashbackCard();
+            setShowAddToHome(false);*/
             getClientLogo(storeConfigVal.storeId);
             getCashback(storeConfigVal);
             showOfferPromptStates();
