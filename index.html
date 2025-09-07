@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>quikrush - shop from local stores & unlock rewards</title>
+    <title>slashify - shop from local stores & unlock rewards</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="icon" type="image/png" sizes="32x32" href="shuffle-for-tailwind.png">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" defer></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/TweenMax.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/plugins/ModifiersPlugin.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.2/utils/Draggable.min.js'></script>
+    <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/ThrowPropsPlugin.min.js'></script>
     <style type="text/css">
       @font-face {
         font-family: goodtimes;
@@ -753,6 +757,9 @@ card-btn{
     right: 68px;
   }
       @media (min-width: 768px) {
+          .mobile-only {
+            display: none;
+          }
           .md\:text-6xl {
               font-size: 2.625rem;
               font-weight: 300;
@@ -762,6 +769,122 @@ card-btn{
           }
       }
       @media (max-width: 768px) {
+        .icon-list-heading {
+            top: 146vw !important;
+            margin: 0 auto;
+            left: 0;
+            right: 0;
+        }
+        .icon-list {
+            top: 157vw;
+            position: absolute;
+            display: inline-table;
+        }
+        .icon-tile {
+            display: table-cell;
+            padding-left: 26px;
+        }
+        .icon-tile > img {
+            width: 64px;
+        }
+        .icon-label {
+          top: 6px;
+          position: relative;
+        }
+        .logo {
+              width: 160px;
+              margin-top: -4px !important;
+              margin-left: 6px !important;
+          }
+        .mob-cta {
+          background: #f81134;
+          color: #fff;
+          width: 92vw;
+          margin: 0 auto;
+          left: 0;
+          right: 0;
+          position: absolute;
+          bottom: 40px;
+        }
+        section#mobOnly {
+          display: flex;
+          position: relative;
+          flex-direction: column;
+          width: 100vw;
+          height: 100vh;
+          top: -32px;
+        }
+        .slide-head {
+          font-family: 'quicksand';
+        font-size: 1.9rem;
+        position: absolute;
+        top: 99px;
+        padding-left: 30px;
+        padding-right: 30px;
+        font-weight: 200;
+        text-align: center;
+        line-height: 36px;
+        }
+        .slide-desc {
+          font-family: 'quicksand';
+        font-size: 1.18rem;
+        position: absolute;
+        top: 163px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-weight: 400;
+        text-align: center;
+        line-height: 26px;
+        color: #454545;
+      }
+
+        .white-top {
+          top: 96vw;
+          position: absolute;
+          width: 74vw;
+          margin: 0 auto;
+          left: 0;
+          right: 0;
+        }
+
+        .controls {
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 70px;
+          min-height: 70px;
+        }
+
+        .slides-container {
+          position: relative;
+          overflow: hidden;
+          display: flex;
+          flex: 1;
+          pointer-events: none;
+        }
+
+        .slide {
+          position: absolute;
+          background-size: 100%;
+          font-size: 90px;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.9);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          width: calc(100% / 3);
+          width: 100%;
+          height: 94vw;
+        }
+
+        .slides-inner {
+          position: relative;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+        }
           .sticky-btn {
             position: fixed;bottom: -16px;margin: 0 auto;left: 0;right: 0;
           }
@@ -870,7 +993,7 @@ card-btn{
                  <div class="flex flex-wrap justify-between h-full">
                     <div class="w-full">
                        <div class="flex items-center justify-between -m-2">
-                          <div class="w-auto p-2">                <a class="inline-block" href="#">                  <img src="assets/images/qlogo.png" alt="">                </a>              </div>
+                          <div class="w-auto p-2">                <a class="inline-block" href="#">                  <img src="assets/images/sflogo.png" alt="">                </a>              </div>
                           <div class="w-auto p-2">
                              <button x-on:click="mobileNavOpen = !mobileNavOpen">
                                 <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -903,6 +1026,53 @@ card-btn{
            </div>
         </div>
         
+     </section>
+     <section id="mobOnly" class="pt-8 bg-white overflow-hidden pb-10 mobile-only">
+      <div class="slides-container">
+        <div class="slides-inner">
+          <div class="slide">
+            <img src="assets/images/01.png"/>
+            <div class="slide-head">Local shopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+          </div>
+          <div class="slide">
+            <img src="assets/images/020.png"/>
+            <div class="slide-head">Fashion shopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+          </div>
+          <div class="slide">
+            <img src="assets/images/030.png"/>
+            <div class="slide-head">Cafe hopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+          </div>
+          <div class="slide">
+            <img src="assets/images/040.png"/>
+            <div class="slide-head">Spa booking that keeps <span style="font-weight: 600;">paying back</span>!</div>
+          </div>
+        </div>
+        
+      </div>
+      <img class="white-top" src="assets/images/white-top.png" />
+      <div class="slide-desc" style="top: 108vw;">No more coupon spamming. Get your FREE <b>card</b> to slash local spends.</div>
+      
+     </section>
+     <section class="mobile-only">
+      <div class="slide-desc icon-list-heading">Enjoy <b>slashed prices</b> at:</div>
+      <div class="icon-list">
+          <div class="icon-tile">
+            <img src="assets/images/ic_cafe.png" />
+            <span class="icon-label">Cafes</span>
+          </div>
+          <div class="icon-tile">
+            <img src="assets/images/ic_fashion.png" />
+            <span class="icon-label">Fashion</span>
+          </div>
+          <div class="icon-tile">
+            <img src="assets/images/ic_spa.png" />
+            <span class="icon-label" style="margin-left: 14px;">Spas</span>
+          </div>
+          <div class="icon-tile">
+            <img src="assets/images/ic_more.png" />
+            <span class="icon-label">& More</span>
+          </div>
+      </div>
      </section>
      <section class="pt-8 bg-white overflow-hidden pb-10 ">
         <div class="container px-4 mx-auto pb-8">
@@ -957,7 +1127,7 @@ card-btn{
      <section id="howItWorks" class="relative pb-24 bg-white overflow-hidden pt-16 section-how">
         <img class="absolute left-1/2 top-0 transform -translate-x-1/2" src="assets/flaro-assets/images/how-it-works/gradient2.svg" alt="">  
         <div class="relative z-10 container px-4 mx-auto">
-           <p class="mb-6 text-sm text-indigo-600 text-center font-semibold uppercase tracking-px">HOW quikrush WORKS</p>
+           <p class="mb-6 text-sm text-indigo-600 text-center font-semibold uppercase tracking-px">HOW slashify WORKS</p>
            <h2 class="mb-20 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight headline">Get rewarded for good taste</h2>
            <div class="flex flex-wrap -m-8">
               <div class="w-full md:w-1/2 lg:w-1/4 p-8 custom-mar-44" style="padding-top: 1rem;">
@@ -1004,7 +1174,7 @@ card-btn{
                     </div>
                     <div class="md:max-w-xs mx-auto">
                        <h3 class="mb-4 font-heading text-xl font-bold font-heading leading-normal">Shop Online</h3>
-                       <p class="text-gray-600 font-medium leading-relaxed">Shop the store catalog online with quikrush</p>
+                       <p class="text-gray-600 font-medium leading-relaxed">Shop the store catalog online with slashify</p>
                     </div>
                  </div>
               </div>
@@ -1057,7 +1227,7 @@ card-btn{
               </div>
               <div class="w-full md:w-1/2 p-8 sticky-btn">
                  <div class="flex flex-wrap ml-auto md:w-56 -m-2">
-                    <div class="w-full p-2">            <button class="py-4 px-6 w-full font-medium rounded-xl shadow-6xl focus:ring focus:ring-gray-300 bg-white hover:bg-gray-100 transition ease-in-out duration-200" style="background: #f81134;color: #fff;" type="button" onclick="window.location.href='/app/shop/'">Shop Now</button>          </div>
+                    <div class="w-full p-2">            <button class="mob-cta py-4 px-6 w-full font-medium rounded-xl shadow-6xl focus:ring focus:ring-gray-300 bg-white hover:bg-gray-100 transition ease-in-out duration-200" style="background: #f81134;color: #fff;" type="button" onclick="window.location.href='/app/shop/'">Shop Now</button>          </div>
                     <div class="w-full p-2">
                        
                     </div>
@@ -1069,16 +1239,137 @@ card-btn{
      <section class="relative py-8 bg-indigo-600 overflow-hidden" style="background: #fff; padding-top: 3rem">
       
       <div class="relative z-10 container px-4 mx-auto">
-         <div class="flex flex-wrap items-center -m-8">
+         <div class="flex flex-wrap items-center -m-2">
             <div class="w-full md:w-1/2 p-8">
               
-               <p class=" text-opacity-90 font-medium md:max-w-md py-12" style="text-align: center;color:#b7b7b7;padding-bottom: 6px">Copyright © 2025 quikrush</p>
-            </div>
+               <p class=" text-opacity-90 font-medium md:max-w-md py-12" style="text-align: center;color:#b7b7b7;padding-bottom: 6px">Copyright © 2025 slashify</p>
+               <br/><br/><br/><br/>
+              </div>
             
          </div>
       </div>
    </section>
   </div>
+  <script type="text/javascript">
+  var slideDelay = 2.5;
+  var slideDuration = 0.3;
+
+  var slides = document.querySelectorAll(".slide");
+  var prevButton = document.querySelector("#prevButton");
+  var nextButton = document.querySelector("#nextButton");
+
+  var numSlides = slides.length;
+
+  for (var i = 0; i < numSlides; i++) {
+    TweenLite.set(slides[i], {
+      backgroundColor: Math.random() * 0xffffff,
+      xPercent: i * 100
+    });
+  }
+
+  var wrap = wrapPartial(-100, (numSlides - 1) * 100);
+  var timer = TweenLite.delayedCall(slideDelay, autoPlay);
+
+  var animation = TweenMax.to(slides, 1, {
+    xPercent: "+=" + (numSlides * 100),
+    ease: Linear.easeNone,
+    paused: true,
+    repeat: -1,
+    modifiers: {
+      xPercent: wrap
+    }
+  });
+
+  var proxy = document.createElement("div");
+  TweenLite.set(proxy, { x: "+=0" });
+  var transform = proxy._gsTransform;
+  var slideAnimation = TweenLite.to({}, 0.1, {});
+  var slideWidth = 0;
+  var wrapWidth = 0;
+  resize();
+
+  var draggable = new Draggable(proxy, {
+    trigger: ".slides-container",
+    throwProps: true,
+    onPress: updateDraggable,
+    onDrag: updateProgress,
+    onThrowUpdate: updateProgress,
+    snap: {     
+      x: snapX
+    }
+  });
+
+  window.addEventListener("resize", resize);
+
+  prevButton.addEventListener("click", function() {
+    animateSlides(1);
+  });
+
+  nextButton.addEventListener("click", function() {
+    animateSlides(-1);
+  });
+
+function updateDraggable() {
+  
+  timer.restart(true);
+  slideAnimation.kill();
+  this.update();
+}
+
+function animateSlides(direction) {
+    
+  timer.restart(true);
+  slideAnimation.kill();
+  
+  var x = snapX(transform.x + direction * slideWidth);
+  
+  slideAnimation = TweenLite.to(proxy, slideDuration, {
+    x: x,
+    onUpdate: updateProgress
+  });  
+}
+
+function autoPlay() {  
+    
+  if (draggable.isPressed || draggable.isDragging || draggable.isThrowing) {
+    timer.restart(true);
+  } else {
+    animateSlides(-1);
+  }
+}
+
+function updateProgress() {  
+  animation.progress(transform.x / wrapWidth);
+}
+
+function snapX(x) {
+  return Math.round(x / slideWidth) * slideWidth;
+}
+
+function resize() {
+  
+  var norm = (transform.x / wrapWidth) || 0;
+  
+  slideWidth = slides[0].offsetWidth;
+  wrapWidth = slideWidth * numSlides;
+  
+  TweenLite.set(proxy, {
+    x: norm * wrapWidth
+  });
+  
+  animateSlides(0);
+  slideAnimation.progress(1);
+}
+
+function wrapPartial(min, max) {  
+  var r = max - min;  
+  return function(value) {
+    var v = value - min;
+    return ((r + v % r) % r) + min;
+  }
+}
+
+  </script>
 </body>
 </html>
 
