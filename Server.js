@@ -226,12 +226,12 @@ subApp.get("/app/:store", (req, res) => {
 
 subApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-83753.js?r=635315")');
+  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
 });
 
 subApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"Kids Aura","short_name":"Kids Aura","start_url":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://quikrush.com/assets/images/kidsaurajpnagar/icon.png","sizes":"192x192"}]}');
+  res.send('{"name":"kids aura","short_name":"kids aura","start_url":"https://kidsaurajpnagar.slashify.in/app/kidsa","id":"https://kidsaurajpnagar.slashify.in/app/kidsa","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-83010-1.png?1757239505","sizes":"192x192"}]}');
 });
 
 app.use(vhost('kindjpnagar.slashify.in', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
