@@ -117,6 +117,129 @@ p.notif-card-msg-txt {
 .card-margin-logo {
     top: 159px;
 }
+.holder {
+    position: relative;
+  }
+  .scard {
+    border: 1px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+    font-size: 2rem;
+    height: 220px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 370px;
+    position: fixed;
+    width: 80vw;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+  .scard:before {
+    background-color: rgb(255 255 255 / 1%);
+    backdrop-filter: blur(10px) saturate(100%) contrast(100%) brightness(100%);
+    -webkit-backdrop-filter: blur(10px) saturate(100%) contrast(45%) brightness(130%);
+    content: "";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+  .card__text {
+    color: #6f7886;
+    margin-left: 30px;
+    margin-top: 100px;
+    position: relative;
+    z-index: 2;
+  }
+  .scard svg {
+    bottom: 30px;
+    position: absolute;
+    right: 30px;
+  }
+  .scard-mini {
+    border: 1px solid #fff;
+    border-radius: 15px;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    font-size: 2rem;
+    height: 220px;
+    left: 0;
+    margin: 0 auto;
+    max-width: 370px;
+    overflow: hidden;
+    position: relative;
+    right: 0;
+    width: 100%;
+    width: 80vw;
+    z-index: 1;
+    height: 50px;
+    width: 100%;
+    border-radius: 0;
+    background: white;
+}
+.ssbox {
+    background: #f81134;
+    height: 43px;
+    margin: 50px;
+    width: 150px;
+}
+  
+.left-skew {
+    border-top-right-radius: 15px;
+    float: right;
+    position: absolute;
+    right: -52px;
+    top: -50px;
+    z-index: 0;
+}
+.left-skew:before {
+    background: red;
+    bottom: 0;
+    content: "";
+    display: block;
+    left: -28px;
+    position: absolute;
+    top: 0;
+    transform: skew(20deg);
+    width: 55px;
+    z-index: -1;
+}
+.scard > img.sslogo {
+    position: absolute;
+    width: 24px;
+    top: 12px;
+    left: 14px;
+}
+.card__elig {
+    font-size: 1.05rem;
+    margin-left: 52px;
+    margin-top: 8px;
+    position: absolute;
+    top: 56px;
+    width: 222px;
+    z-index: 0;
+}
+img.card__elig_loc_logo {
+    position: absolute;
+    z-index: 0;
+    top: 119px;
+}
+img.card__elig_loc {
+    left: 160px;
+    position: absolute;
+    top: 103px;
+    z-index: 0;
+}
+  
+  @keyframes orbit {
+    from {
+      transform: rotate(0deg) translateX(100px) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateX(100px) rotate(-360deg);
+    }
+  }
 
 @media screen and (min-width:768px) {
     .menu-bar {
