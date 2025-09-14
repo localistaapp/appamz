@@ -288,7 +288,7 @@ const Header = (props) => {
             localStorage.setItem('nanoId', nanoId);
           }
           let cashbackPc = 0.05; //0.1 if from=store 
-          cashbackPc = 0.1;
+          cashbackPc = 0.2;
           setShareLoading(true);
 
           //fetchStoreDetail(storeConfigVal)
@@ -315,9 +315,12 @@ const Header = (props) => {
                       await navigator.share({
                         title: 'Special offer on Slashify 🎉',
                         text: shareText,
-                        url: 'https://www.slashify.in/app/shop/id='+product['place_id']+'&u='+nanoId
+                        url: 'https://www.slashify.in/app/shop/id='+storeConfig.placeId+'&u='+nanoId
                       });
                       setShareLoading(false);
+                      getCashback(storeConfig.storeId);
+                      setShowCashback(true);
+                      confetti();
                       console.log('Shared successfully');
                     } catch (err) {
                       console.error('Share failed:', err);
@@ -388,12 +391,12 @@ const Header = (props) => {
         {
             showCashbackDone && maxCashbackValue > 0 && <div class="holder">
 
-                <div class="scard-mini" onClick={handleScardMiniClick}>
-                    <img class="sslogo" src="../../assets/images/slogos.png"/>
-                    <span class="scard-mini-text">Share to earn upto ₹{maxCashbackValue}/-</span>
-                    <div id="webcrumbs" class="mini-share-ic"><i class="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px',color: '#22c55d'}}></i></div>
-                    <div class="card__text"></div><div class="ssbox left-skew"></div>
-                    <div class="scard-mini-cashback">₹{cashbackValue} collected</div>
+                <div class="scard-mini">
+                    <img class="sslogo" src="../../assets/images/slogos.png" onClick={handleScardMiniClick} />
+                    <span class="scard-mini-text" onClick={triggerShare}>Share to earn upto ₹{maxCashbackValue}/-</span>
+                    <div id="webcrumbs" class="mini-share-ic" onClick={triggerShare}><i class="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px',color: '#22c55d'}}></i></div>
+                    <div class="card__text"></div><div class="ssbox left-skew" onClick={handleScardMiniClick}></div>
+                    <div class="scard-mini-cashback" onClick={handleScardMiniClick}>₹{cashbackValue} collected</div>
                     </div>
             </div>
         }
