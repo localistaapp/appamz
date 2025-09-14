@@ -141,7 +141,7 @@ const Header = (props) => {
             confetti();
             //addTopCardClass();
             setShowCashback(true);
-            setShowAddToHome(true);
+            setShowAddToHome(false);
             track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
             localStorage.setItem('subscribed', 'true');
         } else {
