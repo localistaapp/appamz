@@ -144,11 +144,14 @@ const Header = (props) => {
             //confetti();
             //addTopCardClass();
             removeTopCardClass();
-            setShowCashback(true);
+            //setShowCashback(true);
             setShowAddToHome(false);
             //setTimeout(()=>{setShowCashbackDone(true);}, 4100);
-            track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
+            alert('0');
+            alert(storeConfig.storeId);
             addCashback(storeConfig.storeId);
+            track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
+            
             localStorage.setItem('subscribed', 'true');
         } else {
             setShowAddToHome(false);
