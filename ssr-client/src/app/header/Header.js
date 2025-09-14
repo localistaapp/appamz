@@ -154,11 +154,10 @@ const Header = (props) => {
         //ToDo: Remove
         /*setShowAddToHome(false);
         showCashbackCard();*/
-        confetti();
-            //addTopCardClass();
+        /*confetti();
             setShowCashback(true);
             setShowAddToHome(true);
-            setTimeout("document.getElementById('bounceElem').classList.remove('bounceElem')",3000);
+            setTimeout("document.getElementById('bounceElem').classList.remove('bounceElem')",3000);*/
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
@@ -329,7 +328,11 @@ const Header = (props) => {
                 </div>
             </div>
             <div>
-            {showCashback && <div class="holder">
+            </div>
+            <div class="card-modal" ></div>
+         </>
+        }
+        {showCashback && <div class="holder">
             <div class="scard-bg bounce-3"></div>
                 <div class="scard bounce-3">
                     <img class="sslogo" src="../../assets/images/slogos.png" />
@@ -344,10 +347,6 @@ const Header = (props) => {
                     <div class="cashback-value">₹90 collected</div>
                 </div>
                 </div>}
-            </div>
-            <div class="card-modal" ></div>
-         </>
-        }
         
         </>
 }
