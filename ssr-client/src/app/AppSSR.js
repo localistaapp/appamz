@@ -25,11 +25,11 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
                 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
                 <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400" rel="stylesheet"></link>
-                <meta property="og:title" content="Special offer on Quikrush 🎉"/>
+                <meta property="og:title" content="Special offer on Slashify 🎉"/>
                 <meta property="og:type" content="website"/>
-                <meta property="og:image" content="https://quikrush.com/assets/images/deals.png"/>
+                <meta property="og:image" content="https://slashify.in/assets/images/deals.png"/>
                 <link rel="manifest" href="/manifest.json" />
-                <title>{`quickrush | hyperlocal deals marketplace`}</title>
+                <title>{`Slashify | shop nearby & unlock rewards`}</title>
                 
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})
