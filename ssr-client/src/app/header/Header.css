@@ -123,18 +123,17 @@ p.notif-card-msg-txt {
   .scard {
     border: 1px solid #fff;
     border-radius: 15px;
-    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
     font-size: 2rem;
     height: 220px;
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    max-width: 370px;
-    position: fixed;
-    width: 80vw;
-    margin: 0 auto;
     left: 0;
+    margin: 0 auto;
+    max-width: 370px;
+    overflow: hidden;
+    position: fixed;
     right: 0;
+    width: 100%;
+    width: 100vw;
     z-index: 1;
   }
   .scard:before {
@@ -178,6 +177,35 @@ p.notif-card-msg-txt {
     border-radius: 0;
     background: white;
 }
+.scard-mini-text {
+    position: absolute;
+    font-size: 0.95rem;
+    top: 7px;
+    width: 33%;
+    left: 54px;
+}
+.cashback-type {
+    position: absolute;
+    font-size: 1.4rem;
+    margin-top: 52px;
+    width: 62px;
+    left: 28px;
+    background: #22C55D;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+}
+.scard-type {
+    position: absolute;
+    font-size: 1.4rem;
+    margin-top: 52px;
+    width: 62px;
+    left: 28px;
+    background: #22C55D;
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+}
 .ssbox {
     background: #f81134;
     height: 43px;
@@ -213,7 +241,7 @@ p.notif-card-msg-txt {
 }
 .card__elig {
     font-size: 1.05rem;
-    margin-left: 52px;
+    margin-left: 137px;
     margin-top: 8px;
     position: absolute;
     top: 56px;
@@ -231,6 +259,22 @@ img.card__elig_loc {
     top: 103px;
     z-index: 0;
 }
+.cashback-value {
+    position: absolute;
+    right: 16px;
+    font-size: 1.15rem;
+    top: 10px;
+    color: white;
+}
+.bounce-3 {
+    animation-name: bounce-3;
+    animation-timing-function: ease;
+    top:-200px;
+    animation-duration:8000ms;
+    animation-delay: 0s;
+    animation-fill-mode: forwards;
+}
+@keyframes bounce-3 { 0% { transform: translateY(0px); } 5% { transform: translateY(300px); } 15% { transform: translateY(300px); } 40% { transform: translateY(300px); } 60% { transform: translateY(-300px); } 61% { transform: translateY(-300px); } 62% { transform: translateY(-80px); } 63% { transform: translateY(-80px); } 64% { transform: translateY(-80px); } 65% { transform: translateY(-80px); } 66% { transform: translateY(-80px); } 67% { transform: translateY(-80px); } 68% { transform: translateY(-80px); } 69% { transform: translateY(-80px); } 75% { transform: translateY(-80px); } 90% { transform: translateY(-80px); } 100% { transform: translateY(-80px); } }
   
   @keyframes orbit {
     from {

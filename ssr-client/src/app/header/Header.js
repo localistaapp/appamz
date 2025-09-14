@@ -152,9 +152,9 @@ const Header = (props) => {
 
     const showOfferPromptStates = () => {
         //ToDo: Remove
-        setShowAddToHome(true);
+        /*setShowAddToHome(true);
         addTopCardClass();
-        //setShowCashback(true);
+        showCashbackCard();*/
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
@@ -325,9 +325,10 @@ const Header = (props) => {
                 </div>
             </div>
             <div>
-            <div class="holder">
-                <div class="scard">
+            {showCashbackCard && <div class="holder">
+                <div class="scard bounce-3">
                     <img class="sslogo" src="../../assets/images/slogos.png" />
+                    <div class="cashback-type">Upto 360/- OFF</div>
                     <div class="card__elig">*Eligible online & in-store across all partner stores in</div>
                     <img class="card__elig_loc" src="../../assets/images/sblr.png"/>
                     <img class="card__elig_loc_logo" src="../../assets/images/sloc_blr.png"/>
@@ -335,34 +336,14 @@ const Header = (props) => {
                     
                     </div>
                     <div class="ssbox left-skew"></div>
+                    <div class="cashback-value">₹90 collected</div>
                 </div>
-                </div>
+                </div>}
             </div>
             <div class="card-modal" ></div>
          </>
         }
-        {
-            showCashback && 
-            <div class="notif-card-box-th notif-card-box-th-1" style={{backgroundCcolor: '#fff!important'}}>
-            <div class="notif-card-msg-box-container notif-box">
-               <div class="notif-card-title-txt-container">
-                  <p class="notif-card-title-txt notif-box" style={{color:'#333!important'}}>🎉 Congratulations!</p>
-               </div>
-               <div class="notif-card-msg-txt-container">
-                  <p class="notif-card-msg-txt notif-box" style={{color:'#777!important'}}>
-                    You're eligible for instant cashback upto ₹300 per purchase.
-                    Share this viral deal to claim full cashback!
-                   </p>
-               </div>
-            </div>
-            <div class="notif-card-icon-container notif-sp">
-                <a onClick={()=>{triggerShare({name: storeName, place_id: storeConfig.placeId}, reviews)}} className="bg-green-500 text-white p-2 rounded-full flex items-center justify-center hover:bg-green-600 transition-all w-10 h-10" style={{textDecoration: 'none'}}>
-                {!shareLoading && <img style={{maxWidth: '54px'}} src="../../assets/images/wi.png" />}
-                {shareLoading && <img src="../../assets/images/6.gif" />}
-                </a>
-            </div>
-         </div>
-        }
+        
         </>
 }
 
