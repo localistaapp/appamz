@@ -389,7 +389,7 @@ const Header = (props) => {
                 </div>
                 </div>}
         {
-            showCashbackDone && maxCashbackValue > 0 && <div class="holder">
+            maxCashbackValue > 0 && <div class="holder">
 
                 <div class="scard-mini">
                     <img class="sslogo" src="../../assets/images/slogos.png" onClick={handleScardMiniClick} />
