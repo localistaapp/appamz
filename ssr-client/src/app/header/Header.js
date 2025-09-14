@@ -148,9 +148,9 @@ const Header = (props) => {
             setShowAddToHome(false);
             //setTimeout(()=>{setShowCashbackDone(true);}, 4100);
             alert('0');
-            alert(storeConfig.storeId);
-            addCashback(storeConfig.storeId);
-            track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
+            alert(window.storeConfig.storeId);
+            addCashback(window.storeConfig.storeId);
+            track(window.storeConfig.storeId, METRICS.DEALS_CLAIMED);
             
             localStorage.setItem('subscribed', 'true');
         } else {
@@ -248,6 +248,7 @@ const Header = (props) => {
             'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'}
         }
         let storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
+        window.storeConfig = storeConfigVal;
         setStoreConfig(storeConfigVal);
         homeLocation = window.location.href;
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
