@@ -134,6 +134,10 @@ const ProductList = ({products, storeConfig}) => {
       const modal = document.getElementById('modal');
       const closeBtn = document.getElementById('closeBtn');
 
+      if(localStorage.getItem('cashback-value') != null && parseInt(localStorage.getItem('cashback-value'),10) > 0) {
+        setCashbackValue(parseInt(localStorage.getItem('cashback-value'),10));
+      }
+
       openBtn.addEventListener('click', () => {
         setCurrStep(1);
         modal.classList.add('active');
@@ -177,9 +181,7 @@ const ProductList = ({products, storeConfig}) => {
         })
 
 
-        if(localStorage.getItem('cashback-value') != null && parseInt(localStorage.getItem('cashback-value'),10) > 0) {
-          setCashbackValue(parseInt(localStorage.getItem('cashback-value'),10));
-        }
+        
       
     }, []);
 
