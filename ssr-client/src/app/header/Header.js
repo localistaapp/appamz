@@ -240,6 +240,16 @@ const Header = (props) => {
             homeLocation = window.location.href.substring(0,window.location.href.indexOf('?'));
         } 
     }
+
+    const handleScardMiniClick = () => {
+        setShowCashback(true);
+        document.getElementById('scardMain').classList.remove('bounce-3');
+        document.getElementById('scardMainInner').classList.remove('bounce-3');
+        setShowCashbackDone(false);
+        setTimeout("document.getElementById('scardMain').classList.add('bounce-3');",50);
+        setTimeout("document.getElementById('scardMainInner').classList.add('bounce-3');",50);
+        setTimeout(()=>{setShowCashbackDone(true);},3700);
+    }
     const triggerShare = async (product) => {
         let shareText = '';
         
@@ -335,8 +345,8 @@ const Header = (props) => {
          </>
         }
         {showCashback && <div class="holder">
-            <div class="scard-bg bounce-3"></div>
-                <div class="scard bounce-3">
+            <div id="scardMain" class="scard-bg bounce-3"></div>
+                <div id="scardMainInner" class="scard bounce-3">
                     <img class="sslogo" src="../../assets/images/slogos.png" />
                     <div class="cashback-type">Upto 360/- OFF</div>
                     <div class="card__elig">*Eligible online & in-store across all partner stores in</div>
@@ -352,7 +362,7 @@ const Header = (props) => {
         {
             showCashbackDone && <div class="holder">
 
-                <div class="scard-mini">
+                <div class="scard-mini" onClick={handleScardMiniClick}>
                     <img class="sslogo" src="../../assets/images/slogos.png"/>
                     <span class="scard-mini-text">Share to earn upto ₹360/-</span>
                     <div id="webcrumbs" class="mini-share-ic"><i class="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px',color: '#22c55d'}}></i></div>
