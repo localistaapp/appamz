@@ -51,6 +51,7 @@ const Header = (props) => {
     const [cashbackValue, setCashbackValue] = useState(0);
     const [showAddToHome, setShowAddToHome] = useState(false);
     const [showCashback, setShowCashback] = useState(false);
+    const [showCashbackDone, setShowCashbackDone] = useState(false);
     const [logoSrc, setLogoSrc] = useState(false);
     const [shareLoading, setShareLoading] = useState(false);
     const [reviews, setReviews] = useState([]);
@@ -143,6 +144,7 @@ const Header = (props) => {
             removeTopCardClass();
             setShowCashback(true);
             setShowAddToHome(false);
+            setTimeout(()=>{setShowCashbackDone(true);}, 3700);
             track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
             localStorage.setItem('subscribed', 'true');
         } else {
@@ -153,12 +155,11 @@ const Header = (props) => {
 
     const showOfferPromptStates = () => {
         //ToDo: Remove
-        /*setShowAddToHome(false);
-        showCashbackCard();*/
-        /*confetti();
-            setShowCashback(true);
-            setShowAddToHome(true);
-            setTimeout("document.getElementById('bounceElem').classList.remove('bounceElem')",3000);*/
+        /*removeTopCardClass();
+        setShowAddToHome(false);
+        setShowCashback(true);
+        confetti();
+        setTimeout(()=>{setShowCashbackDone(true);}, 3700);*/
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
@@ -348,6 +349,18 @@ const Header = (props) => {
                     <div class="cashback-value">₹90 collected</div>
                 </div>
                 </div>}
+        {
+            showCashbackDone && <div class="holder">
+
+                <div class="scard-mini">
+                    <img class="sslogo" src="../../assets/images/slogos.png"/>
+                    <span class="scard-mini-text">Share to earn upto ₹360/-</span>
+                    <div id="webcrumbs" class="mini-share-ic"><i class="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px',color: '#22c55d'}}></i></div>
+                    <div class="card__text"></div><div class="ssbox left-skew"></div>
+                    <div class="scard-mini-cashback">₹90 collected</div>
+                    </div>
+            </div>
+        }
         
         </>
 }

@@ -184,7 +184,7 @@ p.notif-card-msg-txt {
   .scard-mini {
     border: 1px solid #fff;
     border-radius: 15px;
-    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2);
+    box-shadow: none;
     font-size: 2rem;
     height: 220px;
     left: 0;
@@ -200,13 +200,30 @@ p.notif-card-msg-txt {
     width: 100%;
     border-radius: 0;
     background: white;
+    margin-top: 6px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.scard-mini-cashback {
+    left: 232px;
+    position: absolute;
+    top: 11px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
 }
 .scard-mini-text {
+    font-size: .9rem;
+    left: 51px;
     position: absolute;
-    font-size: 0.95rem;
-    top: 7px;
+    top: 8px;
     width: 33%;
-    left: 54px;
+}
+.mini-share-ic {
+    position: relative !important;
+    top: 10px !important;
+    left: 126px !important;
+    float: left;
 }
 .cashback-type {
     position: absolute;
@@ -258,6 +275,12 @@ p.notif-card-msg-txt {
     z-index: -1;
 }
 .scard > img.sslogo {
+    position: absolute;
+    width: 24px;
+    top: 12px;
+    left: 14px;
+}
+.scard-mini > img.sslogo {
     position: absolute;
     width: 24px;
     top: 12px;
