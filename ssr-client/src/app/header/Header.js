@@ -325,7 +325,7 @@ const Header = (props) => {
                 </div>
             </div>
             <div>
-            {showCashbackCard && <div class="holder">
+            {showCashback && <div class="holder">
                 <div class="scard bounce-3">
                     <img class="sslogo" src="../../assets/images/slogos.png" />
                     <div class="cashback-type">Upto 360/- OFF</div>
