@@ -140,6 +140,7 @@ const Header = (props) => {
         if (localStorage.getItem('subscribed') == null) {
             confetti();
             //addTopCardClass();
+            removeTopCardClass();
             setShowCashback(true);
             setShowAddToHome(false);
             track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
