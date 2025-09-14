@@ -575,6 +575,7 @@ app.get("/user/st-cashback/:nanoId/:storeId", (req, res) => {
   console.log('---nanoId--', nanoId);
   console.log('---storeId--', storeId);
   let cashBackValue = 0;
+  let maxCashBackValue = 0;
 
   client.connect(err => {
     if (err) {
@@ -591,9 +592,10 @@ app.get("/user/st-cashback/:nanoId/:storeId", (req, res) => {
             } else {
               if (response.rows && response.rows.length > 0) {
                 cashBackValue = response.rows[0]['cashback_pc'];
+                maxCashBackValue =  response.rows[0]['max_cashback_value']/response.rows[0]['collected_over'];
                 cashBackValue = cashBackValue * response.rows[0]['max_cashback_value']/response.rows[0]['collected_over'];
               } 
-              res.send('{"cashBackValue": '+cashBackValue+'}');
+              res.send('{"cashBackValue": '+cashBackValue+', "maxCashBackValue": '+maxCashBackValue+'}');
               client.end();
             }
       });

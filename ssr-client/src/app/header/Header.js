@@ -49,6 +49,7 @@ const Header = (props) => {
     const [isShopFlow, setIsShopFlow] = useState(false);
     const [cashbackExists, setCashbackExists] = useState(false);
     const [cashbackValue, setCashbackValue] = useState(0);
+    const [maxCashbackValue, setMaxCashbackValue] = useState(0);
     const [showAddToHome, setShowAddToHome] = useState(false);
     const [showCashback, setShowCashback] = useState(false);
     const [showCashbackDone, setShowCashbackDone] = useState(false);
@@ -59,14 +60,15 @@ const Header = (props) => {
     const [storeConfig, setStoreConfig] = useState(null);
     let homeLocation = '/';
 
-    const getCashback = (storeConfigVal) => {
+    const getCashback = (storeId) => {
         //alert(`/user/st-cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`);
-        axios.get(`/user/st-cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`)
+        axios.get(`/user/st-cashback/${localStorage.getItem('nanoId')}/${storeId}`)
         .then(function (response) {
             console.log('--user cashback data-----', response.data.cashBackValue);
             if (response.data != null && response.data.cashBackValue > 0) {
                 setCashbackExists(true);
                 setCashbackValue(response.data.cashBackValue);
+                setMaxCashbackValue(response.data.maxCashBackValue);
                 localStorage.setItem('cashback-value', response.data.cashBackValue);
             }
         })
@@ -144,8 +146,9 @@ const Header = (props) => {
             removeTopCardClass();
             setShowCashback(true);
             setShowAddToHome(false);
-            setTimeout(()=>{setShowCashbackDone(true);}, 3700);
+            //setTimeout(()=>{setShowCashbackDone(true);}, 4100);
             track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
+            addCashback(storeConfig.storeId);
             localStorage.setItem('subscribed', 'true');
         } else {
             setShowAddToHome(false);
@@ -153,13 +156,31 @@ const Header = (props) => {
         }
     }
 
-    const showOfferPromptStates = () => {
+    const addCashback = (storeId) => {
+        let nanoId = localStorage.getItem('nanoId');
+
+        if (nanoId == null) {
+            nanoId = nanoid();
+            localStorage.setItem('nanoId', nanoId);
+        }
+        let cashbackPc = 0.1; //0.1 if from=store 
+        axios.post(`/store/user/create/`, {nanoId: nanoId, storeId: storeId, cashbackPc: cashbackPc, storeUrl: window.shopOnlineUrl}).then(async (response) => {
+            console.log(response.status);
+            getCashback(storeId);
+            confetti();
+            setShowCashback(true);
+            setTimeout(()=>{setShowCashbackDone(true);}, 3700);
+        });
+    }
+
+    const showOfferPromptStates = (storeId) => {
         //ToDo: Remove
+        
         /*removeTopCardClass();
         setShowAddToHome(false);
-        setShowCashback(true);
-        confetti();
-        setTimeout(()=>{setShowCashbackDone(true);}, 3700);*/
+        addCashback(storeId);*/
+        
+
         if (isNotSubscribed()) {
             if (isIOS()) {
                 console.log('isNotificationShown: ',isNotificationShown());
@@ -228,8 +249,8 @@ const Header = (props) => {
             showCashbackCard();
             setShowAddToHome(false);*/
             getClientLogo(storeConfigVal.storeId);
-            getCashback(storeConfigVal);
-            showOfferPromptStates();
+            getCashback(storeConfigVal.storeId);
+            showOfferPromptStates(storeConfigVal.storeId);
         }
       }, []);
 
@@ -289,7 +310,7 @@ const Header = (props) => {
                       await navigator.share({
                         title: 'Special offer on Quikrush 🎉',
                         text: shareText,
-                        url: 'https://www.quikrush.com/app/shop/id='+product['place_id']+'&u='+nanoId
+                        url: 'https://www.slashify.in/app/shop/id='+product['place_id']+'&u='+nanoId
                       });
                       setShareLoading(false);
                       console.log('Shared successfully');
@@ -344,11 +365,11 @@ const Header = (props) => {
             <div class="card-modal" ></div>
          </>
         }
-        {showCashback && <div class="holder">
+        {showCashback && maxCashbackValue > 0 && <div class="holder">
             <div id="scardMain" class="scard-bg bounce-3"></div>
                 <div id="scardMainInner" class="scard bounce-3">
                     <img class="sslogo" src="../../assets/images/slogos.png" />
-                    <div class="cashback-type">Upto 360/- OFF</div>
+                    <div class="cashback-type">Upto {maxCashbackValue} OFF</div>
                     <div class="card__elig">*Eligible online & in-store across all partner stores in</div>
                     <img class="card__elig_loc" src="../../assets/images/sblr.png"/>
                     <img class="card__elig_loc_logo" src="../../assets/images/sloc_blr.png"/>
@@ -356,18 +377,18 @@ const Header = (props) => {
                     
                     </div>
                     <div class="ssbox left-skew"></div>
-                    <div class="cashback-value">₹90 collected</div>
+                    <div class="cashback-value">₹{cashbackValue} collected</div>
                 </div>
                 </div>}
         {
-            showCashbackDone && <div class="holder">
+            showCashbackDone && maxCashbackValue > 0 && <div class="holder">
 
                 <div class="scard-mini" onClick={handleScardMiniClick}>
                     <img class="sslogo" src="../../assets/images/slogos.png"/>
-                    <span class="scard-mini-text">Share to earn upto ₹360/-</span>
+                    <span class="scard-mini-text">Share to earn upto ₹{maxCashbackValue}/-</span>
                     <div id="webcrumbs" class="mini-share-ic"><i class="fa-brands fa-whatsapp text-xl" style={{fontSize: '34px',color: '#22c55d'}}></i></div>
                     <div class="card__text"></div><div class="ssbox left-skew"></div>
-                    <div class="scard-mini-cashback">₹90 collected</div>
+                    <div class="scard-mini-cashback">₹{cashbackValue} collected</div>
                     </div>
             </div>
         }
