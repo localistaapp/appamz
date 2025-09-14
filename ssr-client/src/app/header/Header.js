@@ -139,7 +139,7 @@ const Header = (props) => {
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
         if (localStorage.getItem('subscribed') == null) {
             confetti();
-            addTopCardClass();
+            //addTopCardClass();
             showCashbackCard();
             setShowAddToHome(false);
             track(storeConfig.storeId, METRICS.DEALS_CLAIMED);
@@ -152,8 +152,7 @@ const Header = (props) => {
 
     const showOfferPromptStates = () => {
         //ToDo: Remove
-        /*setShowAddToHome(true);
-        addTopCardClass();
+        /*setShowAddToHome(false);
         showCashbackCard();*/
         if (isNotSubscribed()) {
             if (isIOS()) {
