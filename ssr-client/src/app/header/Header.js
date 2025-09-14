@@ -147,8 +147,7 @@ const Header = (props) => {
             //setShowCashback(true);
             setShowAddToHome(false);
             //setTimeout(()=>{setShowCashbackDone(true);}, 4100);
-            alert('0');
-            alert(window.storeConfig.storeId);
+
             addCashback(window.storeConfig.storeId);
             track(window.storeConfig.storeId, METRICS.DEALS_CLAIMED);
             
@@ -160,24 +159,20 @@ const Header = (props) => {
     }
 
     const addCashback = (storeId) => {
-        alert('1');
         let nanoId = localStorage.getItem('nanoId');
-        alert('2');
+
         if (nanoId == null) {
             nanoId = nanoid();
             localStorage.setItem('nanoId', nanoId);
         }
-        alert('3');
+
         let cashbackPc = 0.1; //0.1 if from=store 
         axios.post(`/store/user/create/`, {nanoId: nanoId, storeId: storeId, cashbackPc: cashbackPc, storeUrl: window.shopOnlineUrl}).then(async (response) => {
-            alert('4');
+            
             console.log(response.status);
-            alert(storeId);
             getCashback(storeId);
-            alert('5')
             setShowCashback(true);
             confetti();
-            alert('6')
             setTimeout(()=>{setShowCashbackDone(true);}, 3200);
         });
     }
