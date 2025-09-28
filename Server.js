@@ -234,9 +234,9 @@ subApp.get("/manifest.json", (req, res) => {
   res.send('{"name":"kids aura","short_name":"kids aura","start_url":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-83010-1.png?1757239505","sizes":"192x192"}]}');
 });
 
-app.use(vhost('kindjpnagar.slashify.in', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.slashify.in', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.slashify.in', subApp));
+app.use(vhost('kindjpnagar.wishler.in', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.wishler.in', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('kidsaurajpnagar.wishler.in', subApp));
 
 const swirlyoSubApp = express();
 

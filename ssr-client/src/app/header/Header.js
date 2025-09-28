@@ -305,7 +305,7 @@ const Header = (props) => {
                     try {
                       if (product != null && reviewsArr.length > 0) {
             
-                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviewsArr.join('\n')+".\n\nVisit them on Slashify now! 🔗 - https://www.slashify.in/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviewsArr.join('\n')+".\n\nVisit them on Slashify now! 🔗 - https://www.wishler.in/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
                   
                   
                       } else {
@@ -315,7 +315,7 @@ const Header = (props) => {
                       await navigator.share({
                         title: 'Special offer on Slashify 🎉',
                         text: shareText,
-                        url: 'https://www.slashify.in/app/shop/id='+storeConfig.placeId+'&u='+nanoId
+                        url: 'https://www.wishler.in/app/shop/id='+storeConfig.placeId+'&u='+nanoId
                       });
                       setShareLoading(false);
                       getCashback(storeConfig.storeId);
