@@ -274,7 +274,7 @@ swirlyoSubApp.get("/manifest.json", (req, res) => {
 
 });
 
-app.use(vhost('swirlyojpnagar.quikrush.com', swirlyoSubApp));
+app.use(vhost('swirlyojpnagar.wishler.in', swirlyoSubApp));
 
 app.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
