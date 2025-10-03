@@ -25,6 +25,10 @@
         font-family: goodtimes;
         src: url(assets/fonts/m.otf);
       }
+      @font-face {
+        font-family: rec;
+        src: url(assets/fonts/rec.otf);
+      }
       .headline {
         font-family: "Archivo", sans-serif;
         font-weight: 100 !important;
@@ -821,14 +825,15 @@ card-btn{
           position: relative;
           flex-direction: column;
           width: 100vw;
-          height: 100vh;
-          top: -32px;
+          height: 66vh;
+          top: -10px;
         }
         .slide-head {
-          font-family: 'quicksand';
-        font-size: 1.9rem;
+          font-family: rec;
+          color: #000;
+        font-size: 1.7rem;
         position: absolute;
-        top: 99px;
+        top: 0px;
         padding-left: 30px;
         padding-right: 30px;
         font-weight: 200;
@@ -967,7 +972,7 @@ card-btn{
            <div class="relative z-20 flex items-center justify-between px-4 py-5 bg-transparent">
               <div class="w-auto">
                  <div class="flex flex-wrap items-center">
-                    <div class="w-auto mr-14">            <a href="#">              <img src="assets/images/wlogo.png" alt="" class="logo">            </a>          </div>
+                    <div class="w-auto mr-14">            <a href="#">              <img src="assets/images/wslogo.png" alt="" class="logo">            </a>          </div>
                     <div class="w-auto hidden lg:block">
                        <!--<ul class="flex items-center mr-16">
                           <li class="mr-9 font-medium hover:text-gray-700"><a href="#howItWorks">How it works</a></li>
@@ -1003,7 +1008,7 @@ card-btn{
                  <div class="flex flex-wrap justify-between h-full">
                     <div class="w-full">
                        <div class="flex items-center justify-between -m-2">
-                          <div class="w-auto p-2">                <a class="inline-block" href="#">                  <img src="assets/images/wlogo.png" alt="">                </a>              </div>
+                          <div class="w-auto p-2">                <a class="inline-block" href="#">                  <img src="assets/images/wslogo.png" alt="">                </a>              </div>
                           <div class="w-auto p-2">
                              <button x-on:click="mobileNavOpen = !mobileNavOpen">
                                 <svg width="24" height="24" viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1042,48 +1047,31 @@ card-btn{
         <div class="slides-inner">
           <div class="slide">
             <img src="assets/images/01.png"/>
-            <div class="slide-head">Local shopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+            <div class="slide-head">Your shopping wishlist<br/><span style="font-weight: 600;">that rewards</span>!</div>
           </div>
           <div class="slide">
-            <img src="assets/images/020.png"/>
-            <div class="slide-head">Fashion shopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+            <img src="assets/images/02.png"/>
+            <div class="slide-head">Create a wishlist or import from other <span style="font-weight: 600;">shopping apps</span>!</div>
           </div>
           <div class="slide">
-            <img src="assets/images/030.png"/>
-            <div class="slide-head">Cafe hopping that keeps <span style="font-weight: 600;">paying back</span>!</div>
+            <img src="assets/images/03.png"/>
+            <div class="slide-head">Shop personalized offers <span style="font-weight: 600;">on your wishlist</span>!</div>
           </div>
           <div class="slide">
-            <img src="assets/images/040.png"/>
-            <div class="slide-head">Spa booking that keeps <span style="font-weight: 600;">paying back</span>!</div>
+            <img src="assets/images/04.png"/>
+            <div class="slide-head">Automatically compare<span style="font-weight: 600;margin-left: 6px;">online</span><span style="font-family: Quicksand;margin-left: 6px;">&</span><span style="font-weight: 600;margin-left: 6px;">local stores</span><span style="margin-left: 6px;"></span>for best deals!</span></div>
+          </div>
+          <div class="slide">
+            <img src="assets/images/05.png"/>
+            <div class="slide-head">Get <span style="font-weight: 600;margin-left: 1px;">instant cashback</span><span style="margin-left: 6px;">everytime you shop</span>!</div>
           </div>
         </div>
         
       </div>
       <img class="white-top" src="assets/images/white-top.png" />
-      <div class="slide-desc" style="top: 108vw;">Window shopping & rewards. Earn once, redeem across partners.</div>
       
      </section>
-     <section class="mobile-only">
-      <div class="slide-desc icon-list-heading">Enjoy <b>slashed prices</b> at:</div>
-      <div class="icon-list">
-          <div class="icon-tile">
-            <img src="assets/images/ic_cafe.png" />
-            <span class="icon-label">Cafes</span>
-          </div>
-          <div class="icon-tile">
-            <img src="assets/images/ic_fashion.png" />
-            <span class="icon-label">Fashion</span>
-          </div>
-          <div class="icon-tile">
-            <img src="assets/images/ic_spa.png" />
-            <span class="icon-label" style="margin-left: 14px;">Spas</span>
-          </div>
-          <div class="icon-tile">
-            <img src="assets/images/ic_more.png" />
-            <span class="icon-label">& More</span>
-          </div>
-      </div>
-     </section>
+     
      <section class="pt-8 bg-white overflow-hidden pb-10 desktop-only">
         <div class="container px-4 mx-auto pb-8">
            <h2 class="text-3xl md:text-6xl text-center font-bold font-heading font-heading tracking-px-n leading-tight mx-auto wide-headline headline" style="width: 100% !important;"><span>Local</span> finds. <span>Viral</span> deals!</h2>
@@ -1123,7 +1111,7 @@ card-btn{
      <section id="recentBrags" class="relative pb-6 bg-white overflow-hidden pt-16 mob-margin-80">
       <img class="absolute left-1/2 top-0 transform -translate-x-1/2" style="margin-top: 32px;" src="assets/flaro-assets/images/how-it-works/gradient2.svg" alt="">  
       <div class="relative z-10 container px-4 mx-auto">
-         <h2 class="mb-20 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight headline" style="font-weight: 300">Slashed near you:</h2>
+         <h2 class="mb-20 text-6xl md:text-7xl text-center font-bold font-heading tracking-px-n leading-tight headline" style="font-weight: 300;font-family: rec;font-size: 1.7rem !important;">Wished near you:</h2>
          <div class="flex flex-wrap -m-8">
             <div class="w-full md:w-1/2 lg:w-1/4 p-8 custom-mar-44 card-ct">
               <a href="/app/snugglefitsjpnagar/"><div class="card"><img src="https://ik.imagekit.io/amuzely/04441766406-e1_c7b6gjQFC.jpg" alt="classy denim dress top"><div class="card-content"><div class="highlights">girls,1-to-6,dresses</div><div class="description">classy denim dress top</div><div class="price"><div class="price-current">₹2500</div><div class="price-original">₹3000</div></div><div class="quantity"><a class="quantity__minus"><span style="font-size: 25px; line-height: 0px; margin-left: 2px;">-</span></a><input name="quantity" type="text" class="quantity__input" value="0"><a class="quantity__plus"><span>+</span></a></div></div></div></a>
@@ -1261,7 +1249,7 @@ card-btn{
    </section>
   </div>
   <script type="text/javascript">
-  var slideDelay = 2.5;
+  var slideDelay = 2.9;
   var slideDuration = 0.3;
 
   var slides = document.querySelectorAll(".slide");
