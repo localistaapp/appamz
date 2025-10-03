@@ -44,6 +44,11 @@ const MainView = ({storeConfig}) => {
         import("./viewshops/ViewShopsApp.js")
     );
 
+    const ViewFeedComponent = lazy(() =>
+        //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
+        import("./viewshops/ViewFeedApp.js")
+    );
+
     const ViewShopDetailComponent = lazy(() =>
         //delay(100).then(() => import("./viewproducts/ViewProducts.js"))
         import("./viewshops/ViewShopDetail.js")
@@ -66,7 +71,7 @@ const MainView = ({storeConfig}) => {
                 <ViewShopDetailComponent storeConfig={storeConfigVal} />
             </Suspense>}
             {view == 'shop-stores' &&  <Suspense fallback={<></>}>
-                <ViewShopsComponent storeConfig={storeConfigVal} />
+                <ViewFeedComponent storeConfig={storeConfigVal} />
             </Suspense>}
         </div>
     );
