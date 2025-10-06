@@ -475,10 +475,13 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [isClient, setIsClient] = useState(false);
+    const [topFiveCat, setTopFiveCat] = useState("");
+    const [trendingProducts, setTrendingProducts] = useState([]);
 
-    let trendingCategories = {"Menswear":{"1": []},"Womenswear":{"1": []},"Kidswear":{"girls":{"1-to-6":{"jumpsuits":0,"dresses":0,"skirts":0,"tops":0},"6-to-14":{"jackets":0,"dresses":0}},"boys":{"1-to-6":{"denims":0,"shirts":0},"6-to-14":{"shoes":0}}}};
+    //leaf nodes to have "1": []
+    let trendingCategories = {"1":[]};
 
-    let yourWishdropsCategories = {"furniture": {"1":[]},"home decor": {"1":[]},"Linen": {"1":[]}};
+    let yourWishdropsCategories = {"1":[]};
 
     let cafeCategories = {"cafe only": [],"food and cafe": [],"cafe and restaurant": []};
 
@@ -493,6 +496,46 @@ const ViewFeedApp = ({url,storeConfig}) => {
     useEffect(() => {
       setIsClient(true);
       setCategories(categoriesList['tabTrending']);
+      axios.get(`/feed/categories`)
+        .then(function (response) {
+            categoriesList['tabTrending'] = response.data.split(',');
+            const catArr = response.data.split(',');
+            let catObj = new Object();
+            for(var i in catArr) {
+              catObj[catArr[i]] = [];
+            }
+            categoriesList['tabTrending'] = catObj;
+            setCategories(categoriesList['tabTrending']);
+            setTopFiveCat(response.data.split(',').slice(0, 5).join());
+            const arr1 = response.data.split(',').slice(1, 4);
+            const arr2 = response.data.split(',').slice(response.data.split(',').length-4, response.data.split(',').length);
+            let arr = arr1.concat(arr2);
+            setTopFiveCat(arr.join());
+            window.trendingProductsArr = [];
+            let cnt = 0;
+              for(var j in arr) {
+                axios.get(`/feed/search/trending/${arr[j]}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  let tArr = trendingProducts;
+                  let fArr = tArr.concat(resArr);
+                  console.log('-fArr.length-', fArr.length);
+                  window.trendingProductsArr = window.trendingProductsArr.concat(fArr);
+                  console.log('-trendingProducts.length-', trendingProducts.length);
+                  console.log('-trendingProducts-', trendingProducts);
+                  cnt++;
+                }.bind(this));
+              }
+        });
+
+        setTimeout(function(){
+          console.log('--window.trendingProductsArr--', window.trendingProductsArr);
+          debugger;
+          setTrendingProducts(window.trendingProductsArr);
+          debugger;
+          console.log('--final trending products--',trendingProducts);
+        }.bind(this),3000);
       
     }, []);
     
@@ -577,6 +620,15 @@ const ViewFeedApp = ({url,storeConfig}) => {
           searchPlaces(selected, window.placeQuery);
           console.log('-filters-'+ filters+'-');
           let filterPattern =filters;
+          setTrendingProducts([]);
+
+          axios.get(`/feed/search/trending/${filters}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                }.bind(this));
+
           const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
           console.log('--newArr--', newArr);
           setProducts(newArr);
@@ -628,7 +680,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                     {tabUpdate >=0 && <NestedTabs categories={categories} />}
                     </div>
                 </div>
-                {!isLoading && <ProductGrid products={productsArr} />}
+                {!isLoading && <ProductGrid products={trendingProducts} />}
                 {isLoading && <LoadingShimmer/>}
             </div>
         </div>

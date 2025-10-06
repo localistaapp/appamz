@@ -42,7 +42,7 @@
     },
     {
       id: '6',
-      title: 'Traditional Kurti Set',
+      title: 'Sweatshirt jacket',
       category: 'ethnic-wear',
       price: 2499,
       image: '/assets/images/temp/ethnic-3.jpg',

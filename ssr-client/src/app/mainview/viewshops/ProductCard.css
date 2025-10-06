@@ -8,10 +8,12 @@
   }
   
   .product-card img {
-    width: 100%;
     display: block;
-    object-fit: cover;
-  }
+    object-fit: contain;
+    width: 100%;
+    width: 80%;
+    padding: 22px;
+}
   
   .card-content {
     padding: 0.75rem 1rem;

@@ -7,14 +7,14 @@ const ProductCard = ({ product }) => {
   return (
     <div className="product-card">
       <img
-        src={product.image}
+        src={product.imageUrls['800x800']}
         alt={product.title}
-        style={{ height: product.height }}
+        style={{ height: '300px' }}
       />
       <div className="card-content">
-        <h3>{product.title}</h3>
-        <p className="category">{product.category}</p>
-        <p className="price">₹{product.price}</p>
+        <h3 style={{fontWeight: 400}}>{product.title}</h3>
+        <p className="category">{product.categoryPath.split('>')[product.categoryPath.split('>').length-1]}</p>
+        <p className="price">₹{product.flipkartSpecialPrice.amount}</p>
       </div>
     </div>
   );

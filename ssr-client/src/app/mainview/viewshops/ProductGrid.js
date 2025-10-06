@@ -6,7 +6,7 @@ const ProductGrid = ({ products }) => {
   return (
     <div className="product-grid">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.productBaseInfoV1.productId} product={product.productBaseInfoV1} />
       ))}
     </div>
   );

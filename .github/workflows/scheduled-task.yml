@@ -3,9 +3,11 @@ name: Weekly Trigger
 on:
   schedule:
     - cron: "30 17 * * 6" # 6:00 PM IST (12:30 UTC)
+    - cron: "30 0 * * *"  # Daily 6:00 AM IST (00:30 UTC)
 
 jobs:
-  trigger:
+  weekly:
+    if: github.event.schedule == '30 17 * * 6'
     runs-on: ubuntu-latest
     steps:
       - name: Call endpoint with retries
@@ -13,6 +15,23 @@ jobs:
           for i in 1 2 3; do
             echo "Attempt $i..."
             if curl -s -o /dev/null -w "%{http_code}" -X POST https://amuzely.onrender.com/run-task?key=${{ secrets.TASK_KEY }} | grep -q "200"; then
+              echo "Success"
+              exit 0
+            fi
+            echo "Failed, retrying in 30s..."
+            sleep 30
+          done
+          echo "All retries failed"
+          exit 1
+  daily:
+    if: github.event.schedule == '30 0 * * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger daily task
+        run: |
+          for i in 1 2 3; do
+            echo "Attempt $i..."
+            if curl -s -o /dev/null -w "%{http_code}" -X POST https://amuzely.onrender.com/run-daily-task?key=${{ secrets.TASK_KEY }} | grep -q "200"; then
               echo "Success"
               exit 0
             fi

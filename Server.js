@@ -12,6 +12,7 @@ import HomeStoreSSR from "./ssr-client/src/web/home-store/HomeStoreSSR";
 const vhost = require('vhost');
 const ImageKit = require('imagekit');
 const runTaskRoute = require("./run-task");
+const runDailyTaskRoute = require("./run-daily-task");
 
 var axios = require('axios');
 
@@ -319,6 +320,7 @@ app.get("/dashboard/:store", (req, res) => {
 });
 
 runTaskRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
+runDailyTaskRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
 
 app.post('/push-notif', function(req, res) {
   let title = req.body.title;
@@ -482,6 +484,148 @@ app.get("/store-stats/:storeId/:type", (req, res) => {
             }
       });
   }});
+});
+
+function formatDate(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function parseNestedJson(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(parseNestedJson);
+  } else if (obj && typeof obj === 'object') {
+    const result = {};
+    for (const key in obj) {
+      let val = obj[key];
+      if (typeof val === 'string') {
+        try {
+          val = JSON.parse(val); // attempt to parse string as JSON
+        } catch (e) {
+          // leave as string if parse fails
+        }
+      }
+      result[key] = parseNestedJson(val);
+    }
+    return result;
+  }
+  return obj;
+}
+
+app.get("/feed/search/trending/:query", async (req, res) => {
+  let query = req.params.query;
+  let type = req.params.type;
+
+  const client = new Client(dbConfig);
+
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query("select results from am_feed_trending where query = '"+query+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              console.log('--response.rows.length--', response.rows.length);
+              if(response.rows.length == 0) {
+                const response = await axios.get(`https://affiliate-api.flipkart.net/affiliate/1.0/search.json?resultCount=12&query=${query}`,
+                  {headers: {
+                    'Fk-Affiliate-Id': 'attiristf',
+                    'Fk-Affiliate-Token': process.env.AFF_TOKEN,
+                    'Content-Type': 'application/json' 
+                  }
+              });
+                
+                
+                console.log('--typeof response.data.products--', typeof response.data.products)
+                client.query("INSERT INTO \"public\".\"am_feed_trending\"(query, results) VALUES($1, $2)",
+                       [query, JSON.stringify(response.data.products)], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               client.end();
+                             } else {
+                              client.end();
+                             }
+                           });
+              
+                console.log('--Trending products--', response.data.products);
+                res.send(response.data.products);
+              } else {
+                client.end();
+                res.send(response.rows[0]['results']);
+              }
+            }
+      });
+    }
+  });
+});
+
+app.get("/feed/categories", async (req, res) => {
+  const client = new Client(dbConfig);
+  const now = new Date();
+  const fromDateObj = new Date(now.getFullYear(), now.getMonth() - 4, now.getDate());
+  const toDateObj = new Date(now.getFullYear(), now.getMonth() - 2, now.getDate());
+  const currDate = formatDate(new Date());
+  // Format as YYYY-MM-DD
+  const fromDate = formatDate(fromDateObj);
+  const toDate = formatDate(toDateObj);
+
+  console.log('--currDate--', currDate);
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query("select id, searches from am_feed_categories where type = 'trending' and created_at::date = '"+currDate+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              console.log('--response.rows.length--', response.rows.length);
+              if(response.rows.length == 0) {
+                const response = await axios.get(`https://serpapi.com/search?engine=google_trends&cat=18&date=${fromDate} ${toDate}&geo=IN-KA&gprop=froogle&data_type=RELATED_QUERIES&api_key=${process.env.SERP_API_KEY}`);
+                let searches = []
+                for(var o in response.data.related_queries.rising) {
+                  searches.push(response.data.related_queries.rising[o].query);
+                }
+
+                client.query("INSERT INTO \"public\".\"am_feed_categories\"(searches, type) VALUES($1, $2)",
+                       [searches.join(), 'trending'], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               client.end();
+                             } else {
+                              client.end();
+                             }
+                           });
+              
+                console.log('--Trending searches#1--', searches);
+                searches.unshift('all');
+                res.send(searches.join());
+              } else {
+                client.end();
+                let newArr = response.rows[0]['searches'].split(',');
+                newArr.unshift('all');
+                res.send(newArr.join());
+              }
+            }
+      });
+    }
+  });
+
+  
+
+  
 });
 
 app.post('/track', function(req, res) {

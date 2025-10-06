@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./ssr-client/build/static/css/main.ba268745.css",
-    "main.js": "./ssr-client/build/static/js/main.e1ddc200.js",
+    "main.js": "./ssr-client/build/static/js/main.f92af3a9.js",
     "static/css/816.06b1064f.chunk.css": "./ssr-client/build/static/css/816.06b1064f.chunk.css",
     "static/js/816.5b6bc34b.chunk.js": "./ssr-client/build/static/js/816.5b6bc34b.chunk.js",
     "static/css/205.36279b8a.chunk.css": "./ssr-client/build/static/css/205.36279b8a.chunk.css",
@@ -37,12 +37,12 @@
     "static/css/987.f3bbd52d.chunk.css": "./ssr-client/build/static/css/987.f3bbd52d.chunk.css",
     "static/js/987.23273f24.chunk.js": "./ssr-client/build/static/js/987.23273f24.chunk.js",
     "static/js/247.34a779a3.chunk.js": "./ssr-client/build/static/js/247.34a779a3.chunk.js",
-    "static/css/899.a421e2d6.chunk.css": "./ssr-client/build/static/css/899.a421e2d6.chunk.css",
-    "static/js/899.4ba05aad.chunk.js": "./ssr-client/build/static/js/899.4ba05aad.chunk.js",
+    "static/css/899.51a1a96b.chunk.css": "./ssr-client/build/static/css/899.51a1a96b.chunk.css",
+    "static/js/899.6d5c0919.chunk.js": "./ssr-client/build/static/js/899.6d5c0919.chunk.js",
     "static/js/962.53cecb8e.chunk.js": "./ssr-client/build/static/js/962.53cecb8e.chunk.js",
     "index.html": "./ssr-client/build/index.html",
     "main.ba268745.css.map": "./ssr-client/build/static/css/main.ba268745.css.map",
-    "main.e1ddc200.js.map": "./ssr-client/build/static/js/main.e1ddc200.js.map",
+    "main.f92af3a9.js.map": "./ssr-client/build/static/js/main.f92af3a9.js.map",
     "816.06b1064f.chunk.css.map": "./ssr-client/build/static/css/816.06b1064f.chunk.css.map",
     "816.5b6bc34b.chunk.js.map": "./ssr-client/build/static/js/816.5b6bc34b.chunk.js.map",
     "205.36279b8a.chunk.css.map": "./ssr-client/build/static/css/205.36279b8a.chunk.css.map",
@@ -78,12 +78,12 @@
     "987.f3bbd52d.chunk.css.map": "./ssr-client/build/static/css/987.f3bbd52d.chunk.css.map",
     "987.23273f24.chunk.js.map": "./ssr-client/build/static/js/987.23273f24.chunk.js.map",
     "247.34a779a3.chunk.js.map": "./ssr-client/build/static/js/247.34a779a3.chunk.js.map",
-    "899.a421e2d6.chunk.css.map": "./ssr-client/build/static/css/899.a421e2d6.chunk.css.map",
-    "899.4ba05aad.chunk.js.map": "./ssr-client/build/static/js/899.4ba05aad.chunk.js.map",
+    "899.51a1a96b.chunk.css.map": "./ssr-client/build/static/css/899.51a1a96b.chunk.css.map",
+    "899.6d5c0919.chunk.js.map": "./ssr-client/build/static/js/899.6d5c0919.chunk.js.map",
     "962.53cecb8e.chunk.js.map": "./ssr-client/build/static/js/962.53cecb8e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ba268745.css",
-    "static/js/main.e1ddc200.js"
+    "static/js/main.f92af3a9.js"
   ]
 }
