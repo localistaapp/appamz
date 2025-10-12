@@ -477,6 +477,8 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [isClient, setIsClient] = useState(false);
     const [topFiveCat, setTopFiveCat] = useState("");
     const [trendingProducts, setTrendingProducts] = useState([]);
+    const [showBack, setShowBack] = useState(false);
+    const [gridLoading, setGridLoading] = useState(false);
 
     //leaf nodes to have "1": []
     let trendingCategories = {"1":[]};
@@ -492,6 +494,30 @@ const ViewFeedApp = ({url,storeConfig}) => {
     let categoriesList = {};
     categoriesList['tabTrending'] = trendingCategories;
     categoriesList['tabYourWishdrops'] = yourWishdropsCategories;
+
+    window.addEventListener('scroll', () => {
+      // Calculate the current scroll position relative to the bottom
+      const scrollBottom = window.scrollY + window.innerHeight;
+    
+      // Get the total height of the scrollable content
+      const documentHeight = document.body.scrollHeight; // Or document.documentElement.scrollHeight
+    
+      // Check if the user has reached the bottom (with a small buffer)
+      if (scrollBottom >= documentHeight - 30) {
+        console.log("Reached the end of the page!");
+        console.log('--unique queries--', window.uniqueQueries);
+        console.log('--currentCategory--', window.currentCategory);
+        // Perform actions here, like loading more content
+        window.scrollTo(0, 280);
+        axios.get(`/feed/search/trending/${window.currentCategory} ${window.uniqueQueries[0].replace(/\//g,' ')}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                  window.uniqueQueries.shift();
+                }.bind(this));
+      }
+    });
 
     useEffect(() => {
       setIsClient(true);
@@ -621,12 +647,24 @@ const ViewFeedApp = ({url,storeConfig}) => {
           console.log('-filters-'+ filters+'-');
           let filterPattern =filters;
           setTrendingProducts([]);
-
+          window.selFilter = filters;
           axios.get(`/feed/search/trending/${filters}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
                   let resArr = res.data;
                   setTrendingProducts(res.data);
+                  window.currentCategory  = res.data[0].productBaseInfoV1.categoryPath.replace(/\>/g,' ');
+                  let j = res.data || [];
+                  let queries = []; 
+                  for (var i in j) { 
+                      (j[i].categorySpecificInfoV1.keySpecs||[]).forEach((item)=>{
+                          if(item.indexOf(':')!=-1) {queries.push(item.split(':')[1]);} else {queries.push(item)} 
+                        });
+                  }
+                  console.log('-queries--', queries);
+                  const un = [...new Set(queries)];
+                  console.log('--un--', un);
+                  window.uniqueQueries =  un;
                 }.bind(this));
 
           const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
@@ -661,6 +699,42 @@ const ViewFeedApp = ({url,storeConfig}) => {
         searchPlaces(window.selectedCatId, q);
       }
     }
+
+    const onProductClick = (queries, cat) => {
+      console.log('--onProductClick queries--', queries);
+      console.log('--onProductClick cat--', cat);
+      
+      window.uniqueQueries = queries;
+      window.currentCategory = cat;
+      setGridLoading(true);
+      document.body.classList.add('no-scroll');
+
+      axios.get(`/feed/search/trending/${window.currentCategory} ${window.uniqueQueries[0].replace(/\//g,' ')}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                  window.uniqueQueries.shift();
+                  setGridLoading(false);
+                  document.body.classList.remove('no-scroll');
+                }.bind(this));
+      setShowBack(true);
+    }
+
+    const onBackClick = () => {
+      setGridLoading(true);
+      document.body.classList.add('no-scroll');
+      axios.get(`/feed/search/trending/${window.selFilter}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                  window.uniqueQueries.shift();
+                  setGridLoading(false);
+                  document.body.classList.remove('no-scroll');
+                }.bind(this));
+      setShowBack(false);
+    }
     
     return (
         <div className="main">
@@ -680,7 +754,8 @@ const ViewFeedApp = ({url,storeConfig}) => {
                     {tabUpdate >=0 && <NestedTabs categories={categories} />}
                     </div>
                 </div>
-                {!isLoading && <ProductGrid products={trendingProducts} />}
+                {!isLoading && showBack && <span> <img className="modal-left-arrow img-bck" src="../../assets/images/left-arrow.png" onClick={onBackClick} /><span className="lbl-back">Back to {window.currentCategory}</span></span>}
+                {!isLoading && <ProductGrid gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
                 {isLoading && <LoadingShimmer/>}
             </div>
         </div>

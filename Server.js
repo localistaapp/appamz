@@ -555,7 +555,7 @@ app.get("/feed/search/trending/:query", async (req, res) => {
                              }
                            });
               
-                console.log('--Trending products--', response.data.products);
+                //console.log('--Trending products--', response.data.products);
                 res.send(response.data.products);
               } else {
                 client.end();

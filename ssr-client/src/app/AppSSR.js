@@ -29,7 +29,13 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 <meta property="og:type" content="website"/>
                 <meta property="og:image" content="https://wishler.in/assets/images/deals.png"/>
                 <link rel="manifest" href="/manifest.json" />
-                <title>{`Slashify | shop nearby & unlock rewards`}</title>
+                <title>{`wishler - rewards on your wishlist`}</title>
+                <style type="text/css">
+                    {`@font-face {
+                        font-family: rec;
+                        src: url(../../assets/fonts/rec.otf);
+                    }`}
+                </style>
                 
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})

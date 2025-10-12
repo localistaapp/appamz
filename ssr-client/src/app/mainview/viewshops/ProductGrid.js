@@ -2,11 +2,11 @@ import React from "react";
 import ProductCard from "./ProductCard";
 import "./ProductGrid.css";
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ gridLoading, products = [], onProductClick }) => {
   return (
-    <div className="product-grid">
+    <div className={`product-grid ${gridLoading ? 'grid-loading' : ''}`}>
       {products.map((product) => (
-        <ProductCard key={product.productBaseInfoV1.productId} product={product.productBaseInfoV1} />
+        <ProductCard onProductClick={onProductClick} key={product.productBaseInfoV1.productId} product={product.productBaseInfoV1} category={product.categorySpecificInfoV1.keySpecs} />
       ))}
     </div>
   );
