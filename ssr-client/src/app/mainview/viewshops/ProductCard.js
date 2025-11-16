@@ -48,7 +48,8 @@ const ProductCard = ({ product, category, onProductClick }) => {
       <div className="card-content-desc">
         <p className="category">{product.categoryPath.split('>')[product.categoryPath.split('>').length-1]}</p>
         <p className="price-range">{getPriceRange(product.flipkartSpecialPrice.amount)}</p>
-        <span className="cta-wishlist price-range">+ wishlist</span>
+        <span className="cta-wishlist price-range">♡ Favourite</span>
+        <span className="cta-wishlist price-range cta-shop" style={{ background: '#000'}} onClick={()=>{window.location.href=product.productUrl}}>Shop Now</span>
       </div>
     </div>
   );

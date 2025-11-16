@@ -248,17 +248,29 @@ video {
     overflow: hidden;
   }
 
+  .btn-reset {
+    font-size: 32px;
+    left: 0px;
+    margin-top: -6px;
+    position: absolute;
+    background: white;
+    padding-left: 19px;
+    padding-right: 10px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+
   .lbl-back {
     color: #727272;
     display: inline-block;
     font-size: 16px;
     font-weight: 500;
-    left: -23px;
-    position: relative;
-    top: 11px;
-    white-space: nowrap;
+    left: 39px;
     overflow: hidden;
+    position: relative;
     text-overflow: ellipsis;
+    top: -27px;
+    white-space: nowrap;
     width: 300px;
   }
   

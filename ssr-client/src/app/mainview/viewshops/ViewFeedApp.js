@@ -362,6 +362,7 @@ const ProductList = ({products, storeConfig}) => {
 const NestedTabs = (categories) => {
   const [selectedKeys, setSelectedKeys] = useState({}); 
   const [isClient, setIsClient] = useState(false);
+  const [isNestedTabSelected, setIsNestedTabSelected] = useState(false);
 
   useEffect(()=> {
     setIsClient(true);
@@ -407,8 +408,8 @@ const NestedTabs = (categories) => {
           } 
               console.log('--filterStr--', window.filterStr);
           
-          
           window.onFilter(key, window.filterStr);
+          setIsNestedTabSelected(true);
       }
     }
     setSelectedKeys((prev) => {
@@ -424,6 +425,7 @@ const NestedTabs = (categories) => {
   
   return (
     <div>
+      {isNestedTabSelected && <span className="btn-reset" onClick={()=>{window.location.reload()}}>⟳</span>}
       {levels.map((level, index) => {
         //window.scrollTo(0,index*55);
         if (index > 0) {
@@ -479,9 +481,11 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [trendingProducts, setTrendingProducts] = useState([]);
     const [showBack, setShowBack] = useState(false);
     const [gridLoading, setGridLoading] = useState(false);
+    const [isFirstTimeTabInit, setIsFirstTimeTabInit] = useState(true);
+    const [searchQueried, setSearchQueried] = useState('');
 
     //leaf nodes to have "1": []
-    let trendingCategories = {"1":[]};
+    let trendingCategories = {"Women":{"1": []},"Men":{"1": []},"Kids - Girls":{"girls":{"1-to-6":{"jumpsuits":0,"dresses":0,"skirts":0,"tops":0},"6-to-14":{"jackets":0,"dresses":0}}},"Kids - Boys":{"1-to-6":{"denims":0,"shirts":0},"6-to-14":{"shoes":0}}};
 
     let yourWishdropsCategories = {"1":[]};
 
@@ -509,7 +513,12 @@ const ViewFeedApp = ({url,storeConfig}) => {
         console.log('--currentCategory--', window.currentCategory);
         // Perform actions here, like loading more content
         window.scrollTo(0, 280);
-        axios.get(`/feed/search/trending/${window.currentCategory} ${window.uniqueQueries[0].replace(/\//g,' ')}`)
+        let catQuery = encodeURIComponent(`${window.allFilters} ${window.uniqueQueries[0].replace(/\//g,' ')}`);
+        debugger;
+        if(window.searchQueried != '') {
+          catQuery = encodeURIComponent(`${window.searchQueried}  ${window.allFilters} ${window.uniqueQueries[0].replace(/\//g,' ')}`);
+        }
+        axios.get(`/feed/search/trending/${catQuery}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
                   let resArr = res.data;
@@ -520,10 +529,38 @@ const ViewFeedApp = ({url,storeConfig}) => {
     });
 
     useEffect(() => {
+      window.allFilters = '';
       setIsClient(true);
+      setTimeout(()=>{
+        let catQuery = encodeURIComponent('Women');
+        //document.querySelectorAll('.tab')[2].click();
+        axios.get(`/feed/search/trending/${catQuery}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                  window.currentCategory  = res.data[0].productBaseInfoV1.categoryPath.replace(/\>/g,' ');
+                  let j = res.data || [];
+                  let queries = []; 
+                  for (var i in j) { 
+                      (j[i].categorySpecificInfoV1.keySpecs||[]).forEach((item)=>{
+                          if(item.indexOf(':')!=-1) {queries.push(item.split(':')[1]);} else {queries.push(item)} 
+                        });
+                  }
+                  console.log('-queries--', queries);
+                  const un = [...new Set(queries)];
+                  console.log('--un--', un);
+                  window.uniqueQueries =  un;
+                  //setTimeout("document.querySelectorAll('.tab')[2].classList.add('active')",500);
+                }.bind(this));
+      },1500);
+
+
+
       setCategories(categoriesList['tabTrending']);
       axios.get(`/feed/categories`)
         .then(function (response) {
+            return;
             categoriesList['tabTrending'] = response.data.split(',');
             const catArr = response.data.split(',');
             let catObj = new Object();
@@ -555,13 +592,13 @@ const ViewFeedApp = ({url,storeConfig}) => {
               }
         });
 
-        setTimeout(function(){
+       /* setTimeout(function(){
           console.log('--window.trendingProductsArr--', window.trendingProductsArr);
           debugger;
           setTrendingProducts(window.trendingProductsArr);
           debugger;
           console.log('--final trending products--',trendingProducts);
-        }.bind(this),3000);
+        }.bind(this),3000);*/
       
     }, []);
     
@@ -648,7 +685,9 @@ const ViewFeedApp = ({url,storeConfig}) => {
           let filterPattern =filters;
           setTrendingProducts([]);
           window.selFilter = filters;
-          axios.get(`/feed/search/trending/${filters}`)
+          window.allFilters = window.allFilters + ' ' + selected;
+          let catQuery = encodeURIComponent(`${window.allFilters} ${filters}`);
+          axios.get(`/feed/search/trending/${catQuery}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
                   let resArr = res.data;
@@ -665,7 +704,43 @@ const ViewFeedApp = ({url,storeConfig}) => {
                   const un = [...new Set(queries)];
                   console.log('--un--', un);
                   window.uniqueQueries =  un;
+                  document.querySelectorAll('.tabs-container.shop')[0].scrollLeft = 0;
                 }.bind(this));
+
+
+                axios.get(`/feed/categories/${window.allFilters} ${selected}`)
+                .then(function (response) {
+                    categoriesList['tabTrending'] = response.data.split(',');
+                    const catArr = response.data.split(',');
+                    let catObj = new Object();
+                    for(var i in catArr) {
+                      catObj[catArr[i]] = [];
+                    }
+                    categoriesList['tabTrending'] = catObj;
+                    setCategories(categoriesList['tabTrending']);
+                    setTopFiveCat(response.data.split(',').slice(0, 5).join());
+                    const arr1 = response.data.split(',').slice(1, 4);
+                    const arr2 = response.data.split(',').slice(response.data.split(',').length-4, response.data.split(',').length);
+                    let arr = arr1.concat(arr2);
+                    setTopFiveCat(arr.join());
+                    window.trendingProductsArr = [];
+                    let cnt = 0;
+                      for(var j in arr) {
+                        let catQuery = encodeURIComponent(`${window.allFilters} ${arr[j]}`);
+                        axios.get(`/feed/search/trending/${catQuery}`)
+                        .then(function (res) {
+                          console.log('--trending response.data--', res.data);
+                          let resArr = res.data;
+                          let tArr = trendingProducts;
+                          let fArr = tArr.concat(resArr);
+                          console.log('-fArr.length-', fArr.length);
+                          window.trendingProductsArr = window.trendingProductsArr.concat(fArr);
+                          console.log('-trendingProducts.length-', trendingProducts.length);
+                          console.log('-trendingProducts-', trendingProducts);
+                          cnt++;
+                        }.bind(this));
+                      }
+                });
 
           const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
           console.log('--newArr--', newArr);
@@ -696,7 +771,18 @@ const ViewFeedApp = ({url,storeConfig}) => {
         if (window.selectedCatId == null) {
           window.selectedCatId = selectedCategory;
         }
-        searchPlaces(window.selectedCatId, q);
+        //searchPlaces(window.selectedCatId, q);
+        setSearchQueried(q);
+        window.searchQueried = q;
+        axios.get(`/feed/search/keyword/${encodeURIComponent(q)}`)
+                .then(function (res) {
+                  console.log('--trending response.data--', res.data);
+                  let resArr = res.data;
+                  setTrendingProducts(res.data);
+                  window.uniqueQueries.shift();
+                  setGridLoading(false);
+                  document.body.classList.remove('no-scroll');
+                }.bind(this));
       }
     }
 
@@ -708,8 +794,11 @@ const ViewFeedApp = ({url,storeConfig}) => {
       window.currentCategory = cat;
       setGridLoading(true);
       document.body.classList.add('no-scroll');
-
-      axios.get(`/feed/search/trending/${window.currentCategory} ${window.uniqueQueries[0].replace(/\//g,' ')}`)
+      if(searchQueried != '') {
+        window.allFilters = searchQueried + window.allFilters;
+      }
+      let catQuery = encodeURIComponent(`${window.allFilters} ${window.uniqueQueries[0].replace(/\//g,' ')}`);
+      axios.get(`/feed/search/trending/${catQuery}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
                   let resArr = res.data;
@@ -742,16 +831,16 @@ const ViewFeedApp = ({url,storeConfig}) => {
            <div class="container">
                 <h1 style={{marginLeft: '16px', display: 'none'}}>Shops near you:</h1>
                 <div class="shop-search-c">
-                  <input type="text" placeholder="Search products, wishlist or stores" onKeyUp={handleSearchInput} />
+                  <input type="text" placeholder="Search products, favourites or stores" onKeyUp={handleSearchInput} />
                   <img src="../../assets/images/magnifying.png" />
                 </div>
                 <div class="tabs-container shop">
                     <div class="tabs" id="main-tabs">
                     <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('tags_fashion', 'tabTrending')}>⚡ Trending</div>
-                    <div id="tabYourWishdrops" class="tab" onClick={() => handlePrimaryTabSelect('tags_essentials', 'tabYourWishdrops')}>Your Wishdrops</div>
+                    <div id="tabYourWishdrops" class="tab" onClick={() => handlePrimaryTabSelect('tags_essentials', 'tabYourWishdrops')}>Your Favourites</div>
                     </div>
-                    <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
-                    {tabUpdate >=0 && <NestedTabs categories={categories} />}
+                    <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px',marginLeft: '26px'}}>
+                    {tabUpdate >=0 && <NestedTabs categories={categories}/>}
                     </div>
                 </div>
                 {!isLoading && showBack && <span> <img className="modal-left-arrow img-bck" src="../../assets/images/left-arrow.png" onClick={onBackClick} /><span className="lbl-back">Back to {window.currentCategory}</span></span>}

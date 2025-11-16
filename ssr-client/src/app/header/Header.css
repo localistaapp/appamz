@@ -4,19 +4,19 @@
     color: #000;
     text-align: center;
     font-size: 24px;
-    height: 43px;
+    height: 24px;
 }
 .store-logo {
     position: absolute;
-    width: 140px;
+    width: 93px;
     left: 70px;
     top: 19px;
 }
 .store-logo-shop {
     position: absolute;
-    width: 140px;
+    width: 93px;
     left: 20px;
-    top: 24px;
+    top: 14px;
 }
 .store-logo-sm {
     position: absolute;

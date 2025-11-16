@@ -514,9 +514,14 @@ function parseNestedJson(obj) {
   return obj;
 }
 
-app.get("/feed/search/trending/:query", async (req, res) => {
+app.get("/feed/search/keyword/:query", async (req, res) => {
   let query = req.params.query;
   let type = req.params.type;
+
+  if(query.indexOf('Under')!==-1) {
+    res.send('-error-');
+    return;
+  }
 
   const client = new Client(dbConfig);
 
@@ -565,6 +570,118 @@ app.get("/feed/search/trending/:query", async (req, res) => {
       });
     }
   });
+});
+
+app.get("/feed/search/trending/:query", async (req, res) => {
+  let query = req.params.query;
+  let type = req.params.type;
+
+  if(query.indexOf('Under')!==-1) {
+    res.send('-error-');
+    return;
+  }
+
+  const client = new Client(dbConfig);
+
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query("select results from am_feed_trending where query = '"+query+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              console.log('--response.rows.length--', response.rows.length);
+              if(response.rows.length == 0) {
+                const response = await axios.get(`https://affiliate-api.flipkart.net/affiliate/1.0/search.json?resultCount=12&query=${query}`,
+                  {headers: {
+                    'Fk-Affiliate-Id': 'attiristf',
+                    'Fk-Affiliate-Token': process.env.AFF_TOKEN,
+                    'Content-Type': 'application/json' 
+                  }
+              });
+                
+                
+                console.log('--typeof response.data.products--', typeof response.data.products)
+                client.query("INSERT INTO \"public\".\"am_feed_trending\"(query, results) VALUES($1, $2)",
+                       [query, JSON.stringify(response.data.products)], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               client.end();
+                             } else {
+                              client.end();
+                             }
+                           });
+              
+                //console.log('--Trending products--', response.data.products);
+                res.send(response.data.products);
+              } else {
+                client.end();
+                res.send(response.rows[0]['results']);
+              }
+            }
+      });
+    }
+  });
+});
+
+app.get("/feed/categories/:cat", async (req, res) => {
+  const client = new Client(dbConfig);
+  const now = new Date();
+  const cat = req.params.cat;
+  const currDate = formatDate(new Date());
+
+  console.log('--currDate--', currDate);
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query("select id, searches from am_feed_categories where type = 'trending - "+cat+"' and created_at::date = '"+currDate+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              console.log('--response.rows.length--', response.rows.length);
+              if(response.rows.length == 0) {
+                const response = await axios.get(`https://serpapi.com/search.json?engine=google_shopping&q=${cat}&location=India&google_domain=google.co.in&hl=en&gl=in&api_key=${process.env.SERP_API_KEY}`);
+                let searches = [];
+                searches = response.data.filters.find((f)=>f.type=='Carousel Filters').options.map((o)=>o.text);
+
+                client.query("INSERT INTO \"public\".\"am_feed_categories\"(searches, type) VALUES($1, $2)",
+                       [searches.join(), 'trending - '+cat], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               client.end();
+                             } else {
+                              client.end();
+                             }
+                           });
+              
+                console.log('--Trending searches#1--', searches);
+                searches = searches.filter((f)=> f.indexOf('Under')==-1)
+                searches.unshift('all');
+                res.send(searches.join());
+              } else {
+                client.end();
+                let newArr = response.rows[0]['searches'].split(',');
+                newArr.unshift('all');
+                res.send(newArr.join());
+              }
+            }
+      });
+    }
+  });
+
+  
 });
 
 app.get("/feed/categories", async (req, res) => {
