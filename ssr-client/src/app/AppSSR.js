@@ -29,7 +29,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 <meta property="og:type" content="website"/>
                 <meta property="og:image" content="https://wishler.in/assets/images/deals.png"/>
                 <link rel="manifest" href="/manifest.json" />
-                <title>{`Spesh - deals on your favourites`}</title>
+                <title>{`Lootler - deals on your favourites`}</title>
                 <style type="text/css">
                     {`@font-face {
                         font-family: rec;
