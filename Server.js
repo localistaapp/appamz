@@ -514,6 +514,165 @@ function parseNestedJson(obj) {
   return obj;
 }
 
+app.post('/user-favs/create', async function(req, res) {
+
+  const client = new Client(dbConfig)
+  var title = req.body.title;
+  var nanoid = req.body.nanoid;
+  var highlights = req.body.highlights;
+  var price = req.body.price;
+  var url = req.body.url;
+  var imgUrl = req.body.imgUrl;
+  var related = [];
+  var query = '';
+
+  let qArr = []; 
+  highlights.split(',').forEach((i)=>{if(i.indexOf(':')!=-1){qArr.push(i.split(':')[1]);} else {qArr.push(i);}});
+  query = qArr[0] + ' ' + title;
+  qArr.unshift();
+  query += qArr.join().replaceAll(',', ' ');
+
+  console.log('--ser query--', query);
+
+  const serpApiRes = await axios.get(`https://serpapi.com/search.json?engine=google_shopping&q=${query}&location=India&google_domain=google.co.in&hl=en&gl=in&api_key=${process.env.SERP_API_KEY}`);
+  console.log('--serpApiRes--', serpApiRes.data.shopping_results);
+  let thumbnails = serpApiRes.data.shopping_results.map((o)=>{return o.thumbnail; });
+  let canonical = imgUrl;
+  const imageURLs = thumbnails;
+  const topK = 4;
+    
+  // Call OpenAI to get ranking
+  const result = await getSimilarityRanking(canonical, imageURLs);
+  let ranked = result.rankings;
+  let items = [];
+  let rest = [];
+  for(var i=0; i<ranked.length-1; i++) {
+    serpApiRes.data.shopping_results.forEach((item, index) => {
+      if(index == ranked[i]) {
+        if(!items.find(it=>item.position==it.position)) {
+          items.push(item);
+        }
+      } else {
+        if(!rest.find(rt=>item.position==rt.position)) {
+          rest.push(item);
+        }
+      }
+    })
+  };
+
+  var allItems = items.concat(rest);
+
+  client.connect(err => {
+   if (err) {
+     console.error('error connecting', err.stack)
+   } else {
+     console.log('connected')
+ 
+     client.query("INSERT INTO \"public\".\"am_user_favs\"(nanoid, title, price, url, highlights, img_url, related) VALUES($1, $2, $3, $4, $5, $6, $7)",
+                       [nanoid, title, price, url, highlights, imgUrl, JSON.stringify(allItems)], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               res.send('{"status":"insert-error"}');
+                               client.end();
+                             } else {
+                              res.send('{"status":"success"}');
+                              client.end();
+                             }
+                           });
+   }
+ });
+ });
+
+/**
+* Ask OpenAI to compare images and return JSON with scores.
+* Expects canonical first, then list of candidate image URLs.
+*/
+async function getSimilarityRanking(canonicalUrl, candidateUrls) {
+  const instruction = `
+  You are given one reference image followed by N candidate images.
+
+  Return ONLY a JSON object:
+  {
+    "rankings": [
+      { "image": "matching image index", "score": 0-100, "explanation": "short reason" }
+    ]
+  }
+
+  Score 0 = totally different, 100 = visually identical.
+  Sort by highest score first.
+  `;
+
+  const content = [
+    {
+      type: "text",
+      text: instruction
+    },
+    {
+      type: "image_url",
+      image_url: { url: canonicalUrl }
+    },
+    ...candidateUrls.map(u => ({
+      type: "image_url",
+      image_url: { url: u }
+    }))
+  ];
+  
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "user",
+        content
+      }
+    ],
+    max_tokens: 800
+  });
+
+  const raw = response.choices?.[0]?.message?.content;
+  if (!raw) throw new Error("No content from model");
+
+  try {
+    return JSON.parse(raw);
+  } catch (err) {
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (jsonMatch) return JSON.parse(jsonMatch[0]);
+    return { raw };
+  }
+}
+
+
+  app.post("/compare", async (req, res) => {
+    try {
+    const { canonicalURL, imageURLs, topK = 4 } = req.body;
+    if (!imageURLs || !Array.isArray(imageURLs) || imageURLs.length === 0) {
+    return res.status(400).json({ error: "imageURLs must be a non-empty array" });
+    }
+    
+    
+    const canonical = canonicalURL || DEFAULT_CANONICAL;
+    
+    
+    // Call OpenAI to get ranking
+    const result = await getSimilarityRanking(canonical, imageURLs);
+    
+    
+    // result may contain 'rankings' array
+    if (result.rankings && Array.isArray(result.rankings)) {
+    // limit to topK
+    const top = result.rankings.slice(0, topK);
+    return res.json({ canonical, top, raw: result });
+    }
+    
+    
+    // if result is unexpected shape, return it raw
+    return res.json({ canonical, raw: result });
+    } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message || "internal error" });
+    }
+    });
+
 app.get("/feed/search/keyword/:query", async (req, res) => {
   let query = req.params.query;
   let type = req.params.type;
@@ -570,6 +729,35 @@ app.get("/feed/search/keyword/:query", async (req, res) => {
       });
     }
   });
+});
+
+app.get("/feed/search/favourites/:nanoId", async (req, res) => {
+  var nanoId = req.params.nanoId;
+  const client = new Client(dbConfig);
+  console.log('--favourites nanoid--', nanoId);
+  console.log(`select img_url, highlights, related from am_user_favs where nanoid = '${nanoId}' order by created_at desc`);
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query(`select img_url, highlights, related from am_user_favs where nanoid = '${nanoId}' order by created_at desc`,
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+
+              console.log('--Fav response.rows--', response.rows);
+              res.send(response.rows);
+            }
+          }
+        );
+        }
+  });
+      
 });
 
 app.get("/feed/search/trending/:query", async (req, res) => {

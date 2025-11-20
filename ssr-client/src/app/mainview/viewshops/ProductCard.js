@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import "./ProductCard.css";
 
 function getPriceRange(price) {
@@ -19,7 +20,7 @@ function getPriceRange(price) {
   }
 }
 
-const ProductCard = ({ product, category, onProductClick }) => {
+const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavRequestComplete }) => {
 
   console.log('--product--',  product);
   console.log('--category--',  category);
@@ -31,6 +32,25 @@ const ProductCard = ({ product, category, onProductClick }) => {
         setQueries(queries);
       });
   }, []);
+
+  const createUserFav = (p, c) => {
+    console.log('--fav product--', p);
+    console.log('--fav category--', c);
+    var title = p.title;
+    var nanoid = localStorage.getItem('nanoId');
+    var highlights = ((p.attributes['color']+',') || '') + ' ' + c.join();
+    var price = p.flipkartSpecialPrice.amount;
+    var url = p.productUrl;
+    var imgUrl = p.imageUrls['800x800'];
+    onFavCreated();
+
+    axios.post(`/user-favs/create`, {title: title, nanoid: nanoid, 
+      highlights: highlights, price: price, 
+      url: url, imgUrl: imgUrl}).then((response) => {
+      onFavRequestComplete();
+      console.log('--Create Product Response--', response);
+    }); 
+  }
 
   return (
     <div className="product-card" onClick={(e)=>{console.log('--category queries--', queries);console.log('--product category--', e.target.attributes['data-cat'].value); onProductClick(queries, e.target.attributes['data-cat'].value)}}>
@@ -48,7 +68,7 @@ const ProductCard = ({ product, category, onProductClick }) => {
       <div className="card-content-desc">
         <p className="category">{product.categoryPath.split('>')[product.categoryPath.split('>').length-1]}</p>
         <p className="price-range">{getPriceRange(product.flipkartSpecialPrice.amount)}</p>
-        <span className="cta-wishlist price-range">♡ Favourite</span>
+        <span className="cta-wishlist price-range" onClick={()=>createUserFav(product, category)}>♡ Favourite</span>
         <span className="cta-wishlist price-range cta-shop" style={{ background: '#000'}} onClick={()=>{window.location.href=product.productUrl}}>Shop Now</span>
       </div>
     </div>

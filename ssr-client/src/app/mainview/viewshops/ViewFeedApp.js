@@ -2,6 +2,7 @@ import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import {ProductGrid} from './ProductGrid'
+import {FavouriteGrid} from './FavouriteGrid'
 
 import { productsArr } from './products';
 
@@ -16,7 +17,7 @@ const GeolocationComponent = ({searchPlaces}) => {
           document.getElementById('locMsg').style.display = 'none';
           window.selectedLat = position.coords.latitude;
           window.selectedLong = position.coords.longitude;
-          searchPlaces('fashion', window.placeQuery);
+          //searchPlaces('fashion', window.placeQuery);
         },
         (error) => {
           console.error('Error getting location:', error.message);
@@ -30,6 +31,12 @@ const GeolocationComponent = ({searchPlaces}) => {
     } else {
       console.error('Geolocation is not supported by this browser.');
     }
+    let nanoId = localStorage.getItem('nanoId');
+
+        if (nanoId == null) {
+            nanoId = nanoid();
+            localStorage.setItem('nanoId', nanoId);
+        }
   }, []);
 
   return (
@@ -479,10 +486,13 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [isClient, setIsClient] = useState(false);
     const [topFiveCat, setTopFiveCat] = useState("");
     const [trendingProducts, setTrendingProducts] = useState([]);
+    const [favouriteProducts, setFavouriteProducts] = useState([]);
     const [showBack, setShowBack] = useState(false);
     const [gridLoading, setGridLoading] = useState(false);
     const [isFirstTimeTabInit, setIsFirstTimeTabInit] = useState(true);
     const [searchQueried, setSearchQueried] = useState('');
+    const [isCreateFav, setIsCreateFav] = useState(false);
+    const [showTrending, setShowTrending] = useState(true);
 
     //leaf nodes to have "1": []
     let trendingCategories = {"Women":{"1": []},"Men":{"1": []},"Kids - Girls":{"girls":{"1-to-6":{"jumpsuits":0,"dresses":0,"skirts":0,"tops":0},"6-to-14":{"jackets":0,"dresses":0}}},"Kids - Boys":{"1-to-6":{"denims":0,"shirts":0},"6-to-14":{"shoes":0}}};
@@ -609,11 +619,27 @@ const ViewFeedApp = ({url,storeConfig}) => {
     };*/
 
     const handlePrimaryTabSelect = (type, tabId) => {
+        
+        if(type == 'trending') {
+          window.location.reload();
+        } else {
+          setShowTrending(false);
+          document.getElementById('tabTrending').classList.remove('active');
+          document.getElementById('tabYourWishdrops').classList.add('active');
+          if(document.querySelector('.btn-reset') != null) {
+            document.querySelector('.btn-reset').style.display = 'none';
+          } 
+          let nanoId = localStorage.getItem('nanoId');
+
+          axios.get(`/feed/search/favourites/${nanoId}`)
+                .then(function (res) {
+                  console.log('--favourites response.data--', res.data);
+                  setFavouriteProducts(res.data);
+                });
+        }
+
         let tabUpdateNew = tabUpdate + 1;
         setTabUpdate(tabUpdateNew);
-        document.getElementById('tabTrending').classList.remove('active');
-        document.getElementById('tabYourWishdrops').classList.remove('active');
-        document.getElementById(tabId).classList.add('active');
 
         //if (tabId == 'tabDefault') {
             document.getElementById('sub-tabs').style.display = 'inline-block';
@@ -627,7 +653,9 @@ const ViewFeedApp = ({url,storeConfig}) => {
         //}
         console.log('categoriesList[tabId]: ', categoriesList[tabId]);
         setCategories(categoriesList[tabId]);
-        searchPlaces(tabId.replace('tab',''), window.placeQuery);
+        //searchPlaces(tabId.replace('tab',''), window.placeQuery);
+
+
         
         /*axios.get(`/products/${storeId}/${type}`)
             .then(function (response) {
@@ -836,15 +864,21 @@ const ViewFeedApp = ({url,storeConfig}) => {
                 </div>
                 <div class="tabs-container shop">
                     <div class="tabs" id="main-tabs">
-                    <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('tags_fashion', 'tabTrending')}>⚡ Trending</div>
-                    <div id="tabYourWishdrops" class="tab" onClick={() => handlePrimaryTabSelect('tags_essentials', 'tabYourWishdrops')}>Your Favourites</div>
+                    <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('trending', 'trending-container')}>⚡ Trending</div>
+                    <div id="tabYourWishdrops" class="tab" onClick={() => { handlePrimaryTabSelect('favourites','favourites-container')}}>Your Favourites</div>
                     </div>
                     <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px',marginLeft: '26px'}}>
                     {tabUpdate >=0 && <NestedTabs categories={categories}/>}
                     </div>
                 </div>
                 {!isLoading && showBack && <span> <img className="modal-left-arrow img-bck" src="../../assets/images/left-arrow.png" onClick={onBackClick} /><span className="lbl-back">Back to {window.currentCategory}</span></span>}
-                {!isLoading && <ProductGrid gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
+                {!isLoading && showTrending && <ProductGrid onFavCreated={()=>{setIsCreateFav(true)}} onFavRequestComplete={()=>{setIsCreateFav(false)}} gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
+                {!isLoading && !showTrending && favouriteProducts.length > 0 && <FavouriteGrid gridLoading={gridLoading} products={favouriteProducts} />}
+                {isCreateFav && <div className="loaderc">
+                  <span className="lbl-c">Fetching deals on your favourites...</span>
+                  <div className="loading-bar animatec">
+                    <span className="lb"></span>
+                  </div></div>}
                 {isLoading && <LoadingShimmer/>}
             </div>
         </div>
