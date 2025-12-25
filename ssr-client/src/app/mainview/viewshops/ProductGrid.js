@@ -3,6 +3,7 @@ import ProductCard from "./ProductCard";
 import "./ProductGrid.css";
 
 const ProductGrid = ({ gridLoading, products = [], onProductClick, onFavCreated, onFavRequestComplete }) => {
+  console.log('--Grid Loading--', gridLoading);
   return (
     <div className={`product-grid ${gridLoading ? 'grid-loading' : ''}`}>
       {products.map((product) => (

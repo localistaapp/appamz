@@ -4,19 +4,19 @@ import "./ProductCard.css";
 
 function getPriceRange(price) {
   if (price > 200 && price < 500) {
-    return "₹250 - ₹1000";
+    return "Usually ₹1500+";
   } else if (price > 250 && price < 1000) {
-    return "₹500 - ₹1000";
+    return "Usually ₹1800+";
   } else if (price > 700 && price < 2000) {
-    return "₹1000 - ₹2000";
+    return "Usually ₹2500+";
   } else if (price > 1500 && price < 3000) {
-    return "₹2000 - ₹3000";
+    return "Usually ₹3500+";
   } else if (price >= 3000) {
     const lower = Math.floor(price / 1000) * 1000;
     const upper = lower + 1000;
     return `₹${lower} - ₹${upper}`;
   } else {
-    return "Below ₹200";
+    return "Usually ₹500+";
   }
 }
 

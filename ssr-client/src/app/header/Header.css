@@ -25,6 +25,7 @@
     width: 70px;
     margin-top: 30px;
     margin-left: 93px;
+    z-index: 1;
 }
 .header .logout {
     position: relative;

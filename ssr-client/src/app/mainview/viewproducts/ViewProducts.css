@@ -365,6 +365,23 @@ video {
     display: inline;
   }
 
+  .notif-pill {
+    position: relative;
+    left: 264px;
+    top: 30px;
+    background: red;
+    padding-left: 12px;
+    padding-right: 12px;
+    color: white;
+    font-weight: bold;
+    width: 8px;
+    border-radius: 32px;
+    margin-top: -34px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-family: 'Quicksand';
+  }
+
   .shop-search-c {
     min-height: 80px;
     margin: 0 auto;

@@ -493,6 +493,8 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [searchQueried, setSearchQueried] = useState('');
     const [isCreateFav, setIsCreateFav] = useState(false);
     const [showTrending, setShowTrending] = useState(true);
+    const [favFetchingState, setFavFetchingState] = useState(1);
+    const [isFavLoaded, setIsFavLoaded] = useState(0);
 
     //leaf nodes to have "1": []
     let trendingCategories = {"Women":{"1": []},"Men":{"1": []},"Kids - Girls":{"girls":{"1-to-6":{"jumpsuits":0,"dresses":0,"skirts":0,"tops":0},"6-to-14":{"jackets":0,"dresses":0}}},"Kids - Boys":{"1-to-6":{"denims":0,"shirts":0},"6-to-14":{"shoes":0}}};
@@ -544,10 +546,12 @@ const ViewFeedApp = ({url,storeConfig}) => {
       setTimeout(()=>{
         let catQuery = encodeURIComponent('Women');
         //document.querySelectorAll('.tab')[2].click();
+        setIsLoading(true);
         axios.get(`/feed/search/trending/${catQuery}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
                   let resArr = res.data;
+                  setIsLoading(false);
                   setTrendingProducts(res.data);
                   window.currentCategory  = res.data[0].productBaseInfoV1.categoryPath.replace(/\>/g,' ');
                   let j = res.data || [];
@@ -630,9 +634,10 @@ const ViewFeedApp = ({url,storeConfig}) => {
             document.querySelector('.btn-reset').style.display = 'none';
           } 
           let nanoId = localStorage.getItem('nanoId');
-
+          setIsLoading(true);
           axios.get(`/feed/search/favourites/${nanoId}`)
                 .then(function (res) {
+                  setIsLoading(false);
                   console.log('--favourites response.data--', res.data);
                   setFavouriteProducts(res.data);
                 });
@@ -802,9 +807,11 @@ const ViewFeedApp = ({url,storeConfig}) => {
         //searchPlaces(window.selectedCatId, q);
         setSearchQueried(q);
         window.searchQueried = q;
+        setIsLoading(true);
         axios.get(`/feed/search/keyword/${encodeURIComponent(q)}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
+                  setIsLoading(false);
                   let resArr = res.data;
                   setTrendingProducts(res.data);
                   window.uniqueQueries.shift();
@@ -852,6 +859,15 @@ const ViewFeedApp = ({url,storeConfig}) => {
                 }.bind(this));
       setShowBack(false);
     }
+
+    const initFavFetchingState = (num) => {
+      if (favFetchingState != 7) {
+        setFavFetchingState(num+1);
+          setTimeout(()=> {
+            initFavFetchingState(num+1);
+          }, 5000);
+        }
+    }
     
     return (
         <div className="main">
@@ -862,6 +878,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                   <input type="text" placeholder="Search products, favourites or stores" onKeyUp={handleSearchInput} />
                   <img src="../../assets/images/magnifying.png" />
                 </div>
+                {isFavLoaded > 0 && <div className="notif-pill" >1</div>}
                 <div class="tabs-container shop">
                     <div class="tabs" id="main-tabs">
                     <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('trending', 'trending-container')}>⚡ Trending</div>
@@ -872,10 +889,15 @@ const ViewFeedApp = ({url,storeConfig}) => {
                     </div>
                 </div>
                 {!isLoading && showBack && <span> <img className="modal-left-arrow img-bck" src="../../assets/images/left-arrow.png" onClick={onBackClick} /><span className="lbl-back">Back to {window.currentCategory}</span></span>}
-                {!isLoading && showTrending && <ProductGrid onFavCreated={()=>{setIsCreateFav(true)}} onFavRequestComplete={()=>{setIsCreateFav(false)}} gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
+                {!isLoading && showTrending && <ProductGrid onFavCreated={()=>{setIsCreateFav(true);initFavFetchingState(0)}} onFavRequestComplete={()=>{setIsCreateFav(false);setFavFetchingState(1);setIsFavLoaded(1);}} gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
                 {!isLoading && !showTrending && favouriteProducts.length > 0 && <FavouriteGrid gridLoading={gridLoading} products={favouriteProducts} />}
                 {isCreateFav && <div className="loaderc">
-                  <span className="lbl-c">Fetching deals on your favourites...</span>
+                  {favFetchingState == 1 && <span className="lbl-c">Fetching deals on your favourites...</span>}
+                  {favFetchingState == 2 && <span className="lbl-c">Searching product catalog...</span>}
+                  {favFetchingState == 3 && <span className="lbl-c">Product catalog searched ✅</span>}
+                  {favFetchingState == 4 && <span className="lbl-c">Finding matching products...</span>}
+                  {favFetchingState == 5 && <span className="lbl-c">This may take a few seconds...</span>}
+                  {favFetchingState == 6 && <span className="lbl-c">This panel will auto close on favoriting ✅</span>}
                   <div className="loading-bar animatec">
                     <span className="lb"></span>
                   </div></div>}
