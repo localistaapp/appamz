@@ -75,6 +75,7 @@
     text-shadow: 4px 9px 14px rgba(0, 0, 0, .2) !important;
     width: calc(100% - 16px) !important;
     font-weight: bold !important;
+    text-align: center;
   }
 
   .cta-shop {
