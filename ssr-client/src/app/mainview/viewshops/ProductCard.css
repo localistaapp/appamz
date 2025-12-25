@@ -66,7 +66,7 @@
     border: 1.2px solid #ffffff;
     border-radius: 38px;
     display: block;
-    font-size: .94rem;
+    font-size: .8rem;
     left: 0 !important;
     margin: 0 auto !important;
     padding: 3px;
@@ -90,8 +90,8 @@
     font-family: rec;
     font-size: 18px;
     height: 200px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
     position: absolute;
     top: 300px;
     margin: 0 auto;
