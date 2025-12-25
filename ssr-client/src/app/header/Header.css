@@ -316,7 +316,7 @@ img.card__elig_loc {
 .bounce-3 {
     animation-name: bounce-3;
     animation-timing-function: ease;
-    top:-200px;
+    top:-230px;
     animation-duration:8000ms;
     animation-delay: 0s;
     animation-fill-mode: forwards;
