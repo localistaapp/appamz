@@ -20,6 +20,39 @@ function getPriceRange(price) {
   }
 }
 
+function getRandomLocality() {
+  const locations = [
+    'Jayanagar',
+    'Indiranagar',
+    'Koramangala',
+    'BTM Layout',
+    'Church Street',
+    'JP Nagar'
+  ];
+
+  const randomIndex = Math.floor(Math.random() * locations.length);
+  return locations[randomIndex];
+}
+
+function getItForMsg(price) {
+  //*Get it for under ₹1000 from Jayanagar
+  if (price > 200 && price < 500) {
+    return "Get it for under ₹1200 from " + getRandomLocality();
+  } else if (price > 250 && price < 1000) {
+    return "Get it for under ₹1500 from " + getRandomLocality();
+  } else if (price > 700 && price < 2000) {
+    return "Get it for under ₹2200 from " + getRandomLocality();
+  } else if (price > 1500 && price < 3000) {
+    return "Get it for under ₹3100 from " + getRandomLocality();
+  } else if (price >= 3000) {
+    const lower = Math.floor(price / 1000) * 1000;
+    const upper = lower + 1000;
+    return `Get it for under ₹${(upper * 1.2) * 0.8} from ` + getRandomLocality();
+  } else {
+    return "Get it for event less from " + getRandomLocality();
+  }
+}
+
 const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavRequestComplete }) => {
 
   console.log('--product--',  product);
@@ -66,10 +99,10 @@ const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavReq
         <p className="price">₹{product.flipkartSpecialPrice.amount}</p>
       </div>
       <div className="card-content-desc">
-        <p className="category">{product.categoryPath.split('>')[product.categoryPath.split('>').length-1]}</p>
+        {/*<p className="category">{product.categoryPath.split('>')[product.categoryPath.split('>').length-1]}</p>*/}
         <p className="price-range">{getPriceRange(product.flipkartSpecialPrice.amount)}</p>
-        <span className="cta-wishlist price-range" onClick={()=>createUserFav(product, category)}>♡ Favourite</span>
-        <span className="cta-wishlist price-range cta-shop" style={{ background: '#000'}} onClick={()=>{window.location.href=product.productUrl}}>Shop Now</span>
+        <p className="price-range get-it-for">{getItForMsg(product.flipkartSpecialPrice.amount)}</p>
+        <span className="cta-wishlist price-range" onClick={()=>createUserFav(product, category)}>♡ Favourite for Deals</span>
       </div>
     </div>
   );
