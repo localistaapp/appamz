@@ -240,9 +240,9 @@ subApp.get("/manifest.json", (req, res) => {
   res.send('{"name":"Lootler","short_name":"Lootler","start_url":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85632-1.png?1766641195","sizes":"192x192"}]}');
 });
 
-app.use(vhost('kindjpnagar.wishler.in', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
-.use(vhost('urbansareesbroad.wishler.in', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
-.use(vhost('kidsaurajpnagar.wishler.in', subApp));
+app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
+.use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('kidsaurajpnagar.lootler.com', subApp));
 
 const swirlyoSubApp = express();
 
