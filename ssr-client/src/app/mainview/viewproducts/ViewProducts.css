@@ -365,6 +365,43 @@ video {
     display: inline;
   }
 
+  .favourited {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 18px;
+  }
+
+  .favourited > img {
+    object-fit: cover !important;
+  }
+
+  .favd {
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    background: #2d2d2d99;
+    padding: 12px;
+    border-radius: 36px;
+    color: white;
+    padding-top: 6px;
+    padding-bottom: 7px;
+    font-family: quicksand;
+  }
+
+  .favd-grid-title {
+    margin-left: 18px;
+    font-family: Quicksand;
+    font-weight: 500;
+    font-size: 1.3rem;
+    letter-spacing: -0.7px;
+    color: #575757;
+    margin-bottom: 16px;
+  }
+
+  .favd-grid {
+    width: 89% !important;
+  }
+
   .notif-pill {
     position: relative;
     left: 264px;

@@ -402,7 +402,14 @@ const NestedTabs = (categories) => {
     if (isClient) {
       document.getElementById('sub-tabs').style.display = 'inline-block';
     }
-    if (key !== 'categories') {
+
+    if (key == 'Deals on Favourites'){
+      //getDeals();
+    }
+    if (key == 'Stores'){
+      document.querySelectorAll('.tabs')[1].children[0].classList.remove('active');
+    }
+    if (key !== 'categories' && key !== 'Deals on Favourites' && key !== 'Stores') {
         console.log('--levelIndex--', levelIndex);
         
         if (isClient) {
@@ -499,7 +506,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
     //leaf nodes to have "1": []
     let trendingCategories = {"Women":{"1": []},"Men":{"1": []},"Kids - Girls":{"girls":{"1-to-6":{"jumpsuits":0,"dresses":0,"skirts":0,"tops":0},"6-to-14":{"jackets":0,"dresses":0}}},"Kids - Boys":{"1-to-6":{"denims":0,"shirts":0},"6-to-14":{"shoes":0}}};
 
-    let yourWishdropsCategories = {"1":[]};
+    let yourWishdropsCategories = {"Deals on Favourites":{"1":[]}, "Stores": {"1":[]}};
 
     let cafeCategories = {"cafe only": [],"food and cafe": [],"cafe and restaurant": []};
 
@@ -550,6 +557,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
         axios.get(`/feed/search/trending/${catQuery}`)
                 .then(function (res) {
                   console.log('--trending response.data--', res.data);
+                  setCategories(categoriesList['tabTrending']);
                   let resArr = res.data;
                   setIsLoading(false);
                   setTrendingProducts(res.data);
@@ -570,8 +578,6 @@ const ViewFeedApp = ({url,storeConfig}) => {
       },1500);
 
 
-
-      setCategories(categoriesList['tabTrending']);
       axios.get(`/feed/categories`)
         .then(function (response) {
             return;
@@ -628,6 +634,8 @@ const ViewFeedApp = ({url,storeConfig}) => {
           window.location.reload();
         } else {
           setShowTrending(false);
+          setCategories(categoriesList['tabYourWishdrops']);
+          setTimeout(()=>{document.querySelectorAll('.tabs')[1].children[0].classList.add('active')},200);
           document.getElementById('tabTrending').classList.remove('active');
           document.getElementById('tabYourWishdrops').classList.add('active');
           if(document.querySelector('.btn-reset') != null) {
@@ -657,7 +665,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
           //  document.getElementById('sub-tabs').style.display = 'none';
         //}
         console.log('categoriesList[tabId]: ', categoriesList[tabId]);
-        setCategories(categoriesList[tabId]);
+        //setCategories(categoriesList[tabId]);
         //searchPlaces(tabId.replace('tab',''), window.placeQuery);
 
 
