@@ -433,6 +433,20 @@ video {
     color: white;
   }
 
+  .store-deal {
+    position: absolute;
+    top: 6px;
+    font-size: 14px;
+    left: 4px;
+    font-weight: bold;
+    font-family: quicksand;
+    color: #8f2929;
+    background: #f867674d;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 18px;
+  }
+
   .store-product-grid {
     column-count: 4 !important;
     margin-top: 12px;

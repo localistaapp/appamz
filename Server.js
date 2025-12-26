@@ -242,6 +242,7 @@ subApp.get("/manifest.json", (req, res) => {
 
 app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
+.use(vhost('swirlyojpnagar.lootler.com', subApp))
 .use(vhost('kidsaurajpnagar.lootler.com', subApp));
 
 const swirlyoSubApp = express();
@@ -647,7 +648,7 @@ async function getSimilarityRanking(canonicalUrl, candidateUrls) {
 }
 
 async function getShoppingIntent(phrase) {
-  const instruction = `In the search phrase "${phrase}" on an ecommerce search, identify and create a string of the prodyct_type that the user is looking for - return only product_type which is just the main 1 word string that identifies the product query for eg in the query “green sling bag" only return bag`;
+  const instruction = `In the search phrase "${phrase}" on an ecommerce search, identify and create a string of the prodyct_type that the user is looking for - return strictly only product type as a string which is just the main 1 word string that identifies the product query for eg in the query “green sling bag" only return "bag". Don't return any descriptive text in response - only the product type as string`;
 
   const content = [
     {
@@ -803,9 +804,11 @@ app.get("/feed/store-search/keyword/:query", async (req, res) => {
                                       });
                                     });
                       }
-                      matching = "p.description like \'%"+productType+"%\' or p.title like \'%"+productType+"%\'";
+                      matching = "p.description like \'%"+productType+"%\' or LOWER(p.title) like \'%"+productType.toLocaleLowerCase()+"%\' or LOWER(p.description) like \'%"+productType.toLocaleLowerCase()+"%\' or p.title like \'%"+productType+"%\'";
                     
                       const client2 = new Client(dbConfig);
+
+                      console.log('-match query-', "select p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and ("+matching+") order by name limit 4");
                     
                       client2.connect(async (err) => {
                         if (err) {
@@ -813,7 +816,7 @@ app.get("/feed/store-search/keyword/:query", async (req, res) => {
                           client2.end();
                           return reject(err);
                         } else {
-                          client2.query("select p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and "+matching+" order by name limit 4",
+                          client2.query("select p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and ("+matching+") order by name limit 4",
                           [], async (err, response2) => {
                                 if (err) {
                                   console.log(err)
