@@ -2,6 +2,7 @@ import { useState, createRef, useEffect } from "react";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
 import {ProductGrid} from './ProductGrid'
+import {StoreSearchGrid} from './StoreSearchGrid'
 import {FavouriteGrid} from './FavouriteGrid'
 
 import { productsArr } from './products';
@@ -493,6 +494,8 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [isClient, setIsClient] = useState(false);
     const [topFiveCat, setTopFiveCat] = useState("");
     const [trendingProducts, setTrendingProducts] = useState([]);
+    const [storeSearchProducts, setStoreSearchProducts] = useState([]);
+    const [storeSearchIntent, setStoreSearchIntent] = useState([]);
     const [favouriteProducts, setFavouriteProducts] = useState([]);
     const [showBack, setShowBack] = useState(false);
     const [gridLoading, setGridLoading] = useState(false);
@@ -826,6 +829,13 @@ const ViewFeedApp = ({url,storeConfig}) => {
                   setGridLoading(false);
                   document.body.classList.remove('no-scroll');
                 }.bind(this));
+        axios.get(`/feed/store-search/keyword/${encodeURIComponent(q)}`)
+                .then(function (res) {
+                  console.log('--store search response.data--', res.data);
+                  let resArr = res.data.results;
+                  setStoreSearchProducts(res.data.results);
+                  setStoreSearchIntent(res.data.meta.intent);
+                }.bind(this));
       }
     }
 
@@ -897,6 +907,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                     </div>
                 </div>
                 {!isLoading && showBack && <span> <img className="modal-left-arrow img-bck" src="../../assets/images/left-arrow.png" onClick={onBackClick} /><span className="lbl-back">Back to {window.currentCategory}</span></span>}
+                {storeSearchProducts.length > 0 && <StoreSearchGrid products={storeSearchProducts} storeSearchIntent={storeSearchIntent} />}
                 {!isLoading && showTrending && <ProductGrid onFavCreated={()=>{setIsCreateFav(true);initFavFetchingState(0)}} onFavRequestComplete={()=>{setIsCreateFav(false);setFavFetchingState(1);setIsFavLoaded(1);}} gridLoading={gridLoading} products={trendingProducts} onProductClick={onProductClick}/>}
                 {!isLoading && !showTrending && favouriteProducts.length > 0 && <FavouriteGrid gridLoading={gridLoading} products={favouriteProducts} />}
                 {isCreateFav && <div className="loaderc">

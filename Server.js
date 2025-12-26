@@ -646,6 +646,35 @@ async function getSimilarityRanking(canonicalUrl, candidateUrls) {
   }
 }
 
+async function getShoppingIntent(phrase) {
+  const instruction = `In the search phrase "${phrase}" on an ecommerce search, identify and create a string of the prodyct_type that the user is looking for - return only product_type which is just the main 1 word string that identifies the product query for eg in the query “green sling bag" only return bag`;
+
+  const content = [
+    {
+      type: "text",
+      text: instruction
+    }
+  ];
+  
+
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "user",
+        content
+      }
+    ],
+    max_tokens: 800
+  });
+
+  const raw = response.choices?.[0]?.message?.content;
+  if (!raw) throw new Error("No content from model");
+
+  return raw;
+  
+}
+
 
   app.post("/compare", async (req, res) => {
     try {
@@ -734,6 +763,76 @@ app.get("/feed/search/keyword/:query", async (req, res) => {
       });
     }
   });
+});
+
+app.get("/feed/store-search/keyword/:query", async (req, res) => {
+  let searchQuery = req.params.query.trim();
+  let productType = '';
+
+  let matching = '';
+  const client = new Client(dbConfig);
+  
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      client.end();
+      return reject(err);
+    } else {
+      client.query("select product_type from am_store_promo_search where query like '"+searchQuery+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+                      console.log('--promo response.rows.length--', response.rows.length);
+                      if (response.rows.length > 0) {
+                        productType =  response.rows[0].product_type;
+                      } else {
+                              productType = await getShoppingIntent(searchQuery);
+                              const client1 = new Client(dbConfig);
+                              client1.connect(async (err) => {
+                                client1.query("INSERT INTO \"public\".\"am_store_promo_search\"(query, product_type) VALUES($1, $2)",
+                                  [searchQuery, productType], (err2) => {
+                                        if (err2) {
+                                          console.log(err2);
+                                          client1.end();
+                                        } else {
+                                          client1.end();
+                                        }
+                                      });
+                                    });
+                      }
+                      matching = "p.description like \'%"+productType+"%\' or p.title like \'%"+productType+"%\'";
+                    
+                      const client2 = new Client(dbConfig);
+                    
+                      client2.connect(async (err) => {
+                        if (err) {
+                          console.error('error connecting', err.stack);
+                          client2.end();
+                          return reject(err);
+                        } else {
+                          client2.query("select p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and "+matching+" order by name limit 4",
+                          [], async (err, response2) => {
+                                if (err) {
+                                  console.log(err)
+                                    res.send("error");
+                                    client2.end();
+                                } else {
+                                  console.log('--response.rows.length--', response2.rows.length);
+                                  res.send({"meta":{"intent": productType},"results":response2.rows});
+                                  client2.end();
+                                }
+                          });
+                        }
+                      });
+              }
+      });
+    }
+  });
+
+
 });
 
 app.get("/feed/search/favourites/:nanoId", async (req, res) => {

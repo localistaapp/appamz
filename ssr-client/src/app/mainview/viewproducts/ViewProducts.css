@@ -419,6 +419,34 @@ video {
     font-family: 'Quicksand';
   }
 
+  .store-search-title {
+    border-radius: 7px;
+    color: #4a4a4a;
+    font-family: Quicksand;
+    font-weight: 500;
+    padding: -1px 14px;
+    position: absolute;
+    z-index: 1;
+    background: #b4b4b4;
+    padding: 5px;
+    margin-top: -2px;
+    color: white;
+  }
+
+  .store-product-grid {
+    column-count: 4 !important;
+    margin-top: 12px;
+    width: 95%;
+    background: #cfcfcf8f;
+    padding: 12px;
+    height: 195px;
+  }
+
+  .store-product-card {
+    height: 150px;
+    top: 40px;
+  } 
+
   .shop-search-c {
     min-height: 80px;
     margin: 0 auto;
