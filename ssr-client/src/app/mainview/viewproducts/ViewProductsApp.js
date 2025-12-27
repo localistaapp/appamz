@@ -173,17 +173,15 @@ const ProductList = ({products, storeConfig}) => {
         }.bind(this));
       }
 
-      axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
+      if(localStorage.getItem('onlineOrderId') != null) {
+        axios.get(`/store/web-order/${localStorage.getItem('onlineOrderId')}`)
         .then(function (response) {
             console.log('--web order data-----', response.data);
             setTrackingLink(response.data.tracking_link);
             setPayStatus(response.data.status);
             localStorage.removeItem('onlineOrderId');
-        })
-
-
-        
-      
+        });
+      }
     }, []);
 
     useEffect(()=> {

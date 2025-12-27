@@ -49,7 +49,7 @@ function getItForMsg(price) {
     const upper = lower + 1000;
     return `Get it for under ₹${(upper * 1.2) * 0.8} from ` + getRandomLocality();
   } else {
-    return "Get it for event less from " + getRandomLocality();
+    return "Get it for even less from " + getRandomLocality();
   }
 }
 
