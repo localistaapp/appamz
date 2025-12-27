@@ -433,6 +433,12 @@ video {
     color: white;
   }
 
+  .product-search-cancel {
+    margin-left: 12px;
+    font-weight: bold;
+    font-family: Quicksand;
+  }
+
   .store-deal {
     position: absolute;
     top: 6px;

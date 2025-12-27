@@ -726,9 +726,15 @@ const ViewProductsApp = ({url,storeConfig}) => {
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isClient, setIsClient] = useState(false);
+    const [productSearchType, setProductSearchType] = useState('');
 
     useEffect(() => {
       setIsClient(true);
+      let productTypeParam = window.location.pathname.split('/')[3];
+        if (productTypeParam != null && productTypeParam != '') {
+          productType = productTypeParam;
+          setProductSearchType(productType);
+        }
     }, []);
     
     console.log('--store c1111--', storeConfig);
@@ -841,6 +847,13 @@ const ViewProductsApp = ({url,storeConfig}) => {
           setProducts(newArr);
         }
       }
+
+      const removeProductSearch = () => {
+        let currentUrl = new URL(window.location.href);
+        const pathSegments = currentUrl.pathname.split('/');pathSegments.pop(); 
+        currentUrl.pathname = pathSegments.join('/') || '/';
+        window.location.href = currentUrl+'/';
+      }
     
     return (
         <div className="main">
@@ -852,9 +865,19 @@ const ViewProductsApp = ({url,storeConfig}) => {
                     <div id="tabSeasons" class="tab" onClick={() => handlePrimaryTabSelect('tags_seasons_special', 'tabSeasons')}>Season's Special</div>
                     <div id="tabArrival" class="tab" onClick={() => handlePrimaryTabSelect('tags_new_arrival', 'tabArrival')}>New Arrivals</div>
                     </div>
-                    <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
+                    {productSearchType == '' && <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
                     {tabUpdate >=0 && <NestedTabs categories={categories} />}
-                    </div>
+                    </div>}
+
+                    {productSearchType != '' && <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px'}}>
+                    
+                      <div className="tabs">
+                          <div class="tab active" onClick={()=>{removeProductSearch()}}>
+                            {productSearchType}<span className="product-search-cancel">X</span>
+                            </div> 
+                        </div>
+                    </div>}
+
                 </div>
                 {!isLoading && <ProductList products={products} storeConfig={storeConfig} />}
                 {isLoading && <LoadingShimmer/>}
