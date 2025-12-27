@@ -89,8 +89,8 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         <div className="highlights">{product.highlights}</div>
         <div className="description">{product.description}</div>
         <div className="price">
-          <div className="price-current">₹{product.price}</div>
-          <div className="price-original">₹{originalPrice}</div>
+          <div className="price-current">₹{product.offAmount}</div>
+          <div className="price-original">₹{product.price}</div>
         </div>
         <div className="quantity"><a className="quantity__minus"><span style={{fontSize: '25px', lineHeight: '0px', marginLeft: '2px'}} onClick={() => handleMinusClick(product,basketData)}>-</span></a><input name="quantity" type="text" className="quantity__input" value={qty}/><a className="quantity__plus" onClick={()=>{handlePlusClick(product, basketData);}}><span>+</span></a></div>
       </div>

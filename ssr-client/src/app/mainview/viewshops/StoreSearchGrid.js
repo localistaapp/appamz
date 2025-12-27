@@ -14,7 +14,7 @@ const StoreSearchGrid = ({ products = [], storeSearchIntent }) => {
               alt={product.title}
               style={{ height: '150px' }}
             />
-            <div className="store-deal">22% OFF</div>
+            <div className="store-deal">{product.savingsPc}% OFF</div>
           </div>
       ))}
     </div>

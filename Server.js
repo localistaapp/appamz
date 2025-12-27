@@ -467,7 +467,7 @@ app.get("/products/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') ",
+        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') ",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -479,7 +479,8 @@ app.get("/products/:storeId", (req, res) => {
                 res.send('{"status":"no-results"}');
                 client.end();
               } else {
-                res.send(response.rows);
+                const products = getEffectiveSavings(response.rows);
+                res.send(products);
                 client.end();
               }
           }
@@ -499,7 +500,7 @@ app.get("/products/search/:storeId/:productType", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%')",
+        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%')",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -511,7 +512,8 @@ app.get("/products/search/:storeId/:productType", (req, res) => {
                 res.send('{"status":"no-results"}');
                 client.end();
               } else {
-                res.send(response.rows);
+                const products = getEffectiveSavings(response.rows);
+                res.send(products);
                 client.end();
               }
           }
@@ -842,6 +844,93 @@ app.get("/feed/search/keyword/:query", async (req, res) => {
   });
 });
 
+const applyMarginProtection = (margin, tier) => {
+    let effectiveMargin = 0;
+
+    if (margin == '5-10%' && tier == 'Low') {
+      effectiveMargin = 0.02;
+    } else if (margin == '5-10%' && tier == 'Medium') {
+      effectiveMargin = 0.03;
+    } else if (margin == '5-10%' && tier == 'High') {
+      effectiveMargin = 0.04;
+    }
+
+    if (margin == '10-15%' && tier == 'Low') {
+      effectiveMargin = 0.05;
+    } else if (margin == '10-15%' && tier == 'Medium') {
+      effectiveMargin = 0.06;
+    } else if (margin == '10-15%' && tier == 'High') {
+      effectiveMargin = 0.07;
+    }
+
+    if (margin == '15-20%' && tier == 'Low') {
+      effectiveMargin = 0.08;
+    } else if (margin == '15-20%' && tier == 'Medium') {
+      effectiveMargin = 0.09;
+    } else if (margin == '15-20%' && tier == 'High') {
+      effectiveMargin = 0.1;
+    }
+
+    if (margin == '20-30%' && tier == 'Low') {
+      effectiveMargin = 0.15;
+    } else if (margin == '20-30%' && tier == 'Medium') {
+      effectiveMargin = 0.16;
+    } else if (margin == '20-30%' && tier == 'High') {
+      effectiveMargin = 0.18;
+    }
+
+    if (margin == '30-40%' && tier == 'Low') {
+      effectiveMargin = 0.2;
+    } else if (margin == '30-40%' && tier == 'Medium') {
+      effectiveMargin = 0.22;
+    } else if (margin == '30-40%' && tier == 'High') {
+      effectiveMargin = 0.24;
+    }
+
+    if (margin == '40-50%' && tier == 'Low') {
+      effectiveMargin = 0.25;
+    } else if (margin == '40-50%' && tier == 'Medium') {
+      effectiveMargin = 0.27;
+    } else if (margin == '40-50%' && tier == 'High') {
+      effectiveMargin = 0.3;
+    }
+    return effectiveMargin;
+}
+
+const getEffectiveSavings = (products) => {
+  let prodArr = [];
+  let cashbackPc = 0.2;
+  let tier = 'Low';
+  if (cashbackPc == 0.2) {
+    tier = 'Medium';
+  } else if (cashbackPc > 0.2) {
+    tier = 'High';
+  }
+
+  products.forEach((product) => {
+    let p = product;
+    let margin = product.margin;
+    let origPrice = parseInt(product.price,10) * 1.2;
+    let price = origPrice;
+    let offAmount = 0;
+    let savingsPc = 0;
+
+    let marginPc = applyMarginProtection(margin, tier);
+    let cashbackAmount = cashbackPc * 300;
+    let discountedAmount = marginPc * price;
+    let totalSavings = cashbackAmount + discountedAmount;
+    offAmount = price - totalSavings;
+    savingsPc = Math.round((totalSavings/price) * 100);
+
+    p['offAmount'] = Math.round(offAmount);
+    p['savingsPc'] = savingsPc;
+    p['price'] = origPrice;
+    p['margin'] = 0;
+    prodArr.push(p);
+  });
+  return prodArr;
+}
+
 app.get("/feed/store-search/keyword/:query", async (req, res) => {
   let searchQuery = req.params.query.trim();
   let productType = '';
@@ -892,7 +981,7 @@ app.get("/feed/store-search/keyword/:query", async (req, res) => {
                           client2.end();
                           return reject(err);
                         } else {
-                          client2.query("select p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and ("+matching+") order by name limit 4",
+                          client2.query("select p.price, p.margin, p.title, p.image_url, p.price, s.name, s.locality, s.app_url from am_store_product p, am_store s where p.store_id = s.id and ("+matching+") order by name limit 4",
                           [], async (err, response2) => {
                                 if (err) {
                                   console.log(err)
@@ -900,7 +989,9 @@ app.get("/feed/store-search/keyword/:query", async (req, res) => {
                                     client2.end();
                                 } else {
                                   console.log('--response.rows.length--', response2.rows.length);
-                                  res.send({"meta":{"intent": productType},"results":response2.rows});
+                                  const products = getEffectiveSavings(response2.rows);
+
+                                  res.send({"meta":{"intent": productType},"results":products});
                                   client2.end();
                                 }
                           });
