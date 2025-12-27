@@ -25,6 +25,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
                 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet"></link>
                 <link href="https://fonts.googleapis.com/css?family=Quicksand:100..900" rel="stylesheet"></link>
+                <link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet"></link>
                 <meta property="og:title" content="Special offer on Slashify 🎉"/>
                 <meta property="og:type" content="website"/>
                 <meta property="og:image" content="https://wishler.in/assets/images/deals.png"/>
