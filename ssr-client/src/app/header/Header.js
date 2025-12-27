@@ -214,6 +214,15 @@ const Header = (props) => {
         if (typeof locationHref !== 'undefined' && locationHref.indexOf('/app/') != -1) {
             //locationHref = locationHref.split('from=')[0];
             storeFolder = locationHref.substring(locationHref.indexOf('/app/')+'/app/'.length,locationHref.length);
+
+            const pathNameLength = window.location.pathname.split('/').length;
+            if(pathNameLength >=4 ){
+                let storeParamVal = window.location.pathname.split('/')[2];
+                if (storeParamVal != null && storeParamVal != '') {
+                    storeFolder = storeParamVal;
+                }
+            }
+
             if(storeFolder.indexOf('?')>=0) {
                 storeFolder = storeFolder.substring(0, storeFolder.indexOf('?'));
             }
