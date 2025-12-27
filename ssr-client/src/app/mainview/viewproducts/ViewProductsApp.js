@@ -726,9 +726,19 @@ const ViewProductsApp = ({url,storeConfig}) => {
     const [tabUpdate, setTabUpdate] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [isClient, setIsClient] = useState(false);
+    const [productType, setProductType] = useState('');
 
     useEffect(() => {
       setIsClient(true);
+      const pathNameLength = window.location.pathname.split('/').length
+      
+      if(pathNameLength >=4 ){
+        let productTypeParam = window.location.pathname.split('/')[3];
+        if (productTypeParam != null && productTypeParam != '') {
+          setProductType(productTypeParam);
+        }
+      }
+      
     }, []);
     
     console.log('--store c1111--', storeConfig);
@@ -782,8 +792,14 @@ const ViewProductsApp = ({url,storeConfig}) => {
     }
       
 
-      if (products.length == 0) {
-        axios.get(`/products/${storeId}`)
+      if (products.length == 0 || productType !== '') {
+
+        let productListUrl = `/products/${storeId}`;
+        if (productType !== '') {
+          productListUrl = `/products/search/${storeId}/${productType}`;
+        }
+
+        axios.get(productListUrl)
         .then(function (response) {
           if(response.data != 'auth error') {
               console.log('--product res--', JSON.stringify(response.data));
