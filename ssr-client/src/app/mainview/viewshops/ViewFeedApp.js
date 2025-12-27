@@ -900,7 +900,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                 <div class="tabs-container shop">
                     <div class="tabs" id="main-tabs">
                     <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('trending', 'trending-container')}>⚡ Trending</div>
-                    <div id="tabYourWishdrops" class="tab" onClick={() => { handlePrimaryTabSelect('favourites','favourites-container')}}>Your Favourites</div>
+                    <div id="tabYourWishdrops" class="tab" onClick={() => { handlePrimaryTabSelect('favourites','favourites-container')}}>📋 Your Favourites</div>
                     </div>
                     <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px',marginLeft: '26px'}}>
                     {tabUpdate >=0 && <NestedTabs categories={categories}/>}
