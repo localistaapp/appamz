@@ -686,12 +686,12 @@ app.post('/user-favs/create', async function(req, res) {
                                client.end();
                              } else {
                               let segment = 0;
-                              pushKey = '42a787d4a31f283022a10cc2ce0867df';
+                              const pushKey = '42a787d4a31f283022a10cc2ce0867df';
                               axios
                               .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
-                              .then(res => {
+                              .then(result => {
                                 console.log('Pushalert success: ');
-                                segment = res.id;
+                                segment = result.id;
                                 res.send('{"status":"success", "segment": '+segment+'}');
                                 client.end();
                               })
