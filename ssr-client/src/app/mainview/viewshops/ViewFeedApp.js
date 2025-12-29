@@ -639,7 +639,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const handlePrimaryTabSelect = (type, tabId) => {
         
         if(type == 'trending') {
-          window.location.reload();
+          window.location.href = '/app/shop/';
         } else {
           setShowTrending(false);
           setCategories(categoriesList['tabYourWishdrops']);
