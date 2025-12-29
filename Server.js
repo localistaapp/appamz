@@ -491,7 +491,7 @@ app.post('/store-user-segment/create', function(req, res) {
                         } else {
                             pushKey = response.rows[0]['push_key'];
                             axios
-                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop1'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop2'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
                             .then(result => {
                               const segment = result.data.id;
 
@@ -809,12 +809,12 @@ app.post('/user-favs/create', async function(req, res) {
                                         } else {
                                             const pushKey = '8702af38ad1e22d91f8bdd9398b0c7a8';
                                             axios
-                                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop1'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop2'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
                                             .then(result => {
                                               const segment = result.data.id;
                 
                                               client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment, productType, store_id) VALUES($1, $2, $3, $4)",
-                                              [nanoId, segment, productType, 0], (err, response) => {
+                                              [nanoid, segment, productType, 0], (err, response) => {
                                                     if (err) {
                                                       console.log(err);
                                                       res.send('{"status":"insert-error"}');
