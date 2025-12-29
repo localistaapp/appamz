@@ -292,7 +292,7 @@ app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/a
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
 .use(vhost('kidsaurajpnagar.lootler.com', subApp))
-.use(vhost('shop.lootler.com', subApp));
+.use(vhost('shop.lootler.com', shopSubApp));
 
 const swirlyoSubApp = express();
 
