@@ -1639,13 +1639,75 @@ app.post('/createProduct', function(req, res) {
                                res.send('{"status":"insert-error"}');
                                client.end();
                              } else {
-                              res.send('{"status":"success"}');
-                              client.end();
+
+                                    const client = new Client(dbConfig);
+                                  
+                                    let pushKey = '';
+
+                                    client.connect(err => {
+                                      if (err) {
+                                        console.error('error connecting', err.stack)
+                                        res.send('{"status":"connect-error"}');
+                                        client.end();
+                                      } else {
+                                        
+                                        client.query("select distinct(product_type), segment from am_user_fav_segments where product_type != ''",
+                                        [], (err, res1) => {
+                                              if (err) {
+                                                console.log(err)
+                                                  res.send("error");
+                                                  client.end();
+                                              } else {
+                                                        if (res1.rows.length > 0) {
+                                                            res1.rows.forEach((item) => {
+                                                              if (highlights.indexOf(item['product_type']) >= 0) {
+                                                                client.query("select push_key from am_store where id = "+storeId,
+                                                                  [], (err, response) => {
+                                                                      if (err) {
+                                                                        console.log(err)
+                                                                          res.send("error");
+                                                                          client.end();
+                                                                      } else {
+                                                                        pushKey = response.rows[0]['push_key'];
+                                                                        pushKey = '8702af38ad1e22d91f8bdd9398b0c7a8';
+                                                                        client.end();
+                                                                        let headline = 'New deal unlocked on '+item['product_type'];
+                                                                        let detail = 'Check out this new arrival'
+                                                                        axios
+                                                                          .post('https://api.pushalert.co/rest/v1/segment/'+item.segment+'/send', 'url=https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/'+item['product_type']+'&title='+headline+'&message='+detail, {headers: {'Authorization': 'api_key='+pushKey}})
+                                                                          .then(res => {
+                                                                            console.log('Pushalert success: ');
+                                                                            res.send('{"status":"push success"}');
+                                                                            client.end();
+                                                                          })
+                                                                          .catch(error => {
+                                                                            console.log('Pushalert error: ', error);
+                                                                            res.send('{"status":"push error"}');
+                                                                            client.end();
+                                                                          });
+                                                                      }
+                                                                });
+                                                              } else {
+                                                                res.send('{"status":"success"}');
+                                                              }
+                                                            });
+                                                            
+                                                        } else {
+                                                          res.send('{"status":"success"}');
+                                                        }
+                                                    
+                                                }
+                                              });
+                             
                              }
                            });
-   }
- });
- });
+   }});
+   
+ }
+ 
+});
+
+});
 
  app.use(express.urlencoded({ extended: true }));
  app.post('/store/web-order', function(req, res) {
