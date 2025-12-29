@@ -294,6 +294,11 @@ app.get("/manifest.json", (req,res) => {
   res.send('{"name":"lootler","short_name":"lootler","start_url":"https://lootler.com/app/shop/favourites","id":"https://lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85687-1.png?1766997585","sizes":"192x192"}]}');
 })
 
+app.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
+});
+
 const swirlyoSubApp = express();
 
 swirlyoSubApp.get("/app/:store", (req, res) => {
