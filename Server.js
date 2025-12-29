@@ -1660,7 +1660,7 @@ app.post('/createProduct', function(req, res) {
                                               } else {
                                                         if (res1.rows.length > 0) {
                                                             res1.rows.forEach((item) => {
-                                                              if (highlights.indexOf(item['product_type']) >= 0) {
+                                                              if (item['product_type'] != null && item['product_type'] != 'NULL' && item['product_type'] != '' && highlights.indexOf(item['product_type']) >= 0) {
                                                                 client.query("select push_key from am_store where id = "+storeId,
                                                                   [], (err, response) => {
                                                                       if (err) {
