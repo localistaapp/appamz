@@ -152,6 +152,22 @@ const Header = (props) => {
             track(window.storeConfig.storeId, METRICS.DEALS_CLAIMED);
             
             localStorage.setItem('subscribed', 'true');
+
+            let nanoId = localStorage.getItem('nanoId');
+
+            if (nanoId == null) {
+                nanoId = nanoid();
+                localStorage.setItem('nanoId', nanoId);
+            }
+            axios.get(`/user-fav-segments/${nanoId}`)
+                .then(function (res) {
+                  console.log('--user segments--', res.data);
+                  res.data.forEach((item) => {
+                    console.log('--item.segment--', item.segment);
+                    let pushalertbyiw;
+                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFuncAm]);
+                  });
+                }.bind(this));
         } else {
             setShowAddToHome(false);
             removeTopCardClass();
@@ -324,7 +340,7 @@ const Header = (props) => {
                       await navigator.share({
                         title: 'Special offer on Slashify 🎉',
                         text: shareText,
-                        url: 'https://www.wishler.in/app/shop/id='+storeConfig.placeId+'&u='+nanoId
+                        url: 'https://www.lootler.com/app/shop/id='+storeConfig.placeId+'&u='+nanoId
                       });
                       setShareLoading(false);
                       getCashback(storeConfig.storeId);
