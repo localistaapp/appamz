@@ -803,7 +803,8 @@ app.post('/user-favs/create', async function(req, res) {
                                     } else {
                 
                                         if (res1.rows.length > 0) {
-                                          res.send('{"status":"success", "segment": '+res1[0].segment+'}');
+                                          console.log('--res1--', res1.rows[0]);
+                                          res.send('{"status":"success", "segment": '+res1.rows[0].segment+'}');
                                           client.end();
                                         } else {
                                             const pushKey = '8702af38ad1e22d91f8bdd9398b0c7a8';
