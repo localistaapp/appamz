@@ -158,21 +158,6 @@ const Header = (props) => {
             setShowAddToHome(false);
             removeTopCardClass();
         }
-        let nanoId = localStorage.getItem('nanoId');
-
-        if (nanoId == null) {
-            nanoId = nanoid();
-            localStorage.setItem('nanoId', nanoId);
-        }
-        axios.get(`/user-fav-segments/${nanoId}`)
-                .then(function (res) {
-                  alert('--user segments--', res.data);
-                  res.data.forEach((item) => {
-                    console.log('--item.segment--', item.segment);
-                    let pushalertbyiw;
-                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFnAm]);
-                  });
-                }.bind(this));
     }
 
     const addCashback = (storeId) => {
@@ -221,6 +206,21 @@ const Header = (props) => {
         }
         if (window.pushalertbyiw) {
             (window.pushalertbyiw).push(['onSuccess', callbackOnSuccess]);
+            let nanoId = localStorage.getItem('nanoId');
+
+            if (nanoId == null) {
+                nanoId = nanoid();
+                localStorage.setItem('nanoId', nanoId);
+            }
+            axios.get(`/user-fav-segments/${nanoId}`)
+                    .then(function (res) {
+                    alert('--user segments--', res.data);
+                    res.data.forEach((item) => {
+                        console.log('--item.segment--', item.segment);
+                        let pushalertbyiw;
+                        (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFnAm]);
+                    });
+                    }.bind(this));
         }
      }
     
