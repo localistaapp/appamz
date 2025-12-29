@@ -485,7 +485,7 @@ app.post('/store-user-segment/create', function(req, res) {
                     } else {
 
                         if (res1.rows.length > 0) {
-                          res.send('{"status":"success", "segment": '+res1[0].segment+'}');
+                          res.send('{"status":"success", "segment": '+res1.rows[0].segment+'}');
                           client.end();
                         } else {
                             pushKey = response.rows[0]['push_key'];
