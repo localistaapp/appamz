@@ -690,8 +690,7 @@ app.post('/user-favs/create', async function(req, res) {
                               axios
                               .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
                               .then(result => {
-                                console.log('Pushalert success: ');
-                                segment = result.id;
+                                const segment = result.data.id;
                                 res.send('{"status":"success", "segment": '+segment+'}');
                                 client.end();
                               })
