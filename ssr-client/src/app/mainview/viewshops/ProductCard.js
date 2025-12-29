@@ -77,7 +77,7 @@ const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavReq
     var imgUrl = p.imageUrls['800x800'];
     onFavCreated();
 
-    axios.post(`/user-favs/create`, {title: title, nanoid: nanoid, 
+    axios.post(`/user-favs/create`, {searchQuery: window.placeQuery, title: title, nanoid: nanoid, 
       highlights: highlights, price: price, 
       url: url, imgUrl: imgUrl}).then((response) => {
       onFavRequestComplete();

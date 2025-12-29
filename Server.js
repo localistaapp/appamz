@@ -607,8 +607,10 @@ app.post('/user-favs/create', async function(req, res) {
   var price = req.body.price;
   var url = req.body.url;
   var imgUrl = req.body.imgUrl;
+  var searchQuery = req.body.searchQuery;
   var related = [];
   var query = '';
+  let productType = '';
 
   let qArr = []; 
   highlights.split(',').forEach((i)=>{if(i.indexOf(':')!=-1){qArr.push(i.split(':')[1]);} else {qArr.push(i);}});
@@ -646,21 +648,57 @@ app.post('/user-favs/create', async function(req, res) {
 
   var allItems = items.concat(rest);
 
+  client.query("select product_type from am_store_promo_search where query like '"+searchQuery+"'",
+      [], async (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+                      if (response.rows.length > 0) {
+                        productType =  response.rows[0].product_type;
+                        const client3 = new Client(dbConfig);
+                      client3.connect(async (err) => {
+                        client3.query("INSERT INTO \"public\".\"am_shop_intent\"(query, product_type, type, product) VALUES($1, $2, $3, $4)",
+                          [searchQuery, productType, 'fav', title], (err2) => {
+                                if (err2) {
+                                  console.log(err2);
+                                  client3.end();
+                                } else {
+                                  client3.end();
+                                }
+                              });
+                            });
+                          
+                      } } });
+
   client.connect(err => {
    if (err) {
      console.error('error connecting', err.stack)
    } else {
      console.log('connected')
  
-     client.query("INSERT INTO \"public\".\"am_user_favs\"(nanoid, title, price, url, highlights, img_url, related) VALUES($1, $2, $3, $4, $5, $6, $7)",
-                       [nanoid, title, price, url, highlights, imgUrl, JSON.stringify(allItems)], (err, response) => {
+     client.query("INSERT INTO \"public\".\"am_user_favs\"(nanoid, title, price, url, highlights, img_url, related, product_type) VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+                       [nanoid, title, price, url, highlights, imgUrl, JSON.stringify(allItems), productType], (err, response) => {
                              if (err) {
                                console.log(err);
                                res.send('{"status":"insert-error"}');
                                client.end();
                              } else {
-                              res.send('{"status":"success"}');
-                              client.end();
+                              let segment = 0;
+                              pushKey = '42a787d4a31f283022a10cc2ce0867df';
+                              axios
+                              .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                              .then(res => {
+                                console.log('Pushalert success: ');
+                                segment = res.id;
+                                res.send('{"status":"success", "segment": '+segment+'}');
+                                client.end();
+                              })
+                              .catch(error => {
+                                console.log('Pushalert error: ', error);
+                              });
+                              
                              }
                            });
    }
@@ -969,6 +1007,21 @@ app.get("/feed/store-search/keyword/:query", async (req, res) => {
                                       });
                                     });
                       }
+
+                      const client3 = new Client(dbConfig);
+                      client3.connect(async (err) => {
+                        client3.query("INSERT INTO \"public\".\"am_shop_intent\"(query, product_type, type) VALUES($1, $2, $3)",
+                          [searchQuery, productType, 'search'], (err2) => {
+                                if (err2) {
+                                  console.log(err2);
+                                  client3.end();
+                                } else {
+                                  client3.end();
+                                }
+                              });
+                            });
+                
+
                       matching = "p.description like \'%"+productType+"%\' or LOWER(p.title) like \'%"+productType.toLocaleLowerCase()+"%\' or LOWER(p.description) like \'%"+productType.toLocaleLowerCase()+"%\' or p.title like \'%"+productType+"%\'";
                     
                       const client2 = new Client(dbConfig);
