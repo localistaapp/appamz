@@ -137,6 +137,8 @@ const Header = (props) => {
         }
     }
 
+    const callbackFnAm = () => {};
+
     const callbackOnSuccess = (result) => {
         console.log('cb-', result.subscriber_id); //will output the user's subscriberId
         console.log('cb-', result.alreadySubscribed); // False means user just Subscribed
@@ -152,26 +154,25 @@ const Header = (props) => {
             track(window.storeConfig.storeId, METRICS.DEALS_CLAIMED);
             
             localStorage.setItem('subscribed', 'true');
+        } else {
+            setShowAddToHome(false);
+            removeTopCardClass();
+        }
+        let nanoId = localStorage.getItem('nanoId');
 
-            let nanoId = localStorage.getItem('nanoId');
-
-            if (nanoId == null) {
-                nanoId = nanoid();
-                localStorage.setItem('nanoId', nanoId);
-            }
-            axios.get(`/user-fav-segments/${nanoId}`)
+        if (nanoId == null) {
+            nanoId = nanoid();
+            localStorage.setItem('nanoId', nanoId);
+        }
+        axios.get(`/user-fav-segments/${nanoId}`)
                 .then(function (res) {
                   console.log('--user segments--', res.data);
                   res.data.forEach((item) => {
                     console.log('--item.segment--', item.segment);
                     let pushalertbyiw;
-                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, ()=>{}]);
+                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFnAm]);
                   });
                 }.bind(this));
-        } else {
-            setShowAddToHome(false);
-            removeTopCardClass();
-        }
     }
 
     const addCashback = (storeId) => {
