@@ -46,7 +46,7 @@ const GeolocationComponent = ({searchPlaces}) => {
     }
     let nanoId = localStorage.getItem('nanoId');
 
-        if (nanoId == null) {
+        if (nanoId == null && getCookie('nanoId') == null) {
             nanoId = nanoid();
             localStorage.setItem('nanoId', nanoId);
             setCookie('nanoId', nanoId);
