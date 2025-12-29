@@ -665,6 +665,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
             document.querySelector('.btn-reset').style.display = 'none';
           } 
           let nanoId = localStorage.getItem('nanoId');
+          alert('-nanoId-'+nanoId);
           setIsLoading(true);
           axios.get(`/feed/search/favourites/${nanoId}`)
                 .then(function (res) {
