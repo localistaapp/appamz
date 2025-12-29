@@ -1688,9 +1688,7 @@ app.post('/createProduct', function(req, res) {
                                                                           });
                                                                       }
                                                                 });
-                                                              } else {
-                                                                res.send('{"status":"success"}');
-                                                              }
+                                                              } 
                                                             });
                                                             
                                                         } else {
