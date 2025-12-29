@@ -332,6 +332,46 @@ swirlyoSubApp.get("/manifest.json", (req, res) => {
 
 app.use(vhost('swirlyojpnagar.wishler.in', swirlyoSubApp));
 
+
+const shopSubApp = express();
+
+shopSubApp.get("/app/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
+
+shopSubApp.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send('importScripts("https://cdn.pushalert.co/sw-83754.js?r=5232");');
+});
+
+shopSubApp.get("/manifest.json", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send('{"name":"lootler","short_name":"lootler","start_url":"https://shop.lootler.com/app/shop/favourites","id":"https://shop.lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85692-1.png?1767011855","sizes":"192x192"}]}');
+
+});
+
+app.use(vhost('shop.lootler.com', shopSubApp));
+
+
 app.get("/app/:store/:id", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
@@ -451,7 +491,7 @@ app.post('/store-user-segment/create', function(req, res) {
                         } else {
                             pushKey = response.rows[0]['push_key'];
                             axios
-                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop-'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
                             .then(result => {
                               const segment = result.data.id;
 
@@ -753,19 +793,44 @@ app.post('/user-favs/create', async function(req, res) {
                                res.send('{"status":"insert-error"}');
                                client.end();
                              } else {
-                              let segment = 0;
-                              const pushKey = '42a787d4a31f283022a10cc2ce0867df';
-                              axios
-                              .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
-                              .then(result => {
-                                const segment = result.data.id;
-                                res.send('{"status":"success", "segment": '+segment+'}');
-                                client.end();
-                              })
-                              .catch(error => {
-                                console.log('Pushalert error: ', error);
-                              });
-                              
+
+
+                              client.query("select segment from am_user_fav_segments where store_id = 0 and product_type = '"+productType+"'",
+                              [], (err, res1) => {
+                                    if (err) {
+                                      console.log(err)
+                                        res.send("error");
+                                        client.end();
+                                    } else {
+                
+                                        if (res1.rows.length > 0) {
+                                          res.send('{"status":"success", "segment": '+res1[0].segment+'}');
+                                          client.end();
+                                        } else {
+                                            const pushKey = '8702af38ad1e22d91f8bdd9398b0c7a8';
+                                            axios
+                                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name=shop-'+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                                            .then(result => {
+                                              const segment = result.data.id;
+                
+                                              client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment, productType, store_id) VALUES($1, $2, $3, $4)",
+                                              [nanoId, segment, productType, 0], (err, response) => {
+                                                    if (err) {
+                                                      console.log(err);
+                                                      res.send('{"status":"insert-error"}');
+                                                      client.end();
+                                                    } else {
+                                                      res.send('{"status":"success", "segment": '+segment+'}');
+                                                      client.end();
+                                                    }
+                                                  });
+                                            })
+                                            .catch(error => {
+                                              console.log('Pushalert error: ', error);
+                                            });
+                                        }
+                                    }
+                                  });
                              }
                            });
    }
