@@ -80,8 +80,11 @@ const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavReq
     axios.post(`/user-favs/create`, {searchQuery: window.placeQuery, title: title, nanoid: nanoid, 
       highlights: highlights, price: price, 
       url: url, imgUrl: imgUrl}).then((response) => {
-      onFavRequestComplete();
       console.log('--Create Product Response--', response);
+      let segmentVal = response.data.segment;
+      axios.post(`/user-fav-segments/create`, {nanoid: nanoid, segment: segmentVal}). then((response) => {
+        onFavRequestComplete();
+      });
     }); 
   }
 

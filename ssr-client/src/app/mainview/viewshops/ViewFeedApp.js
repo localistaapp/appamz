@@ -549,12 +549,27 @@ const ViewFeedApp = ({url,storeConfig}) => {
                 }.bind(this));
       }
     });
+            
+    const callbackFuncAm = (result) => {
+    } 
 
     useEffect(() => {
       window.allFilters = '';
       setIsClient(true);
       if(window.location.pathname == '/app/shop/favourites') {
         handlePrimaryTabSelect('favourites','favourites-container');
+        let nanoId = localStorage.getItem('nanoId');
+        if (nanoId != null) {
+          axios.get(`/user-fav-segments/${nanoId}`)
+                .then(function (res) {
+                  console.log('--user segments--', res.data);
+                  res.data.forEach((item) => {
+                    console.log('--item.segment--', item.segment);
+                    let pushalertbyiw;
+                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFuncAm]);
+                  });
+                }.bind(this));
+        }
       } else {
 
       setTimeout(()=>{

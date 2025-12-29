@@ -704,6 +704,67 @@ app.post('/user-favs/create', async function(req, res) {
  });
  });
 
+
+ app.post('/user-fav-segments/create', function(req, res) {
+
+  const client = new Client(dbConfig)
+  var nanoId = req.body.nanoid;
+  var segment = req.body.segment;
+  
+  client.connect(err => {
+   if (err) {
+     console.error('error connecting', err.stack)
+   } else {
+     console.log('connected')
+ 
+     client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment) VALUES($1, $2)",
+                       [nanoId, segment], (err, response) => {
+                             if (err) {
+                               console.log(err);
+                               res.send('{"status":"insert-error"}');
+                               client.end();
+                             } else {
+                              res.send('{"status":"success"}');
+                              client.end();
+                             }
+                           });
+   }
+ });
+ });
+
+
+ app.get("/user-fav-segments/:nanoId", (req, res) => {
+  const client = new Client(dbConfig);
+  let nanoId = req.params.nanoId;
+
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("Select segment from \"public\".\"am_user_fav_segments\" where nanoid = '"+nanoId+"'",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                res.send(response.rows);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+
+
 /**
 * Ask OpenAI to compare images and return JSON with scores.
 * Expects canonical first, then list of candidate image URLs.
