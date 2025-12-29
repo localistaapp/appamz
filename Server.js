@@ -291,8 +291,7 @@ subApp.get("/manifest.json", (req, res) => {
 app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
-.use(vhost('kidsaurajpnagar.lootler.com', subApp))
-.use(vhost('shop.lootler.com', shopSubApp));
+.use(vhost('kidsaurajpnagar.lootler.com', subApp));
 
 const swirlyoSubApp = express();
 
