@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import "./ProductCard.css";
 
+const getCookie = (name) => {
+  return document.cookie
+    .split("; ")
+    .find(row => row.startsWith(name + "="))
+    ?.split("=")[1];
+}
+
 function getPriceRange(price) {
   if (price > 200 && price < 500) {
     return "Usually ₹1500+";
@@ -71,6 +78,10 @@ const ProductCard = ({ product, category, onProductClick, onFavCreated, onFavReq
     console.log('--fav category--', c);
     var title = p.title;
     var nanoid = localStorage.getItem('nanoId');
+    if (localStorage.getItem('nanoId') == null) {
+      nanoid = getCookie('nanoId');
+    }
+
     var highlights = ((p.attributes['color']+',') || '') + ' ' + c.join();
     var price = p.flipkartSpecialPrice.amount;
     var url = p.productUrl;
