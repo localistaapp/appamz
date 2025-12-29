@@ -364,7 +364,7 @@ shopSubApp.get("/sw.js", (req, res) => {
 
 shopSubApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"lootler","short_name":"lootler","start_url":"https://shop.lootler.com/app/shop/favourites","id":"https://shop.lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85692-1.png?1767011855","sizes":"192x192"}]}');
+  res.send('{"name":"lootler","short_name":"lootler","start_url":"https://shop.lootler.com/app/shop/favourites","id":"https://shop.lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://shop.lootler.com/assets/images/lsmall.png","sizes":"192x192"}]}');
 
 });
 
