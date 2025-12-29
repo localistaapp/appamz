@@ -6,6 +6,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
     console.log('Rendering Store App component on server-side');
     console.log('--bootstrapCSS--', bootStrapCSS);
     console.log('--spathName--', pathName);
+    console.log('--slocationHref--', locationHref);
     let cssPaths = [];
     bootStrapCSS.map(cssPath => {
         cssPaths.push('../dashboard/'+cssPath);
@@ -38,7 +39,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                     }`}
                 </style>
                 {
-                    pathName == 'shop' && <script src = "https://cdn.pushalert.co/unified_9cdf8f4c010986b0df8a45f97f22b9a6.js" />
+                    pathName == 'shop' && locationHref == '/app/shop/favourites' && <script src = "https://cdn.pushalert.co/unified_9cdf8f4c010986b0df8a45f97f22b9a6.js" />
                 }
                 {
                     cssPaths.map(cssPath => { return <link key={cssPath} rel="stylesheet" href={cssPath}></link>})

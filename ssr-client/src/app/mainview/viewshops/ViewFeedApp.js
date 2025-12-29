@@ -553,6 +553,10 @@ const ViewFeedApp = ({url,storeConfig}) => {
     useEffect(() => {
       window.allFilters = '';
       setIsClient(true);
+      if(window.location.pathname == '/app/shop/favourites') {
+        handlePrimaryTabSelect('favourites','favourites-container');
+      } else {
+
       setTimeout(()=>{
         let catQuery = encodeURIComponent('Women');
         //document.querySelectorAll('.tab')[2].click();
@@ -579,6 +583,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                   //setTimeout("document.querySelectorAll('.tab')[2].classList.add('active')",500);
                 }.bind(this));
       },1500);
+    }
 
 
       axios.get(`/feed/categories`)
@@ -900,7 +905,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
                 <div class="tabs-container shop">
                     <div class="tabs" id="main-tabs">
                     <div id="tabTrending" class="tab active" onClick={() => handlePrimaryTabSelect('trending', 'trending-container')}>⚡ Trending</div>
-                    <div id="tabYourWishdrops" class="tab" onClick={() => { handlePrimaryTabSelect('favourites','favourites-container')}}>📋 Your Favourites</div>
+                    <div id="tabYourWishdrops" class="tab" onClick={() => { window.location.href = '/app/shop/favourites'}}>📋 Your Favourites</div>
                     </div>
                     <div class="sub-tabs" id="sub-tabs" style={{marginBottom: '0',marginTop: '-16px',marginLeft: '26px'}}>
                     {tabUpdate >=0 && <NestedTabs categories={categories}/>}
