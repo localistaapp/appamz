@@ -1652,7 +1652,7 @@ app.post('/createProduct', function(req, res) {
                                         client.end();
                                       } else {
                                         
-                                        client.query("select distinct(product_type), segment from am_user_fav_segments where product_type != ''",
+                                        client.query("select distinct(product_type), segment from am_user_fav_segments where product_type != '' and store_id=0",
                                         [], (err, res1) => {
                                               if (err) {
                                                 console.log(err)
