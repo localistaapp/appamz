@@ -212,12 +212,12 @@ const Header = (props) => {
                 nanoId = nanoid();
                 localStorage.setItem('nanoId', nanoId);
             }
-            alert('--nanoId--', nanoId);
+            alert('--nanoId--'+ nanoId);
             axios.get(`/user-fav-segments/${nanoId}`)
                     .then(function (res) {
-                    alert('--user segments--', res.data);
+                    alert('--user segments--'+ res.data);
                     res.data.forEach((item) => {
-                        console.log('--item.segment--', item.segment);
+                        alert('--item.segment--'+ item.segment);
                         let pushalertbyiw;
                         (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFnAm]);
                     });
