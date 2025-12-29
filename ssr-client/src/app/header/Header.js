@@ -215,7 +215,7 @@ const Header = (props) => {
 
             let productTypeParam = window.location.pathname.split('/')[3];
             if (productTypeParam != null && productTypeParam != '') {
-                axios.post(`/store-user-segment/create`, {nanoid: nanoid, productType: productTypeParam, storeId: storeId}). then((response) => {
+                axios.post(`/store-user-segment/create`, {nanoid: nanoId, productType: productTypeParam, storeId: storeId}). then((response) => {
                     if(response.data != null) {
                         let pushalertbyiw;
                         (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', response.data.segment, callbackFnAm]);

@@ -291,7 +291,8 @@ subApp.get("/manifest.json", (req, res) => {
 app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
-.use(vhost('kidsaurajpnagar.lootler.com', subApp));
+.use(vhost('kidsaurajpnagar.lootler.com', subApp))
+.use(vhost('shop.lootler.com', subApp));
 
 const swirlyoSubApp = express();
 
@@ -436,29 +437,42 @@ app.post('/store-user-segment/create', function(req, res) {
                 res.send("error");
                 client.end();
             } else {
-              pushKey = response.rows[0]['push_key'];
-              client.end();
-              let segment = 0;
-              axios
-              .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
-              .then(result => {
-                const segment = result.data.id;
+              client.query("select segment from am_user_fav_segments where store_id = "+storeId+" and product_type = '"+productType+"'",
+              [], (err, res1) => {
+                    if (err) {
+                      console.log(err)
+                        res.send("error");
+                        client.end();
+                    } else {
 
-                client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment) VALUES($1, $2)",
-                [nanoId, segment], (err, response) => {
-                      if (err) {
-                        console.log(err);
-                        res.send('{"status":"insert-error"}');
-                        client.end();
-                      } else {
-                        res.send('{"status":"success", "segment": '+segment+'}');
-                        client.end();
-                      }
-                    });
-              })
-              .catch(error => {
-                console.log('Pushalert error: ', error);
-              });
+                        if (res1.rows.length > 0) {
+                          res.send('{"status":"success", "segment": '+res1[0].segment+'}');
+                          client.end();
+                        } else {
+                            pushKey = response.rows[0]['push_key'];
+                            axios
+                            .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+                            .then(result => {
+                              const segment = result.data.id;
+
+                              client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment, productType, store_id) VALUES($1, $2, $3, $4)",
+                              [nanoId, segment, productType, storeId], (err, response) => {
+                                    if (err) {
+                                      console.log(err);
+                                      res.send('{"status":"insert-error"}');
+                                      client.end();
+                                    } else {
+                                      res.send('{"status":"success", "segment": '+segment+'}');
+                                      client.end();
+                                    }
+                                  });
+                            })
+                            .catch(error => {
+                              console.log('Pushalert error: ', error);
+                            });
+                        }
+                    }
+                  });
             }
       });
   }});
