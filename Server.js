@@ -1659,8 +1659,12 @@ app.post('/createProduct', function(req, res) {
                                                   res.send("error");
                                                   client.end();
                                               } else {
+                                                        console.log('--res1.rows--', res1.rows);
                                                         if (res1.rows.length > 0) {
                                                             res1.rows.forEach((item) => {
+                                                              console.log('--item--', item);
+                                                              console.log('--highlights--', highlights);
+                                                              console.log('--storeId--', storeId);
                                                               if (item['product_type'] != null && item['product_type'] != 'NULL' && item['product_type'] != '' && highlights.indexOf(item['product_type']) >= 0) {
                                                                 client.query("select push_key from am_store where id = "+storeId,
                                                                   [], (err, response) => {
