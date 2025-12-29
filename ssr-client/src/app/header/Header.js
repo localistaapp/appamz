@@ -212,6 +212,7 @@ const Header = (props) => {
                 nanoId = nanoid();
                 localStorage.setItem('nanoId', nanoId);
             }
+            alert('--nanoId--', nanoId);
             axios.get(`/user-fav-segments/${nanoId}`)
                     .then(function (res) {
                     alert('--user segments--', res.data);
