@@ -165,7 +165,7 @@ const Header = (props) => {
                   res.data.forEach((item) => {
                     console.log('--item.segment--', item.segment);
                     let pushalertbyiw;
-                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFuncAm]);
+                    (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, ()=>{}]);
                   });
                 }.bind(this));
         } else {
