@@ -268,6 +268,10 @@ subApp.get("/app/:store/:ptype", (req, res) => {
   );
 });
 
+/*app.get("/manifest.json", (req,res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send('{"name":"lootler","short_name":"lootler","start_url":"https://lootler.com/app/shop/favourites","id":"https://lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85687-1.png?1766997585","sizes":"192x192"}]}');
+})*/
 
 subApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
@@ -288,16 +292,6 @@ app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/a
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
 .use(vhost('kidsaurajpnagar.lootler.com', subApp));
-
-app.get("/manifest.json", (req,res) => {
-  res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"lootler","short_name":"lootler","start_url":"https://lootler.com/app/shop/favourites","id":"https://lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85687-1.png?1766997585","sizes":"192x192"}]}');
-})
-
-app.get("/sw.js", (req, res) => {
-  res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
-});
 
 const swirlyoSubApp = express();
 
