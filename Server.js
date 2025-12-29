@@ -360,7 +360,7 @@ shopSubApp.get("/app/:store", (req, res) => {
 
 shopSubApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-83754.js?r=5232");');
+  res.send('importScripts("https://cdn.pushalert.co/sw-86897.js");');
 });
 
 shopSubApp.get("/manifest.json", (req, res) => {
