@@ -7,6 +7,18 @@ import {FavouriteGrid} from './FavouriteGrid'
 
 import { productsArr } from './products';
 
+const setCookie = (name, value, days = 365) => {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie =
+    `${encodeURIComponent(name)}=${encodeURIComponent(value)}; ` +
+    `Expires=${expires}; Path=/; Secure; SameSite=Lax`;
+}
+const getCookie = (name) => {
+  return document.cookie
+    .split("; ")
+    .find(row => row.startsWith(name + "="))
+    ?.split("=")[1];
+}
 
 const GeolocationComponent = ({searchPlaces}) => {
   useEffect(() => {
@@ -37,6 +49,8 @@ const GeolocationComponent = ({searchPlaces}) => {
         if (nanoId == null) {
             nanoId = nanoid();
             localStorage.setItem('nanoId', nanoId);
+            setCookie('nanoId', nanoId);
+
         }
   }, []);
 
@@ -559,6 +573,9 @@ const ViewFeedApp = ({url,storeConfig}) => {
       if(window.location.pathname == '/app/shop/favourites') {
         handlePrimaryTabSelect('favourites','favourites-container');
         let nanoId = localStorage.getItem('nanoId');
+        if (nanoId == null) {
+          nanoId = getCookie('nanoId');
+        }
         if (nanoId != null) {
           axios.get(`/user-fav-segments/${nanoId}`)
                 .then(function (res) {
@@ -665,7 +682,9 @@ const ViewFeedApp = ({url,storeConfig}) => {
             document.querySelector('.btn-reset').style.display = 'none';
           } 
           let nanoId = localStorage.getItem('nanoId');
-          alert('-nanoId-'+nanoId);
+          if (nanoId == null) {
+            nanoId = getCookie('nanoId');
+          }
           setIsLoading(true);
           axios.get(`/feed/search/favourites/${nanoId}`)
                 .then(function (res) {
