@@ -224,7 +224,39 @@ const Stats = ({url}) => {
     const [dealsClaimed, setDealsClaimed] = useState(0);
     const [repeatVisits, setRepeatVisits] = useState(0);
     const [activeTab, setActiveTab] = useState('repeat');
+    const [activeDITab, setActiveDITab] = useState('searches');
     const [funnelData, setFunnelData] = useState(null);
+    const [diData, setDiData] = useState(null);
+
+    const loadDIStats = async (type) => {
+        axios.get(`/stats/${type}/15 days`)
+            .then(function (response) {
+              let total = 0;
+                if(response.data != 'auth error') {
+                    console.log('--res--', JSON.stringify(response.data));
+                    let cnt = 0;
+                    
+                    let diItems = [];
+                    response.data.forEach((elem,ind) => {
+                      cnt++;
+                      total = total+parseInt(elem.count,0);
+                    });
+                    response.data.forEach((elem1,ind1) => {
+                      console.log('val--',elem1.count/total);
+                      let val = Math.round((elem1.count/total)*100);
+                      let obj = {count: val};
+                      if (typeof elem1.product_type !== 'undefined') {
+                        obj['product_type'] = elem1.product_type;
+                      } else {
+                        obj['query'] = elem1.query;
+                      }
+                      diItems.push(obj);
+                    });
+                    setDiData(diItems);
+                }
+            }.bind(this));
+
+    }
 
     const loadStats = async (type) => {
         let storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
@@ -258,10 +290,41 @@ const Stats = ({url}) => {
         });
 
         loadStats('repeat');
+        loadDIStats('searches');
     }, []);
 
     return (
         <div className="main">
+          <div class="di-container">
+                <h1>Demand Insights</h1>
+                <div class="notif-tabs-container">
+                    <div class="notif-tabs" id="notif-tabs-0">
+                        <div onClick={()=>{setActiveDITab('searches');loadDIStats('searches');}} className={`notif-tab ${activeDITab == 'searches' ? 'active' : ''}`}>Searches</div>
+                        <div onClick={()=>{setActiveDITab('favourites');loadDIStats('favs');}} className={`notif-tab ${activeDITab == 'favourites' ? 'active' : ''}`}>Favourites</div>
+                    </div>
+                </div>
+                {diData != null && activeDITab == "searches" && <><div className="funnel-headline">
+                          <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
+                            {
+                              diData.map((item,index) => (
+                                <li><a href="#" data-weight={item.count}>{item.query}</a></li>
+                              ))
+                            }
+                          </ul>
+                    </div></>
+                }
+                {diData != null && activeDITab == "favourites" && <><div className="funnel-headline">
+                          <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
+                            {
+                              diData.map((item,index) => (
+                                <li><a href="#" data-weight={item.count}>{item.product_type}</a></li>
+                              ))
+                            }
+                          </ul>
+                    </div></>
+                }
+            </div>
+
            <div class="stats-container">
                 <h1>Stats</h1>
                 <div class="notif-tabs-container">
