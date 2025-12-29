@@ -415,6 +415,56 @@ app.post('/push-notif', function(req, res) {
 
 });
 
+
+app.post('/store-user-segment/create', function(req, res) {
+  let nanoId = req.body.nanoid;
+  let productType = req.body.productType;
+  let storeId = req.body.storeId;
+  let pushKey = '';
+
+  const client = new Client(dbConfig);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+      client.query("select push_key from am_store where id = "+storeId,
+      [], (err, response) => {
+            if (err) {
+              console.log(err)
+                res.send("error");
+                client.end();
+            } else {
+              pushKey = response.rows[0]['push_key'];
+              client.end();
+              let segment = 0;
+              axios
+              .post('https://api.pushalert.co/rest/v1/segment/create', 'name='+productType, {headers: {'Authorization': 'api_key='+pushKey}})
+              .then(result => {
+                const segment = result.data.id;
+
+                client.query("INSERT INTO \"public\".\"am_user_fav_segments\"(nanoid, segment) VALUES($1, $2)",
+                [nanoId, segment], (err, response) => {
+                      if (err) {
+                        console.log(err);
+                        res.send('{"status":"insert-error"}');
+                        client.end();
+                      } else {
+                        res.send('{"status":"success", "segment": '+segment+'}');
+                        client.end();
+                      }
+                    });
+              })
+              .catch(error => {
+                console.log('Pushalert error: ', error);
+              });
+            }
+      });
+  }});
+
+});
+
 app.get("/stats/:email", (req, res) => {
   const client = new Client(dbConfig);
   let email = req.params.email;

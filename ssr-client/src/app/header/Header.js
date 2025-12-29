@@ -212,16 +212,16 @@ const Header = (props) => {
                 nanoId = nanoid();
                 localStorage.setItem('nanoId', nanoId);
             }
-            alert('--nanoId--'+ nanoId);
-            axios.get(`/user-fav-segments/${nanoId}`)
-                    .then(function (res) {
-                    alert('--user segments--'+ res.data);
-                    res.data.forEach((item) => {
-                        alert('--item.segment--'+ item.segment);
+
+            let productTypeParam = window.location.pathname.split('/')[3];
+            if (productTypeParam != null && productTypeParam != '') {
+                axios.post(`/store-user-segment/create`, {nanoid: nanoid, productType: productTypeParam, storeId: storeId}). then((response) => {
+                    if(response.data != null) {
                         let pushalertbyiw;
-                        (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', item.segment, callbackFnAm]);
-                    });
-                    }.bind(this));
+                        (pushalertbyiw = window.pushalertbyiw || []).push(['addToSegment', response.data.segment, callbackFnAm]);
+                    }
+                  });
+            }
         }
      }
     
