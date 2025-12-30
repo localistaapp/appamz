@@ -46,6 +46,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 }
                 { pathName == 'kidsaurajpnagar' && <script src="https://cdn.pushalert.co/unified_57961a2823431df0596bdc85133d8255.js" /> }
                 { pathName == 'swirlyojpnagar' && <script src="https://cdn.pushalert.co/integrate_7fc3afe390f150da6b0f4f200227fabe.js" /> }
+                { pathName == 'mumnminijpnagar' && <script src="https://cdn.pushalert.co/unified_00df70a3880cf61618efb34aa51c4799.js" /> }
             </head>
             <body>
                 <div id="root-app">

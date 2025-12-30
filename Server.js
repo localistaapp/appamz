@@ -335,12 +335,12 @@ subApp.get("/manifest.json", (req, res) => {
 
 mumNMiniApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
+  res.send('importScripts("https://cdn.pushalert.co/sw-86911.js")');
 });
 
 mumNMiniApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"kids aura","short_name":"kids aura","start_url":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-83010-1.png?1757239505","sizes":"192x192"}]}');
+  res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/","id":"https://mumnminijpnagar.lootler.com/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85706-1.png?1767089531","sizes":"192x192"}]}');
 });
 
 
