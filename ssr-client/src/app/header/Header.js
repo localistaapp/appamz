@@ -263,6 +263,13 @@ const Header = (props) => {
         setLogoSrc(url);
     }
 
+    const getCookie = (name) => {
+        return document.cookie
+          .split("; ")
+          .find(row => row.startsWith(name + "="))
+          ?.split("=")[1];
+      }
+
     useEffect(() => {
         setIsClient(true);
         const storePathNameConfig = {
@@ -284,8 +291,10 @@ const Header = (props) => {
             getCashback(storeConfigVal.storeId);
             showOfferPromptStates(storeConfigVal.storeId);
             let nanoId = localStorage.getItem('nanoId');
+            alert('-local nanoId-'+nanoId)
             if (nanoId == null) {
-                nanoId = nanoid();
+                nanoId = getCookie('nanoId');
+                alert('-cookie nanoId-'+nanoId)
                 localStorage.setItem('nanoId', nanoId);
             }
             axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: parseInt(storeConfigVal.storeId,10)}).then(async (response) => {});
