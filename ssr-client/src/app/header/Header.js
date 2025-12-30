@@ -284,6 +284,13 @@ const Header = (props) => {
             getCashback(storeConfigVal.storeId);
             showOfferPromptStates(storeConfigVal.storeId);
         }
+
+        let nanoId = localStorage.getItem('nanoId');
+        if (nanoId == null) {
+            nanoId = nanoid();
+            localStorage.setItem('nanoId', nanoId);
+        }
+        axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: storeConfigVal.storeId}).then(async (response) => {});
       }, []);
 
     console.log('--props.locationHref--', props.locationHref);

@@ -865,6 +865,41 @@ app.post('/user-favs/create', async function(req, res) {
  });
  });
 
+ app.post('/user-fav-store/create', function(req, res) {
+
+  const client = new Client(dbConfig)
+  var nanoId = req.body.nanoid;
+  var storeId = req.body.storeId;
+  
+  client.connect(err => {
+   if (err) {
+     console.error('error connecting', err.stack)
+   } else {
+     console.log('connected')
+
+      client.connect(err => {
+      if (err) {
+        console.error('error connecting', err.stack)
+        res.send('{"status":"connect-error"}');
+        client.end();
+      } else {
+          client.query("INSERT INTO \"public\".\"am_store_visit\"(nanoid, store_id) VALUES($1, $2)",
+                            [nanoId, storeId], (err, response) => {
+                                  if (err) {
+                                    console.log(err);
+                                    res.send('{"status":"insert-error"}');
+                                    client.end();
+                                  } else {
+                                    res.send('{"status":"success"}');
+                                    client.end();
+                                  }
+                                });  
+            }
+   });
+ }})
+
+});
+
 
  app.get("/user-fav-segments/:nanoId", (req, res) => {
   const client = new Client(dbConfig);
