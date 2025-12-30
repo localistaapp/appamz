@@ -28,6 +28,7 @@ let dbConfig = {
 
 const app = express();
 const subApp = express();
+const mumNMiniApp = express();
 
 const port = 3009;
 
@@ -224,6 +225,28 @@ subApp.get("/app/:store", (req, res) => {
   );
 });
 
+mumNMiniApp.get("/app/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
 app.get("/app/:store/:ptype", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
@@ -268,6 +291,28 @@ subApp.get("/app/:store/:ptype", (req, res) => {
   );
 });
 
+mumNMiniApp.get("/app/:store/:ptype", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
 /*app.get("/manifest.json", (req,res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send('{"name":"lootler","short_name":"lootler","start_url":"https://lootler.com/app/shop/favourites","id":"https://lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85687-1.png?1766997585","sizes":"192x192"}]}');
@@ -288,10 +333,22 @@ subApp.get("/manifest.json", (req, res) => {
   res.send('{"name":"Lootler","short_name":"Lootler","start_url":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85632-1.png?1766641195","sizes":"192x192"}]}');
 });
 
+mumNMiniApp.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
+});
+
+mumNMiniApp.get("/manifest.json", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send('{"name":"kids aura","short_name":"kids aura","start_url":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-83010-1.png?1757239505","sizes":"192x192"}]}');
+});
+
+
 app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
-.use(vhost('kidsaurajpnagar.lootler.com', subApp));
+.use(vhost('kidsaurajpnagar.lootler.com', subApp))
+.use(vhost('mumnminijpnagar.lootler.com', subApp));
 
 const swirlyoSubApp = express();
 
