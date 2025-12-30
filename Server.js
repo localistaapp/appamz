@@ -340,7 +340,7 @@ mumNMiniApp.get("/sw.js", (req, res) => {
 
 mumNMiniApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/","id":"https://mumnminijpnagar.lootler.com/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85706-1.png?1767089531","sizes":"192x192"}]}');
+  res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","id":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/default_icon-85706.png?1767089531","sizes":"192x192"}]}');
 });
 
 
