@@ -227,8 +227,17 @@ const Stats = ({url}) => {
     const [activeDITab, setActiveDITab] = useState('searches');
     const [funnelData, setFunnelData] = useState(null);
     const [diData, setDiData] = useState(null);
+    const [recentSearches, setRecentSearches] = useState(null);
 
     const loadDIStats = async (type) => {
+       if (type =='searches' ) {
+        axios.get(`/recent-searches`)
+        .then(function (response) {
+            if(response.data != 'auth error') {
+                setRecentSearches(response.data);
+            }
+        }.bind(this));
+       }
         axios.get(`/stats/${type}/15 days`)
             .then(function (response) {
               let total = 0;
@@ -304,6 +313,17 @@ const Stats = ({url}) => {
                     </div>
                 </div>
                 {diData != null && activeDITab == "searches" && <><div className="funnel-headline">
+
+                        <span style={{marginRight: '8px',fontWeight: 'bold', top: '-14px', position: 'relative', color: '#616161'}}>Recent Searches:</span>
+                        {recentSearches && recentSearches.map ((recent, index)=> {
+                            if (index == 0) {
+                              return  <span style={{top: '-14px', position: 'relative', color: '#616161'}}>{recent.query}</span>
+                            } else {
+                              return  <span style={{top: '-14px', position: 'relative', color: '#616161'}}>, {recent.query}</span>
+                            }
+                        })
+                       
+                        }
                           <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
                             {
                               diData.map((item,index) => (

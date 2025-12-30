@@ -1903,6 +1903,46 @@ app.get("/stats/searches/:sinceFilter/", function(req, res) {
     });
 });
 
+app.get("/recent-searches/", function(req, res) {
+  let sinceFilter = '7 days';
+  let dateFilter = '';
+  const client = new Client(dbConfig);
+
+  if(sinceFilter == '3 days') {
+    dateFilter = "created_at >= now() - INTERVAL '3 days'";
+  } else if(sinceFilter == '7 days') {
+    dateFilter = "created_at >= now() - INTERVAL '7 days'";
+  } else {
+    dateFilter = "created_at >= now() - INTERVAL '15 days'";
+  }
+
+    client.connect(err => {
+        if (err) {
+          console.error('error connecting', err.stack)
+          res.send('{}');
+          client.end();
+        } else {
+            client.query("select DISTINCT(query), created_at from am_shop_intent where "+dateFilter+" and query != '' order by created_at desc limit 3",
+              [], (err, response) => {
+                    if (err) {
+                      console.log(err);
+                      res.send("error");
+                      client.end();
+                    } else {
+                        //res.send(response.rows);
+                        if (response.rows.length == 0) {
+                          res.send("error");
+                          client.end();
+                        } else {
+                          res.send(response.rows);
+                          client.end();
+                        }
+                    }
+                  });
+         }
+    });
+});
+
 app.get('/shops/search/:cat/:q/:lat/:long', async (req, res) => {
   const query = encodeURIComponent(req.params.q);
   const cat = encodeURIComponent(req.params.cat);
