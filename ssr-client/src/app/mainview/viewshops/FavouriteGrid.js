@@ -6,7 +6,7 @@ const FavouriteGrid = ({ gridLoading, products = [] }) => {
 console.log('--favourites products--', products);
 
   return (
-    <div>
+    <div id="favGrid">
 
 {products.map((product) => (<>
   <div className="product-card scale-down favourited">

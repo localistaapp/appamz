@@ -288,7 +288,7 @@ const Header = (props) => {
                 nanoId = nanoid();
                 localStorage.setItem('nanoId', nanoId);
             }
-            axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: storeConfigVal.storeId}).then(async (response) => {});
+            axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: parseInt(storeConfigVal.storeId,10)}).then(async (response) => {});
         
         }
 

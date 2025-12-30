@@ -427,10 +427,25 @@ const NestedTabs = (categories) => {
       if (nanoId == null) {
         nanoId = getCookie('nanoId');
       }
-      axios.get(`/feed/favs/store/${nanoid}`)
+      document.getElementById('favGrid').innerHTML = '';
+      axios.get(`/feed/favs/store/${nanoId}`)
                 .then(function (res) {
                   console.log('--stores response.data--', res.data);
-                  
+                  let storeListContainer = document.createElement('div');
+                  storeListContainer.classList.add('store-list-container');
+
+                  res.data.forEach((store) => {
+                    let storeElem =  document.createElement('a');
+                    storeElem.classList.add('store-item');
+                    let storeSrc = '';
+                    let storeSuffix = store['app_url'].split('/')[store['app_url'].split('/').length-2];
+                    storeSrc = `https://${storeSuffix}.lootler.com/app/blr/${storeSuffix}/images/logo.png`;
+                    storeElem.href = store['app_url'];
+                    storeElem.innerHTML = '<div class="card-container small" style="padding: 0px 12px; height: 163px; margin-top: 0px;"><div class="section-one"><div class="top"><div class="top-left-mini" style="min-height: 112px"><img id="primaryImgp0" class="primary-img rotatable" src="'+storeSrc+'" style="width: 72px; padding-top: 0px;width: 108px;padding-top: 11px;margin-left: -6px;"></div><div class="top-right-mini"><div class="usp-title"><div class="title" style="margin-top: -10px;font-weight: bold;margin-left:24px">'+store.name+'</div></div><div class="usp-desc" style="color: rgb(101, 101, 101); margin-top: 28px;">'+store.locality+'</div></div></div></div><div class="section-two small"><div class="pricing"><label class="price"><span class="orig" id="priceNewp0" style="font-size: 15px;top: -4px;position: relative;left: -9px;z-index: 1;">Deals Active!</span></label></div><div class="top"></div></div></div>';
+                    storeListContainer.appendChild(storeElem);
+                  });
+
+                  document.getElementById('favGrid').appendChild(storeListContainer);
                 }.bind(this));
     }
     if (key !== 'categories' && key !== 'Deals on Favourites' && key !== 'Stores') {
@@ -520,6 +535,7 @@ const ViewFeedApp = ({url,storeConfig}) => {
     const [storeSearchProducts, setStoreSearchProducts] = useState([]);
     const [storeSearchIntent, setStoreSearchIntent] = useState([]);
     const [favouriteProducts, setFavouriteProducts] = useState([]);
+    const [favouriteStores, setFavouriteStores] = useState([]);
     const [showBack, setShowBack] = useState(false);
     const [gridLoading, setGridLoading] = useState(false);
     const [isFirstTimeTabInit, setIsFirstTimeTabInit] = useState(true);

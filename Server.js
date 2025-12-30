@@ -889,19 +889,19 @@ app.post('/user-favs/create', async function(req, res) {
                       if (response.rows[0].nanoid == nanoId && response.rows[0].store_id == storeId) {
                         client.end();
                         res.send('{"status":"success"}');
-                      }  else {
-                          client.query("INSERT INTO \"public\".\"am_store_visit\"(nanoid, store_id) VALUES($1, $2)",
-                              [nanoId, storeId], (err, response) => {
-                                    if (err) {
-                                      console.log(err);
-                                      res.send('{"status":"insert-error"}');
-                                      client.end();
-                                    } else {
-                                      res.send('{"status":"success"}');
-                                      client.end();
-                                    }
-                                  });
-                        }
+                      } 
+                    } else {
+                      client.query("INSERT INTO \"public\".\"am_store_visit\"(nanoid, store_id) VALUES($1, $2)",
+                      [nanoId, storeId], (err, response) => {
+                            if (err) {
+                              console.log(err);
+                              res.send('{"status":"insert-error"}');
+                              client.end();
+                            } else {
+                              res.send('{"status":"success"}');
+                              client.end();
+                            }
+                          });
                     }
 
                 }
@@ -920,7 +920,7 @@ app.get("/feed/favs/store/:nanoId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select segment from \"public\".\"am_user_fav_segments\" where nanoid = '"+nanoId+"'",
+        client.query("select s.name, s.locality, s.place_id, s.app_url from am_store_visit v, am_store s where s.id = v.store_id and v.nanoid = '"+nanoId+"'",
         [], (err, response) => {
           if (err) {
             console.log(err)
