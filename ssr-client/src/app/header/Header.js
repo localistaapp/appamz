@@ -290,13 +290,7 @@ const Header = (props) => {
             getClientLogo(storeConfigVal.storeId);
             getCashback(storeConfigVal.storeId);
             showOfferPromptStates(storeConfigVal.storeId);
-            let nanoId = localStorage.getItem('nanoId');
-            alert('-local nanoId-'+nanoId)
-            if (nanoId == null) {
-                nanoId = getCookie('nanoId');
-                alert('-cookie nanoId-'+nanoId)
-                localStorage.setItem('nanoId', nanoId);
-            }
+            let nanoId = getCookie('nanoId');
             axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: parseInt(storeConfigVal.storeId,10)}).then(async (response) => {});
         
         }

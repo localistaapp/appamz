@@ -8,10 +8,20 @@ import {FavouriteGrid} from './FavouriteGrid'
 import { productsArr } from './products';
 
 const setCookie = (name, value, days = 365) => {
-  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = "; expires=" + date.toUTCString();
+  }
+
   document.cookie =
-    `${encodeURIComponent(name)}=${encodeURIComponent(value)}; ` +
-    `Expires=${expires}; Path=/; Secure; SameSite=Lax`;
+    name + "=" + encodeURIComponent(value) +
+    expires +
+    "; path=/" +
+    "; domain=.lootler.com" +
+    "; SameSite=None" +
+    "; Secure";
 }
 const getCookie = (name) => {
   return document.cookie
