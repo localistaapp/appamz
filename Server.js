@@ -574,7 +574,7 @@ app.get("/products/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') ",
+        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') order by created_at desc",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -607,7 +607,7 @@ app.get("/products/search/:storeId/:productType", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%')",
+        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%') order by created_at desc",
         [], (err, response) => {
           if (err) {
             console.log(err)
