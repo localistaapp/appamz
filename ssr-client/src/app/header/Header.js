@@ -274,7 +274,8 @@ const Header = (props) => {
         setIsClient(true);
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9', placeId: ''},
-            'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'}
+            'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'},
+            'mumnminijpnagar': {storeId: '15', placeId: 'ChIJ7bp1FhoVrjsRCe4pyE9z6ZU'}
         }
         let storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
         window.storeConfig = storeConfigVal;
