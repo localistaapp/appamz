@@ -423,6 +423,15 @@ const NestedTabs = (categories) => {
     }
     if (key == 'Stores'){
       document.querySelectorAll('.tabs')[1].children[0].classList.remove('active');
+      let nanoId = localStorage.getItem('nanoId');
+      if (nanoId == null) {
+        nanoId = getCookie('nanoId');
+      }
+      axios.get(`/feed/favs/store/${nanoid}`)
+                .then(function (res) {
+                  console.log('--stores response.data--', res.data);
+                  
+                }.bind(this));
     }
     if (key !== 'categories' && key !== 'Deals on Favourites' && key !== 'Stores') {
         console.log('--levelIndex--', levelIndex);

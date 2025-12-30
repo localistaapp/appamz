@@ -875,14 +875,7 @@ app.post('/user-favs/create', async function(req, res) {
    if (err) {
      console.error('error connecting', err.stack)
    } else {
-     console.log('connected')
-
-      client.connect(err => {
-      if (err) {
-        console.error('error connecting', err.stack)
-        res.send('{"status":"connect-error"}');
-        client.end();
-      } else {
+     console.log('connected');
           client.query("INSERT INTO \"public\".\"am_store_visit\"(nanoid, store_id) VALUES($1, $2)",
                             [nanoId, storeId], (err, response) => {
                                   if (err) {
@@ -895,11 +888,39 @@ app.post('/user-favs/create', async function(req, res) {
                                   }
                                 });  
             }
-   });
- }})
+          });
 
 });
 
+app.get("/feed/favs/store/:nanoId", (req, res) => {
+  const client = new Client(dbConfig);
+  let nanoId = req.params.nanoId;
+
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("Select segment from \"public\".\"am_user_fav_segments\" where nanoid = '"+nanoId+"'",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                res.send(response.rows);
+                client.end();
+              }
+          }
+        });
+  }});
+});
 
  app.get("/user-fav-segments/:nanoId", (req, res) => {
   const client = new Client(dbConfig);
