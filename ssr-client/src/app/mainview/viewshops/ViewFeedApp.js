@@ -437,7 +437,10 @@ const NestedTabs = (categories) => {
       if (nanoId == null) {
         nanoId = getCookie('nanoId');
       }
-      document.getElementById('favGrid').innerHTML = '';
+      if (document.getElementById('favGrid') != null) {
+        document.getElementById('favGrid').innerHTML = '';
+      }
+      
       axios.get(`/feed/favs/store/${nanoId}`)
                 .then(function (res) {
                   console.log('--stores response.data--', res.data);
