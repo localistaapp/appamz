@@ -17,7 +17,7 @@ const MainView = ({storeConfig}) => {
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9'},
             'kidsaurajpnagar': {storeId: '13'},
-            'mumnminijpnagar': {storeId: '15'}
+            'mumnmenijpnagar': {storeId: '15'}
         }
         if (isClient) {
             storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];

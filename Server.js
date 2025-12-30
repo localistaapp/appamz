@@ -1605,6 +1605,7 @@ app.post('/track', function(req, res) {
                 res.send("error");
                 client.end();
             } else {
+              if (response.rows.length > 0) {
               metricValue = response.rows[0]['value'];
               console.log('--metricValue--', metricValue);
               metricValue = parseInt(metricValue,10) + 1;
@@ -1622,6 +1623,7 @@ app.post('/track', function(req, res) {
 
                     });
               //client.end();
+                  }
             }
       });
   }});
