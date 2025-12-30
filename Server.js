@@ -877,7 +877,7 @@ app.post('/user-favs/create', async function(req, res) {
    } else {
      console.log('connected')
 
-        client.query("select nanoid, store_id from am_store_visit where store_id = "+storeId,
+        client.query("select nanoid, store_id from am_store_visit where store_id = "+storeId+" and nanoid = '"+nanoId+"'",
         [], (err, response) => {
               if (err) {
                 console.log(err)
