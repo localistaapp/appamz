@@ -390,6 +390,10 @@ const ProductList = ({products, storeConfig}) => {
         document.getElementById('checkoutNextBtn').style.display = 'block';
       }
     }
+
+    const renderPatmentSuccess = () => {
+      setTimeout(() => { setPayStatus('COMPLETED'); },2000);
+    }
   
     return (
       <div className="product-list">
@@ -587,12 +591,12 @@ const ProductList = ({products, storeConfig}) => {
                     </div>
                 }
 
-          {payStatus == 'PAYMENT_SUCCESS' && 
+          {payStatus == 'PAYMENT_SUCCESS' && renderPatmentSuccess() && 
               <div className="card-container notify-card-track" style={{position: 'fixed', bottom: '0', left: '0', width: '100%', minHeight: '100px'}}>
                 <div className="section-one-notify">
                 </div>
                 <div className="section-two" style={{marginTop: '27px', paddingLeft: '10px', paddingRight:'32px', fontWeight: '500'}}>
-                              <div className="top">
+                              <div className="top" style={{marginTop: '0px'}}>
                                 <span style={{color: '#407f40'}}>Your payment is successful! You will recieve a whatsapp notification once your order is dispacthed!</span>
                               </div>
                 </div>
