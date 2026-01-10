@@ -631,7 +631,38 @@ app.get("/products/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') order by created_at desc",
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where available = 'Y' AND store_id IN ('"+storeId+"') order by created_at desc",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                const products = getEffectiveSavings(response.rows);
+                res.send(products);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+app.get("/products-store/:storeId", (req, res) => {
+  const client = new Client(dbConfig);
+  let storeId = req.params.storeId;
+  console.log('---products api storeId--', storeId);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') order by created_at desc",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -761,6 +792,32 @@ function parseNestedJson(obj) {
   }
   return obj;
 }
+
+app.post('/product-store/update/', function(req, res) {
+  const id = req.body.id;
+  const available = req.body.available;
+  
+  const client = new Client(dbConfig)
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+    } else {
+      client.query("UPDATE \"public\".\"am_store_product\" SET available = $1 where id = $2",
+          [available, id], (err, response) => {
+                if (err) {
+                  console.log(err)
+                    res.send("error");
+                    client.end();
+                } else {
+                    //res.send(response);
+                    res.send('success');
+                    client.end();
+                }
+
+              });
+  }
+ })
+});
 
 app.post('/user-favs/create', async function(req, res) {
 

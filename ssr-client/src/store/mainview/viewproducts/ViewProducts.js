@@ -3,6 +3,15 @@ import axios from 'axios';
 import "./ViewProducts.css";
 
 const ProductList = ({products}) => {
+
+  const updateAvailability = (id, value) => {
+    console.log('id: ', id);
+    console.log('value: ', value);
+    let available = value.toLowerCase() == 'available' ? 'Y' : 'N';
+    axios.post(`/product-store/update/`, {id: id, available: available}).then(async (response) => {
+      window.location.reload();
+    });
+  }
   
     return (
       <div className="product-list">
@@ -15,10 +24,16 @@ const ProductList = ({products}) => {
               <div className="card-content">
                 <div className="highlights">{p.highlights}</div>
                 <div className="description">{p.description}</div>
-                <div className="price">
+                <div className="price" style={{position: 'relative'}}>
                   <div className="price-current">₹{p.price}</div>
                   <div className="price-original">₹{originalPrice}</div>
-                </div>
+                  
+                  <select id="pCategory" className="category-container" onChange={(e)=> {var itemId = p.id;console.log('--item id--', itemId); updateAvailability(itemId, e.target.options[e.target.selectedIndex].value)}}>
+                      <option value={p.available == 'Y' ? 'Available' : 'Unavailable'} selected>{p.available == 'Y' ? 'Available' : 'Unavailable'}</option>
+                      <option value={p.available == 'N' ? 'Available' : 'Unavailable'}>{p.available == 'N' ? 'Available' : 'Unavailable'}</option>
+                      </select>
+                    </div>
+                
               </div>
             </div>
           );
@@ -190,7 +205,13 @@ const ViewProducts = ({url}) => {
       
 
       if (products.length == 0) {
-        axios.get(`/products/${storeId}`)
+        let userProfile = window.sessionStorage.getItem('user-profile');
+        let appReqUrl = `/products/${storeId}`;
+        if (userProfile != null) {
+          appReqUrl = `/products-store/${storeId}/`;
+        }
+
+        axios.get(appReqUrl)
         .then(function (response) {
           if(response.data != 'auth error') {
               console.log('--product res--', JSON.stringify(response.data));
