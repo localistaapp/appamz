@@ -179,7 +179,7 @@ const ProductList = ({products, storeConfig}) => {
             console.log('--web order data-----', response.data);
             setTrackingLink(response.data.tracking_link);
             setPayStatus(response.data.status);
-            localStorage.removeItem('onlineOrderId');
+            //localStorage.removeItem('onlineOrderId');
         });
       }
     }, []);
