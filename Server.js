@@ -323,14 +323,14 @@ subApp.get("/sw.js", (req, res) => {
   res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
 });
 
-subApp.get("/manifest.json", (req, res) => {
+/*subApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send('{"name":"kids aura","short_name":"kids aura","start_url":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.slashify.in/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-83010-1.png?1757239505","sizes":"192x192"}]}');
-});
+});*/
 
 subApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"Lootler","short_name":"Lootler","start_url":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","id":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85632-1.png?1766641195","sizes":"192x192"}]}');
+  res.send('{"name":"Lootler","short_name":"Lootler","start_url":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/","id":"https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85632-1.png?1766641195","sizes":"192x192"}]}');
 });
 
 mumNMiniApp.get("/sw.js", (req, res) => {
