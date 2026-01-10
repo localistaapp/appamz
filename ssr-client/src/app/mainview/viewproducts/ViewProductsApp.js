@@ -558,7 +558,7 @@ const ProductList = ({products, storeConfig}) => {
                         <div className="section-one-notify">
                         </div>
                         {trackingLink.indexOf('slimcrust.com') >= 0 ?
-                        <div className="title notify-title-track"><img src="../../assets/images/tickvo.gif" style={{width: '42px'}}/><span className='track-icon-title'>Order received!</span></div> :
+                        <div className="title notify-title-track"><img src="../../assets/images/tickvo.gif" style={{width: '42px'}}/><span className='track-icon-title' style={{marginLeft: '44px'}}>Order received!</span></div> :
                         <div className="title notify-title-track"><img src="../../assets/images/trk.gif" style={{width: '42px'}}/><span className='track-icon-title'>Track your order</span></div>
                         }
                         <div className="section-two">
