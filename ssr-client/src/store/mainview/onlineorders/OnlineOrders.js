@@ -74,7 +74,7 @@ const OrdersList = ({orders}) => {
           orderString = orderString.substring(0,orderString.length-2);
           totalPrice = totalPrice + 750;
           //handle 2rs sample product
-          if (totalPrice == 752) {
+          if (Math.round(totalPrice) == 752) {
             totalPrice = 2;
           }
 
