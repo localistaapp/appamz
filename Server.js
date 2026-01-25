@@ -13,6 +13,7 @@ const vhost = require('vhost');
 const ImageKit = require('imagekit');
 const runTaskRoute = require("./run-task");
 const runDailyTaskRoute = require("./run-daily-task");
+const runDailySocialRoute = require("./run-daily-social");
 
 var axios = require('axios');
 
@@ -472,6 +473,7 @@ app.get("/dashboard/:store", (req, res) => {
 
 runTaskRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
 runDailyTaskRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
+runDailySocialRoute(app, new Client(dbConfig), fs, process.env.TASK_KEY);
 
 app.post('/push-notif', function(req, res) {
   let title = req.body.title;
