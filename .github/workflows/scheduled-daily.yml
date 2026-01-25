@@ -13,7 +13,7 @@ jobs:
         run: |
           for i in 1 2 3; do
             echo "Attempt $i..."
-            if curl -s -o /dev/null -w "%{http_code}" -X POST https://amuzely.onrender.com/run-task-daily?key=${{ secrets.TASK_KEY }} | grep -q "200"; then
+            if curl -s -o /dev/null -w "%{http_code}" -X POST https://amuzely.onrender.com/run-daily-social?key=${{ secrets.TASK_KEY }} | grep -q "200"; then
               echo "Success"
               exit 0
             fi
