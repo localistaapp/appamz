@@ -1,14 +1,18 @@
-import {Suspense, lazy, useState} from "react";
+import {Suspense, lazy, useEffect, useState} from "react";
 import "./MainView.css";
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const MainView = () => {
     let view = '';
-    if(typeof window !== 'undefined' && window.location.href) {
-        if (window.location.href.indexOf('?') >= 0) {
-            view = window.location.href.substring(window.location.href.indexOf('?view=')+6, window.location.href.length);
+    const [currView, setCurrView] = useState('');
+    useEffect(()=>{
+        if(window.location.href) {
+            if (window.location.href.indexOf('?') >= 0) {
+                view = window.location.href.substring(window.location.href.indexOf('?view=')+6, window.location.href.length);
+                setCurrView(view);
+            }
         }
-    }
+    })
     const [message, setMessage] = useState("");
     const AddProductsComponent = lazy(() =>
         //delay(100).then(() => import("./addproducts/AddProducts.js"))
@@ -45,20 +49,20 @@ const MainView = () => {
 
     return (
         <div className="main">
-            {view == '' && <span></span> }
-            {view == 'add-products' && <Suspense fallback={<></>}>
+            {currView == '' && <span></span> }
+            {currView == 'add-products' && <Suspense fallback={<></>}>
                     <AddProductsComponent />
                 </Suspense>}
-            {view == 'view-products' && <Suspense fallback={<></>}>
+            {currView == 'view-products' && <Suspense fallback={<></>}>
                 <ViewProductsComponent />
             </Suspense>}
-            {view == 'online-orders' && <Suspense fallback={<></>}>
+            {currView == 'online-orders' && <Suspense fallback={<></>}>
                 <OnlineOrdersComponent />
             </Suspense>}
-            {view == 'notifications' && <Suspense fallback={<></>}>
+            {currView == 'notifications' && <Suspense fallback={<></>}>
                 <NotificationsComponent />
             </Suspense>}
-            {view == 'stats' && <Suspense fallback={<></>}>
+            {currView == 'stats' && <Suspense fallback={<></>}>
                 <StatsComponent />
             </Suspense>}
         </div>
