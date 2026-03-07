@@ -62,6 +62,8 @@ const initializeStats = (email) => {
 function Dashboard({locationHref}) {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showSideBar, setShowSideBar] = useState(false);
+    const [isClient,setIsClient] = useState(false);
+    const [canRenderGoogleAuth,setCanRenderGoogleAuth] = useState(false);
 
     const toggleSideBar = () => {
         setShowSideBar(!showSideBar);
@@ -71,12 +73,16 @@ function Dashboard({locationHref}) {
         if (window.screen.width >= 768) {
             setShowSideBar(true);
         }
+        setIsClient(true);
+        if(window.sessionStorage.getItem('user-profile') == null) {
+            setCanRenderGoogleAuth(true);
+        }
     }, []);
 
     return (
         <>
             <HeadersComponent loggedOut={true} locationHref={locationHref} showSideBar={toggleSideBar} />
-            {typeof window !== 'undefined' && window.sessionStorage.getItem('user-profile') == null && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);initializeStats(response.email);}} googleAccountConfigs={{ client_id: '854842086574-uk0kfphicblidrs1pkbqi7r242iaih80.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}
+            {isClient && canRenderGoogleAuth && <GoogleOneTapLogin onError={(error) => console.log(error)} onSuccess={(response) => {console.log(response);initializeStats(response.email);}} googleAccountConfigs={{ client_id: '854842086574-uk0kfphicblidrs1pkbqi7r242iaih80.apps.googleusercontent.com',auto_select: false,cancel_on_tap_outside: false }} />}
             <div className="app-layout">
                 {showSideBar && <Suspense fallback={<LoadingSidebarScreen />}>
                     <SidebarComponent />
