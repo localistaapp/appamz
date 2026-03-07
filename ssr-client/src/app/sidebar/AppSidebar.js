@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./AppSidebar.css";
 
 const AppSidebar = () => {
     const [message, setMessage] = useState("");
+    const [path, setPath] = useState("");
+
+    useEffect(() => {
+        setPath(window.location.pathname);
+      }, []);
 
     const showMessage = (msg) => {
         setMessage(msg);
@@ -16,7 +21,7 @@ const AppSidebar = () => {
         <div className="sidebar">
             <h3>App Menu</h3>
             <div className="links">
-                <a style={{marginRight: '24px', display: 'inline'}} href={`${window.location.pathname}?view=view-products`}>Products</a>
+                <a style={{marginRight: '24px', display: 'inline'}} href={`${path}?view=view-products`}>Products</a>
                 <hr class="line-light"></hr>
                 <a href="/">My Orders</a>
                 <hr class="line-light" ></hr>

@@ -40,13 +40,15 @@ const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 function AppDashboard({storeConfig, locationHref}) {
     const [selectedCar, setSelectedCar] = useState(null);
     const [showSideBar, setShowSideBar] = useState(false);
+    const [isDesktop, setIsDesktop] = useState(false);
 
     const toggleSideBar = () => {
         setShowSideBar(!showSideBar);
     }
 
     useEffect( ()=> {
-        if (window.screen.width >= 768) {
+        setIsDesktop(window.screen.width >= 768);
+        if (isDesktop) {
             setShowSideBar(true);
         }
     }, []);

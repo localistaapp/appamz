@@ -8,17 +8,7 @@ const MainView = ({storeConfig}) => {
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
         setIsClient(true);
-      }, []);
-        if (isClient) {
-            window.storeConfig = storeConfig
-        }
-        
-        const storePathNameConfig = {
-            'swirlyojpnagar': {storeId: '9'},
-            'kidsaurajpnagar': {storeId: '13'},
-            'mumnminijpnagar': {storeId: '15'}
-        }
-        if (isClient) {
+            window.storeConfig = storeConfig;
             storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
             if (window && window?.location.href.indexOf('?') >= 0) {
                 view = window?.location.href.substring(window?.location.href.indexOf('?view=')+6, window.location.href.length);
@@ -29,6 +19,13 @@ const MainView = ({storeConfig}) => {
             } else {
                 view = 'default';
             }
+      }, []);
+        
+        
+        const storePathNameConfig = {
+            'swirlyojpnagar': {storeId: '9'},
+            'kidsaurajpnagar': {storeId: '13'},
+            'mumnminijpnagar': {storeId: '15'}
         }
         
     const [message, setMessage] = useState("");
