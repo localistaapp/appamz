@@ -6,6 +6,7 @@ const MainView = ({storeConfig}) => {
     let view = '';
     let storeConfigVal = {};
     const [isClient, setIsClient] = useState(false);
+    const [curView, setCurView] = useState('');
     useEffect(() => {
         setIsClient(true);
             window.storeConfig = storeConfig;
@@ -19,6 +20,7 @@ const MainView = ({storeConfig}) => {
             } else {
                 view = 'default';
             }
+            setCurView(view);
       }, []);
         
         
@@ -60,13 +62,13 @@ const MainView = ({storeConfig}) => {
 
     return (
         <div className="main">
-            {view == 'default' &&  <Suspense fallback={<></>}>
+            {curView == 'default' &&  <Suspense fallback={<></>}>
                     <ViewProductsComponent storeConfig={storeConfigVal} />
                 </Suspense>}
-            {view == 'shop-detail' &&  <Suspense fallback={<></>}>
+            {curView == 'shop-detail' &&  <Suspense fallback={<></>}>
                 <ViewShopDetailComponent storeConfig={storeConfigVal} />
             </Suspense>}
-            {view == 'shop-stores' &&  <Suspense fallback={<></>}>
+            {curView == 'shop-stores' &&  <Suspense fallback={<></>}>
                 <ViewFeedComponent storeConfig={storeConfigVal} />
             </Suspense>}
         </div>
