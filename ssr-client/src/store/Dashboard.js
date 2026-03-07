@@ -52,7 +52,7 @@ const initializeStats = (email) => {
         }
       }.bind(this));
 
-      const dayName = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      const dayName = new Date().toLocaleDateString('en-IN', { weekday: 'long' }).toLowerCase();
       axios.get(`/content-lookup/${dayName}`)
       .then(function (response) {
         console.log('---content-lookup-response---', response.data);
