@@ -9,7 +9,6 @@ const MainView = ({storeConfig}) => {
     useEffect(() => {
         setIsClient(true);
       }, []);
-    //if(typeof window !== 'undefined' && window.location.href) {
         if (isClient) {
             window.storeConfig = storeConfig
         }
@@ -32,7 +31,6 @@ const MainView = ({storeConfig}) => {
             }
         }
         
-    //}
     const [message, setMessage] = useState("");
 
     const ViewProductsComponent = lazy(() =>

@@ -567,10 +567,7 @@ const ProductList = ({products, storeConfig}) => {
                         }
                         <div className="section-two">
                             <div className="top">
-                                {!orderCompleted && trackingLink.indexOf('slimcrust.com') >= 0 ?
-                                   <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%', height: typeof window !== 'undefined' ? window.screen.height-280+'px' : '100%'}} />
-                                   : <iframe className='track-frame' src={`https://${trackingLink}`} style={{width: typeof window !== 'undefined' ? window.screen.width-32 +'px' : '100%'}} />
-                                } 
+                                
                                 <br/>
                                 {payStatus != 'PAYMENT_SUCCESS' && <div style={{visibility: 'hidden'}} className='pay-card'>
                                     <span>Your payment is pending. Please pay now to complete your order.</span>
