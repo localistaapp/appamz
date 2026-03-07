@@ -34,11 +34,11 @@ const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 
 const initializeStats = (email) => {
     let enquiriesArr = [];
-    typeof window !== 'undefined' && window.sessionStorage.setItem('user-profile', email);
+    window.sessionStorage.setItem('user-profile', email);
     axios.get(`/stats/${email}`)
       .then(function (response) {
         if(response.data != 'auth error') {
-            typeof window !== 'undefined' && window.sessionStorage.setItem('user', JSON.stringify(email));
+            window.sessionStorage.setItem('user', JSON.stringify(email));
             if (response.data) {
                 window.sessionStorage.setItem('user-profile', '{"user":"'+email+'","storeId":"'+response.data.storeId+'","franchiseId":"'+response.data.franchiseId+'","supportMobile":"'+response.data.supportMobile+'","businessType":"'+response.data.businessType+'"}');
                 /*this.setState({
