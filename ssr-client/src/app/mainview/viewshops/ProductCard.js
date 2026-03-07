@@ -37,7 +37,7 @@ function getRandomLocality() {
     'JP Nagar'
   ];
 
-  const randomIndex = Math.floor(Math.random() * locations.length);
+  const randomIndex = Math.floor(1 * locations.length);
   return locations[randomIndex];
 }
 
