@@ -9,7 +9,7 @@ const ShopHeadersComponent = lazy(() =>
 );
 
 const AppSidebarComponent = lazy(() =>
-    delay(500).then(() => import("./sidebar/AppSidebar.js"))
+    import("./sidebar/AppSidebar.js")
 );
 
 const MainViewComponent = lazy(() =>
@@ -17,11 +17,11 @@ const MainViewComponent = lazy(() =>
 );
 
 const CarsComponent = lazy(() =>
-    delay(500).then(() => import("../Cars.js" ))
+    import("../Cars.js" )
 );
 
 const CarDetailComponent = lazy(() =>
-    delay(100).then(() => import("../CarDetail.js"))
+    import("../CarDetail.js")
 );
 
 const FooterComponent = lazy(() => import("./footer/Footer.js"));

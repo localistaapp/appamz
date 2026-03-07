@@ -8,15 +8,15 @@ const HeadersComponent = lazy(() =>
 );
 
 const SidebarComponent = lazy(() =>
-    delay(1000).then(() => import("./store/sidebar/Sidebar.js"))
+    import("./store/sidebar/Sidebar.js")
 );
 
 const CarsComponent = lazy(() =>
-    delay(500).then(() => import("./Cars.js" ))
+    import("./Cars.js" )
 );
 
 const CarDetailComponent = lazy(() =>
-    delay(100).then(() => import("./CarDetail.js"))
+    import("./CarDetail.js")
 );
 
 const FooterComponent = lazy(() => import("./store/footer/Footer.js"));
