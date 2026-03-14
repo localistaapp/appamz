@@ -374,6 +374,10 @@ const Header = (props) => {
 
           
       }
+
+      if (typeof window === "undefined") {
+        return null;
+      }
    
     //const logoSrc = getLogoSrc(props.locationHref);
 
