@@ -1,13 +1,11 @@
 import "./AppDashboard.css";
 import {Suspense, lazy, useEffect, useState} from "react";
+import HeadersComponent from "./header/Header.js";
+import MainViewComponent from "./mainview/MainView.js";
 import axios from 'axios';
 import GoogleOneTapLogin from 'react-google-one-tap-login';
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-const HeadersComponent = lazy(() =>
-    import("./header/Header.js")
-);
 
 const HeadersShopComponent = lazy(() =>
     import("./header/HeaderShop.js")
@@ -15,10 +13,6 @@ const HeadersShopComponent = lazy(() =>
 
 const AppSidebarComponent = lazy(() =>
     import("./sidebar/AppSidebar.js")
-);
-
-const MainViewComponent = lazy(() =>
-    import("./mainview/MainView.js")
 );
 
 const CarsComponent = lazy(() =>
@@ -32,7 +26,7 @@ const CarDetailComponent = lazy(() =>
 const FooterComponent = lazy(() => import("./footer/Footer.js"));
 
 const LoadingScreen = () => <div>Loading Cars...</div>;
-const LoadingSidebarScreen = () => <div className="loading-screen"><div className="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div><div class="shimmer"><div class="wrapper"><div class="animate image-card"></div><div class="animate stroke title"></div><div class="animate stroke link"></div><div class="animate stroke description"></div></div></div></div>;
+const LoadingSidebarScreen = () => <div className="loading-screen"><div className="shimmer"><div className="wrapper"><div className="animate image-card"></div><div className="animate stroke title"></div><div className="animate stroke link"></div><div className="animate stroke description"></div></div></div><div className="shimmer"><div className="wrapper"><div className="animate image-card"></div><div className="animate stroke title"></div><div className="animate stroke link"></div><div className="animate stroke description"></div></div></div><div className="shimmer"><div className="wrapper"><div className="animate image-card"></div><div className="animate stroke title"></div><div className="animate stroke link"></div><div className="animate stroke description"></div></div></div><div className="shimmer"><div className="wrapper"><div className="animate image-card"></div><div className="animate stroke title"></div><div className="animate stroke link"></div><div className="animate stroke description"></div></div></div><div className="shimmer"><div className="wrapper"><div className="animate image-card"></div><div className="animate stroke title"></div><div className="animate stroke link"></div><div className="animate stroke description"></div></div></div></div>;
 const LoadingFooterScreen = () => <div>Loading Footer...</div>;
 const LoadingCarDetailScreen = () => <div>Loading Car Details...</div>;
 
