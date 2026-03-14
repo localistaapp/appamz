@@ -46,7 +46,7 @@ const Header = (props) => {
     const [reviews, setReviews] = useState([]);
     const [storeName, setStoreName] = useState('');
     const [storeConfig, setStoreConfig] = useState(null);
-    let homeLocation = '/';
+    const [homeLocation, setHomeLocation] = useState('/');
 
     const getCashback = (storeId) => {
         //alert(`/user/st-cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`);
@@ -268,7 +268,7 @@ const Header = (props) => {
         let storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
         window.storeConfig = storeConfigVal;
         setStoreConfig(storeConfigVal);
-        homeLocation = window.location.href;
+        setHomeLocation(window.location.href);
         if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
             setIsShopFlow(true);
         } else {
@@ -288,9 +288,9 @@ const Header = (props) => {
 
     console.log('--props.locationHref--', props.locationHref);
     if (isClient) {
-        homeLocation = window.location.href;
+        setHomeLocation(window.location.href);
         if (homeLocation.indexOf('?') >= 0) {
-            homeLocation = window.location.href.substring(0,window.location.href.indexOf('?'));
+            setHomeLocation(window.location.href.substring(0,window.location.href.indexOf('?')));
         } 
     }
 
