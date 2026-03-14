@@ -23,11 +23,12 @@
   "dependencies": {
     "@imagekit/react": "^5.0.1",
     "axios": "^0.18.0",
+    "canvas-confetti": "^1.9.4",
     "cross-env": "^7.0.3",
     "express": "^4.18.2",
     "google-trends-api": "4.9.2",
     "imagekit": "^6.0.0",
-    "nanoid": "^5.1.5",
+    "nanoid": "^3.3.11",
     "openai": "^4.86.1",
     "pg": "^8.16.0",
     "puppeteer": "^24.23.0",

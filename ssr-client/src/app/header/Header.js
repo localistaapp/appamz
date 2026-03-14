@@ -2,7 +2,7 @@ import "./Header.css";
 import {useEffect, useState} from "react";
 import axios from 'axios';
 import { nanoid } from 'nanoid';
-import confetti from "https://cdn.skypack.dev/canvas-confetti";
+import confetti from "canvas-confetti";
 import { track } from "../constants/analytics";
 import { METRICS } from "../constants";
 
@@ -258,41 +258,52 @@ const Header = (props) => {
           ?.split("=")[1];
       }
 
-    useEffect(() => {
+      useEffect(() => {
+
+        if (typeof window === "undefined") return;
+    
         setIsClient(true);
+    
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9', placeId: ''},
             'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'},
             'mumnminijpnagar': {storeId: '15', placeId: 'ChIJ7bp1FhoVrjsRCe4pyE9z6ZU'}
         }
-        let storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
+    
+        const storeConfigVal = storePathNameConfig[window.location.pathname.split('/')[2]];
+    
+        if(!storeConfigVal) return;
+    
         window.storeConfig = storeConfigVal;
         setStoreConfig(storeConfigVal);
-        setHomeLocation(window.location.href);
-        if(homeLocation && homeLocation.indexOf('/app/shop/') >= 0) {
-            setIsShopFlow(true);
-        } else {
-            /*confetti();
-            addTopCardClass();
-            showCashbackCard();
-            setShowAddToHome(false);*/
-            getClientLogo(storeConfigVal.storeId);
-            getCashback(storeConfigVal.storeId);
-            showOfferPromptStates(storeConfigVal.storeId);
-            let nanoId = getCookie('nanoId');
-            axios.post(`/user-fav-store/create`, {nanoId: nanoId, storeId: parseInt(storeConfigVal.storeId,10)}).then(async (response) => {});
-        
+    
+        let loc = window.location.href;
+    
+        if (loc.indexOf('?') >= 0) {
+            loc = loc.substring(0, loc.indexOf('?'));
         }
-
+    
+        setHomeLocation(loc);
+    
+        if(loc.indexOf('/app/shop/') >= 0) {
+            setIsShopFlow(true);
+            return;
+        }
+    
+        getClientLogo(storeConfigVal.storeId);
+        getCashback(storeConfigVal.storeId);
+        showOfferPromptStates(storeConfigVal.storeId);
+    
+        const nanoId = getCookie('nanoId');
+    
+        axios.post(`/user-fav-store/create`, {
+            nanoId: nanoId,
+            storeId: parseInt(storeConfigVal.storeId,10)
+        });
+    
     }, []);
 
-    console.log('--props.locationHref--', props.locationHref);
-    if (isClient) {
-        setHomeLocation(window.location.href);
-        if (homeLocation.indexOf('?') >= 0) {
-            setHomeLocation(window.location.href.substring(0,window.location.href.indexOf('?')));
-        } 
-    }
+    
 
     const handleScardMiniClick = () => {
         setShowCashback(true);
@@ -372,7 +383,7 @@ const Header = (props) => {
             
             {!isShopFlow && <svg id="idMenu" onClick={props.showSideBar} className={`menu-bar text-indigo-600`} width="41" height="41" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">                <rect width="56" height="56" rx="16" fill="#b9b9b9"></rect>                <path d="M37 32H19M37 24H19" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>              </svg>}
             {!isShopFlow && <img id="idLogoSm" onClick={()=> window.location.href=homeLocation} className={`store-logo-sm`} src={logoSrc} />}
-            <img id="idLogo" class={isShopFlow ? `store-logo-shop` :`store-logo`} src="../../assets/images/lrlogo2.png"></img>
+            <img id="idLogo" className={isShopFlow ? `store-logo-shop` :`store-logo`} src="../../assets/images/lrlogo2.png"></img>
             {props.loggedOut && !isShopFlow &&
                  <span id="logout" className="logout" onClick={onLogoutClick}>Logout</span>}
         </div>
