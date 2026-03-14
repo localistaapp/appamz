@@ -36,7 +36,7 @@ const Header = (props) => {
     if (isClient) {
         setHomeLocation(window.location.href);
         if (homeLocation.indexOf('?') >= 0) {
-            homeLocation = window.location.href.substring(0,window.location.href.indexOf('?'));
+            setHomeLocation(window.location.href.substring(0,window.location.href.indexOf('?')));
         } 
     }
    
