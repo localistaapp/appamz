@@ -64,12 +64,14 @@ function Dashboard({locationHref}) {
     }
 
     useEffect( ()=> {
+        setIsClient(true);
+        if (typeof window !== "undefined") {
+            const profile = window.sessionStorage.getItem('user-profile');
+            setCanRenderGoogleAuth(profile == null);
+        }
+
         if (window.screen.width >= 768) {
             setShowSideBar(true);
-        }
-        setIsClient(true);
-        if(window.sessionStorage.getItem('user-profile') == null) {
-            setCanRenderGoogleAuth(true);
         }
     }, []);
 
