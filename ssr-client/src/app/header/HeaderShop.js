@@ -27,14 +27,14 @@ const getLogoSrc = (locationHref) => {
 
 const Header = (props) => {
     const [isClient, setIsClient] = useState(false);
-    let homeLocation = '/';
+    const [homeLocation, setHomeLocation] = useState('/');
     useEffect(() => {
         setIsClient(true);
       }, []);
 
     console.log('--props.locationHref--', props.locationHref);
     if (isClient) {
-        homeLocation = window.location.href;
+        setHomeLocation(window.location.href);
         if (homeLocation.indexOf('?') >= 0) {
             homeLocation = window.location.href.substring(0,window.location.href.indexOf('?'));
         } 
