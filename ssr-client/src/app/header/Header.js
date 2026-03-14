@@ -47,6 +47,7 @@ const Header = (props) => {
     const [storeName, setStoreName] = useState('');
     const [storeConfig, setStoreConfig] = useState(null);
     const [homeLocation, setHomeLocation] = useState('/');
+    const [mounted, setMounted] = useState(false);
 
     const getCashback = (storeId) => {
         //alert(`/user/st-cashback/${localStorage.getItem('nanoId')}/${storeConfigVal.storeId}`);
@@ -375,9 +376,11 @@ const Header = (props) => {
           
       }
 
-      if (typeof window === "undefined") {
-        return null;
-      }
+      useEffect(() => {
+        setMounted(true);
+      }, []);
+      
+      if (!mounted) return null;
    
     //const logoSrc = getLogoSrc(props.locationHref);
 

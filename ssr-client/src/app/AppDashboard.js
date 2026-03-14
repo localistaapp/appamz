@@ -47,8 +47,13 @@ function AppDashboard({storeConfig, locationHref}) {
     }
 
     useEffect( ()=> {
-        setIsDesktop(window.screen.width >= 768);
-        if (isDesktop) {
+        if (typeof window === "undefined") return;
+
+        const desktop = window.screen.width >= 768;
+
+        setIsDesktop(desktop);
+
+        if (desktop) {
             setShowSideBar(true);
         }
     }, []);
