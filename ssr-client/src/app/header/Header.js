@@ -71,9 +71,13 @@ const Header = (props) => {
     }
 
     const removeTopCardClass = () => {
-        document.querySelector('#idHeader').classList.remove('card-margin-header');
+        if (document.querySelector('#idHeader') != null)
+            document.querySelector('#idHeader').classList.remove('card-margin-header');
+        if (document.querySelector('#idMenu') != null)
         document.querySelector('#idMenu').classList.remove('card-margin-menu');
-        document.querySelector('#idLogoSm').classList.remove('card-margin-logo-sm');
+        if (document.querySelector('#idLogoSm') != null)
+            document.querySelector('#idLogoSm').classList.remove('card-margin-logo-sm');
+        if (document.querySelector('#idLogo') != null)
         document.querySelector('#idLogo').classList.remove('card-margin-logo');
     }
 
