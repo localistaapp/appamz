@@ -36,7 +36,7 @@ const Header = (props) => {
             homeLocation = window.location.href .substring(0,window.location.href.indexOf('?'));
         } 
         setHloc(homeLocation);
-    })
+    }, [])
     
     const logoSrc = getLogoSrc(props.locationHref);
 
