@@ -6,10 +6,20 @@ const MainView = ({storeConfig}) => {
     let view = '';
     let storeConfigVal = {};
     const [isClient, setIsClient] = useState(false);
-    const [curView, setCurView] = useState('');
     useEffect(() => {
         setIsClient(true);
-            window.storeConfig = storeConfig;
+      }, []);
+    //if(typeof window !== 'undefined' && window.location.href) {
+        if (isClient) {
+            window.storeConfig = storeConfig
+        }
+        
+        const storePathNameConfig = {
+            'swirlyojpnagar': {storeId: '9'},
+            'kidsaurajpnagar': {storeId: '13'},
+            'mumnminijpnagar': {storeId: '15'}
+        }
+        if (isClient) {
             storeConfigVal = storePathNameConfig[window?.location.pathname.split('/')[2]];
             if (window && window?.location.href.indexOf('?') >= 0) {
                 view = window?.location.href.substring(window?.location.href.indexOf('?view=')+6, window.location.href.length);
@@ -20,16 +30,9 @@ const MainView = ({storeConfig}) => {
             } else {
                 view = 'default';
             }
-            setCurView(view);
-      }, []);
-        
-        
-        const storePathNameConfig = {
-            'swirlyojpnagar': {storeId: '9'},
-            'kidsaurajpnagar': {storeId: '13'},
-            'mumnminijpnagar': {storeId: '15'}
         }
         
+    //}
     const [message, setMessage] = useState("");
 
     const ViewProductsComponent = lazy(() =>
@@ -62,13 +65,13 @@ const MainView = ({storeConfig}) => {
 
     return (
         <div className="main">
-            {curView == 'default' &&  <Suspense fallback={<></>}>
+            {view == 'default' &&  <Suspense fallback={<></>}>
                     <ViewProductsComponent storeConfig={storeConfigVal} />
                 </Suspense>}
-            {curView == 'shop-detail' &&  <Suspense fallback={<></>}>
+            {view == 'shop-detail' &&  <Suspense fallback={<></>}>
                 <ViewShopDetailComponent storeConfig={storeConfigVal} />
             </Suspense>}
-            {curView == 'shop-stores' &&  <Suspense fallback={<></>}>
+            {view == 'shop-stores' &&  <Suspense fallback={<></>}>
                 <ViewFeedComponent storeConfig={storeConfigVal} />
             </Suspense>}
         </div>
