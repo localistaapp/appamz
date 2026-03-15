@@ -513,7 +513,7 @@ app.post('/push-notif', function(req, res) {
               pushKey = response.rows[0]['push_key'];
               client.end();
               axios
-                .post('https://api.pushalert.co/rest/v1/send', 'url=https://kidsaurajpnagar.quikrush.com/app/kidsaurajpnagar/&title='+title+'&message='+description, {headers: {'Authorization': 'api_key='+pushKey}})
+                .post('https://api.pushalert.co/rest/v1/send', 'url=https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/&title='+title+'&message='+description, {headers: {'Authorization': 'api_key='+pushKey}})
                 .then(res => {
                   console.log('Pushalert success: ');
                 })
