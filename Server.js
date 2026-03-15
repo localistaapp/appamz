@@ -1319,6 +1319,7 @@ const applyMarginProtection = (margin, tier) => {
 }
 
 const getEffectiveSavings = (products) => {
+  return products;
   let prodArr = [];
   let cashbackPc = 0.2;
   let tier = 'Low';
