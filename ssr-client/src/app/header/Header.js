@@ -64,10 +64,14 @@ const Header = (props) => {
     }
 
     const addTopCardClass = () => {
-        document.querySelector('#idHeader').classList.add('card-margin-header');
-        document.querySelector('#idMenu').classList.add('card-margin-menu');
-        document.querySelector('#idLogoSm').classList.add('card-margin-logo-sm');
-        document.querySelector('#idLogo').classList.add('card-margin-logo');
+        if (document.querySelector('#idHeader') != null)
+            document.querySelector('#idHeader').classList.add('card-margin-header');
+        if (document.querySelector('#idMenu') != null)
+            document.querySelector('#idMenu').classList.add('card-margin-menu');
+        if (document.querySelector('#idLogoSm') != null)
+            document.querySelector('#idLogoSm').classList.add('card-margin-logo-sm');
+        if (document.querySelector('#idLogo') != null)
+            document.querySelector('#idLogo').classList.add('card-margin-logo');
     }
 
     const removeTopCardClass = () => {
