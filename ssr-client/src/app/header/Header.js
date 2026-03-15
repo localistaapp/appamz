@@ -352,7 +352,7 @@ const Header = (props) => {
                     try {
                       if (product != null && reviewsArr.length > 0) {
             
-                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviewsArr.join('\n')+".\n\nVisit them on Slashify now! 🔗 - https://www.wishler.in/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get ₹300 OFF on next order\n✅ We both earn additional ₹200 cashback\n✅ Valid for 30 days only\n\n*T&C* Applied*";
+                        shareText = "Hey!.. Sharing this personalised deal with you!\n\nI just had a great experience visiting "+ product['name']+" & they've shared a warm offer. 💪\n\n They're known for:\n\n"+reviewsArr.join('\n')+".\n\nVisit them on Lootler now! 🔗 - https://www.lootler.com/app/shop/id="+product['place_id']+'&u='+nanoId+" \n\n✅ Get Guaranteed OFF on next order\n✅ Valid for 30 days only\n\n*T&C* Applied*";
                   
                   
                       } else {

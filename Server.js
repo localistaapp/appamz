@@ -333,7 +333,7 @@ mumNMiniApp.get("/app/:store/:ptype", (req, res) => {
 
 subApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-84215.js")');
+  res.send('importScripts("https://cdn.pushalert.co/sw-86837.js")');
 });
 
 /*subApp.get("/manifest.json", (req, res) => {
