@@ -29,6 +29,7 @@
     "google-trends-api": "4.9.2",
     "imagekit": "^6.0.0",
     "nanoid": "^3.3.11",
+    "nodemailer": "^6.10.1",
     "openai": "^4.86.1",
     "pg": "^8.16.0",
     "puppeteer": "^24.23.0",

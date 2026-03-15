@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkssr_client=self.webpackChunkssr_client||[]).push([[187],{8187:(e,s,c)=>{c.r(s),c.d(s,{default:()=>r});var l=c(6507);const r=e=>{let{car:s}=e;return(0,l.jsxs)("div",{className:"car-detail",children:[(0,l.jsx)("h3",{children:s.name}),(0,l.jsx)("p",{children:s.details})]})}}}]);
-//# sourceMappingURL=187.4b7cbb91.chunk.js.map

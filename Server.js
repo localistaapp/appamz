@@ -8,6 +8,7 @@ import express from "express";
 import fs from "fs";
 const { OpenAI } = require('openai');
 var { Client } = require('pg');
+const nodemailer = require("nodemailer");
 import HomeStoreSSR from "./ssr-client/src/web/home-store/HomeStoreSSR";
 const vhost = require('vhost');
 const ImageKit = require('imagekit');
@@ -49,6 +50,17 @@ const imagekit = new ImageKit({
   publicKey: 'public_bPVGjO7o9S+dvjn2+ZSJ6sJ8qQo=',
   //privateKey: process.env.IMAGEKIT_PRIVATE_KEY | 'private_COcANsdOUUACxS6HNCNnJV1OAj0='
   privateKey: 'private_COcANsdOUUACxS6HNCNnJV1OAj0='
+});
+
+const transporter = nodemailer.createTransport({
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "slimcrustbskowner@gmail.com",
+    pass: "lejapifjjmuxfvgc",
+  },
 });
 
 const ReadDirectoryContentToArray = (folderPath, array) => {
@@ -1923,6 +1935,11 @@ app.post('/createProduct', function(req, res) {
   const storeId = req.body.storeId;
   const fromUrl = req.body.fromUrl;
 
+  let onlineOrderId;
+  let onlineOrderName;
+  let onlineOrderMobile;
+  let onlineOrderPrice;
+
   console.log('--price--', price);
   console.log('--items--', items);
 
@@ -1947,32 +1964,48 @@ app.post('/createProduct', function(req, res) {
                               res.send("error");
                             } else {
                               if(responseSelect.rows && responseSelect.rows.length > 0) {
-                                  let onlineOrderId = responseSelect.rows[0].id;
-                                  let onlineOrderName = responseSelect.rows[0].name;
-                                  let onlineOrderMobile = responseSelect.rows[0].mobile;
-                                  let onlineOrderPrice = responseSelect.rows[0].price;
-                                  res.send('{"onlineOrderId":"'+onlineOrderId+'", "onlineOrderName":"'+onlineOrderName+'", "onlineOrderMobile":"'+onlineOrderMobile+'", "onlineOrderPrice":"'+onlineOrderPrice+'"}');
+                                  onlineOrderId = responseSelect.rows[0].id;
+                                  onlineOrderName = responseSelect.rows[0].name;
+                                  onlineOrderMobile = responseSelect.rows[0].mobile;
+                                  onlineOrderPrice = responseSelect.rows[0].price;
                                 } else {
                                   res.send("error");
                                 }
+
+
+                                client.query("select f.owner_email from am_franchise f, am_store s where s.id=$1 and s.franchise_id=f.id",
+                                  [storeId], (err, responseSelect) => {
+                                        if (err) {
+                                          console.log(err)
+                                          res.send("error");
+                                        } else {
+                                          if(responseSelect.rows && responseSelect.rows.length > 0) {
+                                              let email = responseSelect.rows[0].owner_email;
+                                              const mailOptions = {
+                                                from: "slimcrustbskowner@gmail.com",
+                                                to: email,
+                                                subject: "Online Lootler Order",
+                                                text: "There is a new Lootler Order. Please check your dashboard.",
+                                              };
+                                              transporter.sendMail(mailOptions, (error, info) => {
+                                                if (error) {
+                                                  console.error("Error sending email: ", error);
+                                                } else {
+                                                  console.log("Email sent: ", info.response);
+                                                }
+                                              });
+                                              res.send('{"onlineOrderId":"'+onlineOrderId+'", "onlineOrderName":"'+onlineOrderName+'", "onlineOrderMobile":"'+onlineOrderMobile+'", "onlineOrderPrice":"'+onlineOrderPrice+'"}');
+                                            } else {
+                                              res.send("error");
+                                            }
+                                            client.end();
+
+                                          }});
+                                    
                             }
-                            client.end();
+                            
                     })
                     //res.send("success--");
-                    /*const mailOptions = {
-                      from: "slimcrustbskowner@gmail.com",
-                      to: "slimcrustbsk@gmail.com",
-                      cc: 'sampath.oops@gmail.com',
-                      subject: "New Web Order",
-                      text: "There is a new Web Order. Please check your dashboard.",
-                    };
-                    transporter.sendMail(mailOptions, (error, info) => {
-                      if (error) {
-                        console.error("Error sending email: ", error);
-                      } else {
-                        console.log("Email sent: ", info.response);
-                      }
-                    });*/
                     
                 }
 
