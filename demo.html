@@ -1752,6 +1752,12 @@ function updateAppIconAfterContent(newContent) {
       localStorage.removeItem('onlineOrderId');
       sessionStorage.removeItem('user-profile');
       sessionStorage.removeItem('user');
+
+      localStorage.removeItem('onlineOrderId', onlineOrderId);
+      localStorage.removeItem('onlineOrderName', onlineOrderName);
+      localStorage.removeItem('onlineOrderMobile', onlineOrderMobile);
+      localStorage.removeItem('onlineOrderPrice', onlineOrderPrice);
+      localStorage.removeItem('order-created', 'true');
       localStorage.clear();
       sessionStorage.clear();
 
