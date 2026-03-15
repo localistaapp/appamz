@@ -39,14 +39,14 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         document.getElementById('checkoutCount').innerHTML = Object.keys(basketData).length;
         setBasketData(basketData);
         let total = 0;
-        let shippingCharges = 750;
+        //let shippingCharges = 750;
         Object.keys(basketData).forEach((key)=>{total += basketData[key].price});
 
         let cashback = 0;
         if (localStorage.getItem('cashback-value') != null && parseInt(localStorage.getItem('cashback-value'),10) > 0) {
           cashback = parseInt(localStorage.getItem('cashback-value'),10);
         }
-        setTotalPrice(total + shippingCharges - cashback);
+        setTotalPrice(total - cashback);
         console.log('--basketData--', basketData);
     }
     var basketStr = JSON.stringify(basketData);
@@ -90,7 +90,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
         <div className="description">{product.description}</div>
         <div className="price">
           <div className="price-current">₹{product.price}</div>
-          <div className="price-original">₹{Math.round(parseInt(product.price,10) + (parseInt(product.price,10) * 0.2))}</div>
+          <div className="price-original">₹{Math.round(parseInt(product.price,10) + (parseInt(product.price,10) * 0.2 ))}</div>
         </div>
         <div className="quantity"><a className="quantity__minus"><span style={{fontSize: '25px', lineHeight: '0px', marginLeft: '2px'}} onClick={() => handleMinusClick(product,basketData)}>-</span></a><input name="quantity" type="text" className="quantity__input" value={qty}/><a className="quantity__plus" onClick={()=>{handlePlusClick(product, basketData);}}><span>+</span></a></div>
       </div>
@@ -102,6 +102,7 @@ const ProductList = ({products, storeConfig}) => {
 
     const [basketData, setBasketData] = useState(null);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [packagingCharges, setPackagingCharges] = useState(40);
     const [currStep, setCurrStep] = useState(1);
     const [isClient, setIsClient] = useState(false);
 
@@ -336,7 +337,7 @@ const ProductList = ({products, storeConfig}) => {
         sessionStorage.setItem('dAddress',deliveryAddress);
         sessionStorage.setItem('dMobile',deliveryMobile);
         sessionStorage.setItem('dName',deliveryName);
-        let price = totalPrice;
+        let price = totalPrice + packagingCharges;
         let summary = JSON.stringify(basketData);
 
         setShowOrderConfirmationMsg(true);
@@ -541,9 +542,9 @@ const ProductList = ({products, storeConfig}) => {
                 }
                 {cashbackValue > 0 && <span className="cashback-applied">🎉 Cashback of ₹{cashbackValue} applied!</span>}
                 <div class="summary-total">
-                    Total:  <span class="rupee">₹</span><span class={cashbackValue > 0 ? 'txt-strike' : ''} id="price">{totalPrice + cashbackValue}</span>
-                    {cashbackValue > 0 && <span id="price" style={{marginLeft: '8px'}}>{totalPrice}</span> }
-                    <div style={{fontSize: '13px', marginTop: '5px', marginLeft: '2px'}}>(incl GST + delivery apprx.)</div>
+                    Total:  <span class="rupee">₹</span><span class={cashbackValue > 0 ? 'txt-strike' : ''} id="price">{totalPrice + cashbackValue + packagingCharges}</span>
+                    {cashbackValue > 0 && <span id="price" style={{marginLeft: '8px'}}>{totalPrice + packagingCharges}</span> }
+                    <div style={{fontSize: '13px', marginTop: '5px', marginLeft: '2px'}}>(Incl GST + Packaging. Shipping charges extra)</div>
                 </div>
                 <div id="checkoutNextBtn" class="card-btn checkout-next" style={{bottom: '120px', marginTop: 'auto'}} onClick={next}>
                     Next&nbsp;→

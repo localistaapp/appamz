@@ -1319,6 +1319,10 @@ const applyMarginProtection = (margin, tier) => {
 }
 
 const getEffectiveSavings = (products) => {
+
+  products.forEach((product) => {
+    product.price = parseInt(product.price,10) + 60;//add cashback value
+  });
   return products;
   let prodArr = [];
   let cashbackPc = 0.2;
