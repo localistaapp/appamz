@@ -3,7 +3,14 @@ import "./Header.css";
 
 const onLogoutClick = () => {
     console.log('--clicked log out--');
-    alert('Log out');
+    sessionStorage.removeItem('user-profile');
+    sessionStorage.removeItem('user');
+    alert('Logged out successfully!');
+    if (window.location.href.indexOf('?') > 0) {
+        window.location.href = window.location.href.substring(0,window.location.href.indexOf('?'));
+    } else {
+        window.location.reload();
+    }
 }
 
 

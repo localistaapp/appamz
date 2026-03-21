@@ -8,7 +8,9 @@ import { METRICS } from "../constants";
 
 const onLogoutClick = () => {
     console.log('--clicked log out--');
-    alert('Log out');
+    sessionStorage.removeItem('user-profile');
+    sessionStorage.removeItem('user');
+    alert('Logged out successfully!');
 }
 
 const getLogoSrc = (locationHref) => {
