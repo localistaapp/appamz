@@ -759,6 +759,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isClient, setIsClient] = useState(false);
     const [productSearchType, setProductSearchType] = useState('');
+    let pageLimit = 20;
 
     useEffect(() => {
       setIsClient(true);
@@ -767,6 +768,69 @@ const ViewProductsApp = ({url,storeConfig}) => {
           productType = productTypeParam;
           setProductSearchType(productType);
         }
+
+
+        function checkVisibility() {
+          let box = document.querySelector('#intersect');
+          const rect = box.getBoundingClientRect();
+          
+          // Check if any part of the element is within the viewport
+          const isVisible = (
+              rect.top < window.innerHeight && 
+              rect.bottom > 0 &&
+              rect.left < window.innerWidth &&
+              rect.right > 0
+          );
+
+          if (isVisible) {
+            let curHighlight = '';
+              pageLimit = pageLimit + 20;
+              //check for category selection flow
+              document.querySelectorAll('.tab.active').forEach((node) => {
+                curHighlight = curHighlight + node.textContent + ',';
+              });
+              curHighlight = curHighlight.replace(/All/g, '');
+              curHighlight = curHighlight.substring(0,curHighlight.lastIndexOf(','));
+              if (curHighlight.indexOf(',') == 0) {
+                curHighlight = curHighlight.substring(1,curHighlight.length);
+              }
+              if (curHighlight != '') {
+                fetchProductsByCategory(pageLimit);
+              } else {
+                fetchProducts(pageLimit);
+              }
+          } 
+      }
+
+      // Add listeners for scroll and window resize
+      window.addEventListener('scroll', checkVisibility);
+
+      axios.get(`/categories/${storeConfig.storeId}`)
+                .then(function (response) {
+                  if(response.data != 'auth error') {
+                    let tabMap = {};
+
+                    response.data.forEach(cat => {
+                      const highlights = cat.highlights.split(',').map(h => h.trim());
+                      let current = tabMap;
+                    
+                      highlights.forEach((level, index) => {
+                        if (index === highlights.length - 1) {
+                          // Final level - assign 0
+                          current[level] = 0;
+                        } else {
+                          // Intermediate level - go deeper
+                          if (!current[level]) {
+                            current[level] = {};
+                          }
+                          current = current[level];
+                        }
+                      });
+                    });
+                  setCategories(tabMap);
+                  console.log('tabMap:', tabMap);
+                  }
+                });
     }, []);
     
     console.log('--store c1111--', storeConfig);
@@ -775,7 +839,62 @@ const ViewProductsApp = ({url,storeConfig}) => {
         "womens": {"tops" : { "casuals": {"s": ["black", "white", "beige"]}, "casuals": { "T-shirt": {"m": ["black", "white"], "l": ["black", "white"]} }}, "dresses": { "lehengas": {"s": ["black", "white", "beige"]}, "casuals": { "salwar": {"m": ["black", "white"], "l": ["black", "white"]} }}}
     };*/
 
+    const fetchProducts = (pageLimitVal) => {
+      let productListUrl = `/products/${storeId}?offset=0&limit=${pageLimitVal}`;
+        if (productType !== '') {
+          productListUrl = `/products/search/${storeId}/${productType}`;
+        }
+
+        axios.get(productListUrl)
+        .then(function (response) {
+          if(response.data != 'auth error') {
+            debugger;
+              console.log('--product res--', JSON.stringify(response.data));
+              setIsLoading(false);
+              setProducts(response.data);
+              setOrigProducts(response.data);
+              let productsData = response.data;
+          }
+        }.bind(this));
+    }
+
+    const fetchProductsByCategory = (pageLimitVal) => {
+      let curHighlight = '';
+      document.querySelectorAll('.tab.active').forEach((node) => {
+        curHighlight = curHighlight + node.textContent + ',';
+      });
+      debugger;
+      curHighlight = curHighlight.replace(/All/g, '');
+      curHighlight = curHighlight.substring(0,curHighlight.lastIndexOf(','));
+      if (curHighlight.indexOf(',') == 0) {
+        curHighlight = curHighlight.substring(1,curHighlight.length);
+      }
+      
+      console.log('--curHighlight--', curHighlight);
+      if (curHighlight == '') {
+        return;
+      }
+
+      let productListUrl = `/cat-products/${storeId}/${curHighlight}?offset=0&limit=${pageLimitVal}`;
+        if (productType !== '') {
+          productListUrl = `/products/search/${storeId}/${productType}`;
+        }
+
+        axios.get(productListUrl)
+        .then(function (response) {
+          if(response.data != 'auth error') {
+            debugger;
+              console.log('--product res--', JSON.stringify(response.data));
+              setIsLoading(false);
+              setProducts(response.data);
+              setOrigProducts(response.data);
+              let productsData = response.data;
+          }
+        }.bind(this));
+    }
+
     const handlePrimaryTabSelect = (type, tabId) => {
+      debugger;
         let tabUpdateNew = tabUpdate + 1;
         setTabUpdate(tabUpdateNew);
         document.getElementById('tabDefault').classList.remove('active');
@@ -829,43 +948,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
         }
       }
       if (products.length == 0 || productType !== '') {
-
-        let productListUrl = `/products/${storeId}`;
-        if (productType !== '') {
-          productListUrl = `/products/search/${storeId}/${productType}`;
-        }
-
-        axios.get(productListUrl)
-        .then(function (response) {
-          if(response.data != 'auth error') {
-              console.log('--product res--', JSON.stringify(response.data));
-              setIsLoading(false);
-              setProducts(response.data);
-              setOrigProducts(response.data);
-              let productsData = response.data;
-
-              let tabMap = {};
-              productsData.forEach(product => {
-                const highlights = product.highlights.split(',').map(h => h.trim());
-                let current = tabMap;
-              
-                highlights.forEach((level, index) => {
-                  if (index === highlights.length - 1) {
-                    // Final level - assign 0
-                    current[level] = 0;
-                  } else {
-                    // Intermediate level - go deeper
-                    if (!current[level]) {
-                      current[level] = {};
-                    }
-                    current = current[level];
-                  }
-                });
-              });
-            setCategories(tabMap);
-            console.log('tabMap:', tabMap);
-          }
-        }.bind(this));
+        fetchProducts(20);
       }
 
 
@@ -874,9 +957,14 @@ const ViewProductsApp = ({url,storeConfig}) => {
           console.log('-selected-', selected);
           console.log('-filters-'+ filters+'-');
           let filterPattern =filters;
-          const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
+
+          setTimeout(()=>{fetchProductsByCategory(20)},200);
+
+          /*const newArr = origProducts.filter((product) => product.highlights.trim().indexOf(filterPattern.trim()) >= 0);
           console.log('--newArr--', newArr);
-          setProducts(newArr);
+
+
+            setProducts(newArr);*/
         }
       }
 
@@ -912,6 +1000,7 @@ const ViewProductsApp = ({url,storeConfig}) => {
 
                 </div>
                 {!isLoading && <ProductList products={products} storeConfig={storeConfig} />}
+                {!isLoading && <div id="intersect" style={{height: '100px'}}></div>}
                 {isLoading && <LoadingShimmer/>}
             </div>
         </div>

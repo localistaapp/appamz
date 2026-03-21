@@ -635,9 +635,44 @@ app.get("/stats/:email", (req, res) => {
   }});
 });
 
-app.get("/products/:storeId", (req, res) => {
+app.get("/categories/:storeId", (req, res) => {
   const client = new Client(dbConfig);
   let storeId = req.params.storeId;
+  
+  console.log('---categories api storeId--', storeId);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("select DISTINCT highlights from am_store_product where store_id IN ('"+storeId+"')",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                const categories = response.rows;
+                res.send(categories);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+app.get("/cat-products/:storeId/:category", (req, res) => {
+  const client = new Client(dbConfig);
+  let storeId = req.params.storeId;
+  let category = req.params.category;
+  let offset = req.query.offset || 0;
+  let limit = req.query.limit || 1000;
   console.log('---products api storeId--', storeId);
   client.connect(err => {
     if (err) {
@@ -645,7 +680,40 @@ app.get("/products/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights, available_in from am_store_product where available = 'Y' AND store_id IN ('"+storeId+"') order by created_at desc",
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights, available_in from am_store_product where available = 'Y' AND highlights like '%"+category+"%' AND store_id IN ('"+storeId+"') order by created_at desc offset "+offset+" limit "+limit,
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                const products = getEffectiveSavings(response.rows);
+                res.send(products);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+app.get("/products/:storeId", (req, res) => {
+  const client = new Client(dbConfig);
+  let storeId = req.params.storeId;
+  let offset = req.query.offset || 0;
+  let limit = req.query.limit || 1000;
+  console.log('---products api storeId--', storeId);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights, available_in from am_store_product where available = 'Y' AND store_id IN ('"+storeId+"') order by created_at desc offset "+offset+" limit "+limit,
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -709,7 +777,7 @@ app.get("/products/search/:storeId/:productType", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%') order by created_at desc",
+        client.query("Select margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') and (LOWER(description) like '%"+productType+"%' or LOWER(title) like '%"+productType+"%') order by created_at desc LIMIT 300",
         [], (err, response) => {
           if (err) {
             console.log(err)
