@@ -110,7 +110,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
   }
 
   return (
-    <div key={index} className="card" style={{height: product.available_in == null ? '622px' : '665px'}}>
+    <div key={index} className="card" style={{height: product.available_in == null ? '622px' : '690px'}}>
       <img src={product.image_url} alt={product.title} />
       <div className="card-content">
         <div className="highlights">{product.highlights}</div>

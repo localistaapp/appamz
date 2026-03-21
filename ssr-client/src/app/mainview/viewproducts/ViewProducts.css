@@ -332,6 +332,7 @@ video {
 
 .size-box {
   background: #f3f3f3;
+  color: #000;
     border: 1px solid #ccc;
     cursor: pointer;
     font-size: 16px;
