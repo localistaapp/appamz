@@ -8,6 +8,7 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
   const originalPrice = Math.round(product.price * 1.2);
 
   const [qty, setQty] = useState(0);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   document.addEventListener('basket-updated', function(e) {
     console.log('basket-updated event', e.detail);
@@ -53,8 +54,9 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
     localStorage.setItem("basket",basketStr);
 });
 
-  const setCheckoutCount = (count, item, basketData) => {
+  const setCheckoutCount = (count, item, basketData, selectedSize) => {
     debugger;
+    let itemTitle = item.title;
     if (count >= 1) {
       document.getElementById('checkoutHeader').style.display = 'block';
       document.getElementById('checkoutCount').innerHTML = count;
@@ -62,15 +64,22 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
       if (Object.keys(basketData).length == 0)
         document.getElementById('checkoutHeader').style.display = 'none';
     }
+    if (selectedSize != null) {
+      itemTitle = item.title + ' - ' +selectedSize;
+    } 
     var event = new CustomEvent('basket-updated', { 
-      detail: {name: item.title, price: item.price * count, qty: count, itemId: item.id, itemSrc: item.image_url}
+      detail: {name: itemTitle, price: item.price * count, qty: count, itemId: item.id, itemSrc: item.image_url}
     });
     document.dispatchEvent(event);
   }
 
-  const handlePlusClick = (item, basketData) => {
+  const handlePlusClick = (item, basketData, availableIn, selectedSize) => {
+    if (selectedSize == null && availableIn != null && availableIn != '') {
+      alert('Please select a size!');
+      return;
+    }
     setQty(qty + 1);
-    setCheckoutCount(qty + 1, item, basketData);
+    setCheckoutCount(qty + 1, item, basketData, selectedSize);
     let storeId = sessionStorage.getItem('storeId');
     track(storeId, METRICS.BASKET_ADD);
   }
@@ -82,17 +91,36 @@ const ProductCard = ({product, index, basketData, setBasketData, setTotalPrice})
     }
   }
 
+  const getAvailableIn = (availableIn) => {
+    const dimensions = [];
+    if (availableIn == null || availableIn == '') {
+      return dimensions;
+    } else {
+      availableIn.split(',').map(size => {
+        dimensions.push(<button
+          key={size}
+          className={`size-box ${selectedSize === size ? "selected" : ""}`}
+          onClick={() => setSelectedSize(size)}
+        >
+          {size}
+        </button>);
+      })
+    }
+    return <div className="size-container">{dimensions}</div>;
+  }
+
   return (
-    <div key={index} className="card">
+    <div key={index} className="card" style={{height: product.available_in == null ? '622px' : '665px'}}>
       <img src={product.image_url} alt={product.title} />
       <div className="card-content">
         <div className="highlights">{product.highlights}</div>
         <div className="description">{product.description}</div>
+        <div className="available-in">{getAvailableIn(product.available_in)}</div>
         <div className="price">
           <div className="price-current">₹{product.price}</div>
           <div className="price-original">₹{Math.round(parseInt(product.price,10) + (parseInt(product.price,10) * 0.2 ))}</div>
         </div>
-        <div className="quantity"><a className="quantity__minus"><span style={{fontSize: '25px', lineHeight: '0px', marginLeft: '2px'}} onClick={() => handleMinusClick(product,basketData)}>-</span></a><input name="quantity" type="text" className="quantity__input" value={qty}/><a className="quantity__plus" onClick={()=>{handlePlusClick(product, basketData);}}><span>+</span></a></div>
+        <div className="quantity"><a className="quantity__minus"><span style={{fontSize: '25px', lineHeight: '0px', marginLeft: '2px'}} onClick={() => handleMinusClick(product,basketData)}>-</span></a><input name="quantity" type="text" className="quantity__input" value={qty}/><a className="quantity__plus" onClick={()=>{handlePlusClick(product, basketData, product.available_in, selectedSize);}}><span>+</span></a></div>
       </div>
     </div>
   );
@@ -439,7 +467,7 @@ const ProductList = ({products, storeConfig}) => {
                                 <div class="usp-title">
                                     <div class="title" style={{marginTop: '-10px'}}>{basketData[key].name}</div>
                                 </div>
-                                <div class="usp-desc" style={{color: 'rgb(101, 101, 101)', marginTop: '48px'}}>Quantity: ({basketData[key].qty})</div>
+                                <div class="usp-desc" style={{color: 'rgb(101, 101, 101)', marginTop: '66px'}}>Quantity: ({basketData[key].qty})</div>
                               </div>
                           </div>
                         </div>

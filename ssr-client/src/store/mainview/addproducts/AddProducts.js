@@ -55,6 +55,7 @@ const AddProducts = ({url}) => {
     const saveProduct = () => {
         const title = document.querySelector('#pTitle').value;
         const highlights = document.querySelector('#pHighlights').value;
+        const availableIn = document.querySelector('#pAvailableIn').value;
         const description = document.querySelector('#pDesc').value;
         const price = document.querySelector('#pPrice').value;
         const eligibleFor = document.querySelector('#pEligibleFor').options[document.querySelector('#pEligibleFor').selectedIndex].value;
@@ -70,7 +71,8 @@ const AddProducts = ({url}) => {
         console.log('--primaryCat--', primaryCat);
         console.log('--thumbnailUrl--', thumbnailUrl);
         
-        axios.post(`/createProduct`, {title: title, highlights: highlights, 
+        axios.post(`/createProduct`, {title: title, highlights: highlights,
+            availableIn: availableIn,
             description: description, price: price, 
             eligibleFor: eligibleFor, primaryCat: primaryCat,
             thumbnailUrl: thumbnailUrl, storeId: storeId}).then((response) => {
@@ -143,7 +145,8 @@ const AddProducts = ({url}) => {
            <div class="container">
                 <h1>Add Product</h1>
                 <input id="pTitle" type="text" placeholder="Title" />
-                <input id="pHighlights" type="text" placeholder="Highlights (e.g. type: kidswear, age: 9-10)" />
+                <input id="pHighlights" type="text" placeholder="Highlights (e.g. girls,1-to-6,dresses)" />
+                <input id="pAvailableIn" type="text" placeholder="Available in (e.g. 1yr,2yr,3yrs,4yrs)" />
                 <textarea id="pDesc" placeholder="Description"></textarea>
                 <input id="pPrice" type="number" placeholder="Price" />
                 

@@ -645,7 +645,7 @@ app.get("/products/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where available = 'Y' AND store_id IN ('"+storeId+"') order by created_at desc",
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights, available_in from am_store_product where available = 'Y' AND store_id IN ('"+storeId+"') order by created_at desc",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -676,7 +676,7 @@ app.get("/products-store/:storeId", (req, res) => {
       res.send('{"status":"connect-error"}');
       client.end();
     } else {
-        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights from am_store_product where store_id IN ('"+storeId+"') order by created_at desc",
+        client.query("Select available, margin, id, title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, in_stock, created_at, highlights, available_in from am_store_product where store_id IN ('"+storeId+"') order by created_at desc",
         [], (err, response) => {
           if (err) {
             console.log(err)
@@ -1818,6 +1818,7 @@ app.post('/createProduct', function(req, res) {
   const client = new Client(dbConfig)
   var title = req.body.title;
   var highlights = req.body.highlights;
+  var availableIn = req.body.availableIn;
   var description = req.body.description;
   var price = req.body.price;
   var eligibleFor = req.body.eligibleFor;
@@ -1842,8 +1843,8 @@ app.post('/createProduct', function(req, res) {
    } else {
      console.log('connected')
  
-     client.query("INSERT INTO \"public\".\"am_store_product\"(title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, highlights, store_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)",
-                       [title, description, price, eligibleFor, tagsDefault, tagsSeasonsSpecial, tagsNewArrival, thumbnailUrl, highlights, storeId], (err, response) => {
+     client.query("INSERT INTO \"public\".\"am_store_product\"(title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, highlights, store_id, available_in) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
+                       [title, description, price, eligibleFor, tagsDefault, tagsSeasonsSpecial, tagsNewArrival, thumbnailUrl, highlights, storeId, availableIn], (err, response) => {
                              if (err) {
                                console.log(err);
                                res.send('{"status":"insert-error"}');
