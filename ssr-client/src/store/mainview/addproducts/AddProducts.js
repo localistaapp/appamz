@@ -17,11 +17,20 @@ const AddProducts = ({url}) => {
 
     const [uploadUrl, setUploadUrl] = useState(0);
 
+    const [secondaryProgress, setSecondaryProgress] = useState(0);
+
+    const [secondaryUploadUrl, setSecondaryUploadUrl] = useState(0);
+
     // Create a ref for the file input element to access its files easily
     const fileInputRef = createRef();
 
+    // Create a ref for the file input element to access its files easily
+    const secondaryFileInputRef = createRef();
+
     // Create an AbortController instance to provide an option to cancel the upload if needed.
     const abortController = new AbortController();
+
+    const secondaryAbortController = new AbortController();
 
     const showMessage = (msg) => {
         setMessage(msg);
@@ -53,7 +62,7 @@ const AddProducts = ({url}) => {
     };
 
     const saveProduct = () => {
-        const title = document.querySelector('#pTitle').value;
+        //const title = document.querySelector('#pTitle').value;
         const highlights = document.querySelector('#pHighlights').value;
         const availableIn = document.querySelector('#pAvailableIn').value;
         const description = document.querySelector('#pDesc').value;
@@ -61,9 +70,10 @@ const AddProducts = ({url}) => {
         const eligibleFor = document.querySelector('#pEligibleFor').options[document.querySelector('#pEligibleFor').selectedIndex].value;
         const primaryCat = document.querySelector('#pCategory').options[document.querySelector('#pCategory').selectedIndex].value;
         const thumbnailUrl = uploadUrl;
+        const secondaryUrl = secondaryUploadUrl;
         const storeId = JSON.parse(window.sessionStorage.getItem('user-profile')).storeId;
 
-        console.log('--title--', title);
+        //console.log('--title--', title);
         console.log('--highlights--', highlights);
         console.log('--description--', description);
         console.log('--price--', price);
@@ -71,11 +81,12 @@ const AddProducts = ({url}) => {
         console.log('--primaryCat--', primaryCat);
         console.log('--thumbnailUrl--', thumbnailUrl);
         
-        axios.post(`/createProduct`, {title: title, highlights: highlights,
+        axios.post(`/createProduct`, {highlights: highlights,
             availableIn: availableIn,
             description: description, price: price, 
             eligibleFor: eligibleFor, primaryCat: primaryCat,
-            thumbnailUrl: thumbnailUrl, storeId: storeId}).then((response) => {
+            thumbnailUrl: thumbnailUrl, secondaryUrl: secondaryUrl,
+            storeId: storeId}).then((response) => {
             console.log('--Create Product Response--', response);
             setTimeout(()=>{window.location.reload();},500);
         });       
@@ -139,20 +150,77 @@ const AddProducts = ({url}) => {
         }
     };
 
+    const handleSecondaryUpload = async () => {
+        // Access the file input element using the ref
+        const fileInput = secondaryFileInputRef.current;
+        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
+            alert("Please select a file to upload");
+            return;
+        }
+
+        // Extract the first file from the file input
+        const file = fileInput.files[0];
+
+        // Retrieve authentication parameters for the upload.
+        let authParams;
+        try {
+            authParams = await authenticator();
+        } catch (authError) {
+            console.error("Failed to authenticate for upload:", authError);
+            return;
+        }
+        const { signature, expire, token, publicKey } = authParams;
+
+        // Call the ImageKit SDK upload function with the required parameters and callbacks.
+        try {
+            const uploadResponse = await upload({
+                // Authentication parameters
+                expire,
+                token,
+                signature,
+                publicKey,
+                file,
+                fileName: file.name, // Optionally set a custom file name
+                // Progress callback to update upload progress state
+                onProgress: (event) => {
+                    setSecondaryProgress((event.loaded / event.total) * 100);
+                },
+                // Abort signal to allow cancellation of the upload if needed.
+                abortSignal: secondaryAbortController.signal,
+            });
+            setSecondaryUploadUrl(uploadResponse.url);
+            console.log("Upload response:", uploadResponse);
+        } catch (error) {
+            // Handle specific error types provided by the ImageKit SDK.
+            if (error instanceof ImageKitAbortError) {
+                console.error("Upload aborted:", error.reason);
+            } else if (error instanceof ImageKitInvalidRequestError) {
+                console.error("Invalid request:", error.message);
+            } else if (error instanceof ImageKitUploadNetworkError) {
+                console.error("Network error:", error.message);
+            } else if (error instanceof ImageKitServerError) {
+                console.error("Server error:", error.message);
+            } else {
+                // Handle any other errors that may occur.
+                console.error("Upload error:", error);
+            }
+        }
+    };
+
 
     return (
         <div className="main">
            <div class="container">
                 <h1>Add Product</h1>
-                <input id="pTitle" type="text" placeholder="Title" />
+                {/*<input id="pTitle" type="text" placeholder="Title" />*/}
                 <input id="pHighlights" type="text" placeholder="Highlights (e.g. girls,1-to-6,dresses)" />
                 <input id="pAvailableIn" type="text" placeholder="Available in (e.g. 1yr,2yr,3yrs,4yrs)" />
                 <textarea id="pDesc" placeholder="Description"></textarea>
                 <input id="pPrice" type="number" placeholder="Price" />
                 
                 <select id="pEligibleFor" >
-                <option disabled selected>Eligible for</option>
-                <option>Online Purchase</option>
+                <option disabled>Eligible for</option>
+                <option selected>Online Purchase</option>
                 <option>Online Enquiry</option>
                 <option>Online Booking</option>
                 </select>
@@ -167,12 +235,24 @@ const AddProducts = ({url}) => {
                     <input type="file" ref={fileInputRef} style={{width: '92%'}} />
                     {/* Button to trigger the upload process */}
                     <div className="footer-buttons"><button style={{background: 'linear-gradient(180deg, #595959, #000000)'}} type="button" onClick={handleUpload}>
-                        Upload file
+                        Upload primary
                     </button>
                     </div>
                     <br />
                     {/* Display the current upload progress */}
                     Upload progress: <progress value={progress} max={100}></progress>
+
+                    <br/>
+                    {/* File input element using React ref */}
+                    <input type="file" ref={secondaryFileInputRef} style={{width: '92%'}} />
+                    {/* Button to trigger the upload process */}
+                    <div className="footer-buttons"><button style={{background: 'linear-gradient(180deg, #595959, #000000)'}} type="button" onClick={handleSecondaryUpload}>
+                        Upload secondary
+                    </button>
+                    </div>
+                    <br />
+                    {/* Display the current upload progress */}
+                    Upload progress: <progress value={secondaryProgress} max={100}></progress>
             </div>
 
             <div class="footer-buttons">

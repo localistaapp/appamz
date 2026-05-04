@@ -1948,6 +1948,7 @@ app.post('/createProduct', function(req, res) {
   var eligibleFor = req.body.eligibleFor;
   var primaryCat = req.body.primaryCat;
   var thumbnailUrl = req.body.thumbnailUrl;
+  var secondaryUrl = req.body.secondaryUrl;
   var storeId = req.body.storeId;
   var tagsSeasonsSpecial = false;
   var tagsNewArrival = false;
@@ -1967,8 +1968,8 @@ app.post('/createProduct', function(req, res) {
    } else {
      console.log('connected')
  
-     client.query("INSERT INTO \"public\".\"am_store_product\"(title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, highlights, store_id, available_in) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)",
-                       [title, description, price, eligibleFor, tagsDefault, tagsSeasonsSpecial, tagsNewArrival, thumbnailUrl, highlights, storeId, availableIn], (err, response) => {
+     client.query("INSERT INTO \"public\".\"am_store_product\"(title, description, price, eligible_for, tags_default, tags_seasons_special, tags_new_arrival, image_url, secondary_image_url, highlights, store_id, available_in) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+                       [title, description, price, eligibleFor, tagsDefault, tagsSeasonsSpecial, tagsNewArrival, thumbnailUrl, secondaryUrl, highlights, storeId, availableIn], (err, response) => {
                              if (err) {
                                console.log(err);
                                res.send('{"status":"insert-error"}');
