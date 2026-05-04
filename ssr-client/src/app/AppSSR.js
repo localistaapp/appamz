@@ -14,7 +14,8 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
 
     const storePathNameConfig = {
         'swirlyojpnagar': {storeId: '9', placeId: ''},
-        'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'}
+        'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'},
+        'manthan': {storeId: '17', placeId: 'ChIJRbpaPrwVrjsRRJa-dFttLPs'}
     }
     
     return (
@@ -44,6 +45,7 @@ const AppSSR = ({ pathName='swirlyojpnagar', appName = 'quickrush', bootStrapCSS
                 { pathName == 'kidsaurajpnagar' && <script src="https://cdn.pushalert.co/unified_57961a2823431df0596bdc85133d8255.js" /> }
                 { pathName == 'swirlyojpnagar' && <script src="https://cdn.pushalert.co/integrate_7fc3afe390f150da6b0f4f200227fabe.js" /> }
                 { pathName == 'mumnminijpnagar' && <script src="https://cdn.pushalert.co/unified_00df70a3880cf61618efb34aa51c4799.js" /> }
+                { pathName == 'manthan' && <script src="https://cdn.pushalert.co/unified_8fd6919413a3307d8c9b0fdde3a82c97.js" /> }
             </head>
             <body>
                 <div id="root-app">

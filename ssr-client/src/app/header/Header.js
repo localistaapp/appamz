@@ -278,7 +278,8 @@ const Header = (props) => {
         const storePathNameConfig = {
             'swirlyojpnagar': {storeId: '9', placeId: ''},
             'kidsaurajpnagar': {storeId: '13', placeId: 'ChIJjSGVUwAVrjsRKuLMxFv9BYE'},
-            'mumnminijpnagar': {storeId: '15', placeId: 'ChIJ7bp1FhoVrjsRCe4pyE9z6ZU'}
+            'mumnminijpnagar': {storeId: '15', placeId: 'ChIJ7bp1FhoVrjsRCe4pyE9z6ZU'},
+            'manthan': {storeId: '17', placeId: 'ChIJRbpaPrwVrjsRRJa-dFttLPs'}
         }
     
         const storeConfigVal = storePathNameConfig[window.location.pathname.split('/')[2]];
