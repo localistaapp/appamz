@@ -31,6 +31,7 @@ let dbConfig = {
 const app = express();
 const subApp = express();
 const mumNMiniApp = express();
+const manthanApp = express();
 
 const port = 3009;
 
@@ -260,6 +261,28 @@ mumNMiniApp.get("/app/:store", (req, res) => {
   );
 });
 
+manthanApp.get("/app/:store", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
 app.get("/app/:store/:ptype", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
@@ -326,6 +349,28 @@ mumNMiniApp.get("/app/:store/:ptype", (req, res) => {
   );
 });
 
+manthanApp.get("/app/:store/:ptype", (req, res) => {
+  res.socket.on("error", (error) => console.log("Fatal error occured", error));
+  const pathName = req.params.store;
+  let didError = false;
+  
+  const stream = ReactDOMServer.renderToPipeableStream(
+    <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
+    {
+      bootstrapScripts,
+      onShellReady: () => {
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        stream.pipe(res);
+      },
+      onError: (error) => {
+        didError = true;
+        console.log("Error", error);
+      },
+    }
+  );
+});
+
 /*app.get("/manifest.json", (req,res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send('{"name":"lootler","short_name":"lootler","start_url":"https://lootler.com/app/shop/favourites","id":"https://lootler.com/app/shop/favourites","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-85687-1.png?1766997585","sizes":"192x192"}]}');
@@ -356,12 +401,23 @@ mumNMiniApp.get("/manifest.json", (req, res) => {
   res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","id":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/default_icon-85706.png?1767089531","sizes":"192x192"}]}');
 });
 
+manthanApp.get("/sw.js", (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript');
+  res.send('importScripts("https://cdn.pushalert.co/sw-86911.js")');
+});
+
+manthanApp.get("/manifest.json", (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","id":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/default_icon-85706.png?1767089531","sizes":"192x192"}]}');
+});
+
 
 app.use(vhost('kindjpnagar.lootler.com', express.static(path.join(__dirname, '/app/blr/kindjpnagar'))))
 .use(vhost('urbansareesbroad.lootler.com', express.static(path.join(__dirname, '/app/blr/urbansareesbroad'))))
 .use(vhost('swirlyojpnagar.lootler.com', subApp))
 .use(vhost('kidsaurajpnagar.lootler.com', subApp))
-.use(vhost('mumnminijpnagar.lootler.com', mumNMiniApp));
+.use(vhost('mumnminijpnagar.lootler.com', mumNMiniApp))
+.use(vhost('manthan.lootler.com', manthanApp));
 
 const swirlyoSubApp = express();
 
