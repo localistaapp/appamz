@@ -403,12 +403,12 @@ mumNMiniApp.get("/manifest.json", (req, res) => {
 
 manthanApp.get("/sw.js", (req, res) => {
   res.setHeader('Content-Type', 'application/javascript');
-  res.send('importScripts("https://cdn.pushalert.co/sw-86911.js")');
+  res.send('importScripts("https://cdn.pushalert.co/sw-89148.js")');
 });
 
 manthanApp.get("/manifest.json", (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.send('{"name":"mum n mini","short_name":"mum n mini","start_url":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","id":"https://mumnminijpnagar.lootler.com/app/mumnminijpnagar","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/default_icon-85706.png?1767089531","sizes":"192x192"}]}');
+  res.send('{"name":"Manthan","short_name":"Manthan","start_url":"https://manthan.lootler.com/app/manthan","id":"https://manthan.lootler.com/app/manthan","display":"standalone","background_color":"#ffffff","theme_color":"#ffffff","icons":[{"src":"https://cdn.pushalert.co/icons/app-icon-87943-1.png?1777864593","sizes":"192x192"}]}');
 });
 
 
