@@ -6,6 +6,8 @@ import ShopSSR from "./ssr-client/src/shop/ShopSSR";
 import StoreSSR from "./ssr-client/src/store/StoreSSR";
 import express from "express";
 import fs from "fs";
+import { GoogleGenAI } from "@google/genai";
+
 const { OpenAI } = require('openai');
 var { Client } = require('pg');
 const nodemailer = require("nodemailer");
@@ -569,7 +571,7 @@ app.post('/push-notif', function(req, res) {
               pushKey = response.rows[0]['push_key'];
               client.end();
               axios
-                .post('https://api.pushalert.co/rest/v1/send', 'url=https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/&title='+title+'&message='+description, {headers: {'Authorization': 'api_key='+pushKey}})
+                .post('https://api.pushalert.co/rest/v1/send', 'url=https://manthan.lootler.com/app/manthan/&title='+title+'&message='+description, {headers: {'Authorization': 'api_key='+pushKey}})
                 .then(res => {
                   console.log('Pushalert success: ');
                 })
@@ -716,6 +718,161 @@ app.get("/categories/:storeId", (req, res) => {
               } else {
                 const categories = response.rows;
                 res.send(categories);
+                client.end();
+              }
+          }
+        });
+  }});
+});
+
+app.get('/updategenp/', function(req, res) {
+  const tmpDir = '/Users/srishti/Documents/code/appamz/tmp';
+
+  // Read all files from tmp folder
+  const files = fs.readdirSync(tmpDir).filter(f => f.endsWith('.jpg'));
+
+  if (files.length === 0) {
+    return res.send('{"status":"no-files"}');
+  }
+
+  const client = new Client(dbConfig);
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      return res.send('{"status":"connect-error"}');
+    }
+
+    let updated = 0, failed = 0;
+
+    for (const file of files) {
+      // Extract id from filename: "i-386.jpg" -> 386
+      const match = file.match(/^i-(\d+)\.jpg$/);
+      if (!match) {
+        console.log(`Skipping unrecognized file: ${file}`);
+        continue;
+      }
+
+      const id = match[1];
+      const imageUrl = `https://ik.imagekit.io/amuzely/Imgs/i-${id}.jpg`;
+      console.log('Query: '+"UPDATE am_store_product SET img_url = "+imageUrl+" WHERE id = "+id);
+
+      try {
+        await client.query(
+          `UPDATE "public"."am_store_product" SET image_url = $1 WHERE id = $2`,
+          [imageUrl, id]
+        );
+        console.log(`✅ Updated product ${id} -> ${imageUrl}`);
+        updated++;
+      } catch (queryErr) {
+        console.error(`❌ Failed to update product ${id}:`, queryErr);
+        failed++;
+      }
+    }
+
+    client.end();
+    res.send({ status: 'done', updated, failed });
+  });
+});
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+app.get("/genp/:storeId", (req, res) => {
+  const client = new Client(dbConfig);
+  let storeId = req.params.storeId;
+  let highlight = 'kids,girls,0-to-3,ethnic,frocks';
+
+  const ai = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+
+  let promptMap = {
+    "womens,sarees": "Create a PDP-ready photorealistic image of the saree taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian female model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "womens,kurtis-tops": "Create a PDP-ready photorealistic image of the womens kurti/top with a suitable matching bottom with appriopriate length based on kurti or top or long kurti as per input image taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian female model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,girls,0-to-3,partywear": "Create a PDP-ready photorealistic image of the kids/baby dress taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids/baby model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,girls,3-to-6,partywear": "Create a PDP-ready photorealistic image of the kids/baby dress for 3 to 6 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids/baby model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,boys,6-to-12,partywear,kurta": "Create a PDP-ready photorealistic image of the kids boys dress taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,boys,0-to-3,partywear": "Create a PDP-ready photorealistic image of the kids boys dress for 0 to 3 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,boys,0-to-6,coats": "Create a PDP-ready photorealistic image of the kids boys coat for 0 to 6 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,boys,3-to-6,partywear": "Create a PDP-ready photorealistic image of the boys partywear dress for 3 to 6 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,boys,6-to-12,partywear": "Create a PDP-ready photorealistic image of the boys partywear dress for 6 to 12 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,girls,11-to-12,partywear": "Create a PDP-ready photorealistic image of the kids girls dress for 11 to 12 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids girl model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+    "kids,girls,0-to-3,ethnic,frocks":  "Create a PDP-ready photorealistic image of the kids baby/girls ethnic dress for 0 to 3 year old taking the base picture with a subtle light grey background - make it slightly 3d and best quality: Use 2:3 aspect ratio with sufficient white space - with an appropriate Indian kids girl model. Also generate it in a tabular view of 2 columns with first column not having any rows with the image spanning the full height with model and the second column with split view with first row without the model and just the product and second row with fabric detailing. Combined images into 1 image.",
+  }
+  
+  console.log('---categories api storeId--', storeId);
+  client.connect(err => {
+    if (err) {
+      console.error('error connecting', err.stack)
+      res.send('{"status":"connect-error"}');
+      client.end();
+    } else {
+        client.query("select id, image_url from am_store_product where highlights = '"+highlight+"' AND store_id IN ('"+storeId+"')",
+        [], (err, response) => {
+          if (err) {
+            console.log(err)
+              res.send('{"status":"response-error"}');
+              client.end();
+          } else {
+              //res.send(response.rows);
+              if (response.rows.length == 0) {
+                res.send('{"status":"no-results"}');
+                client.end();
+              } else {
+                const products = response.rows;
+                res.send(products);
+                const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+                  // Process at max ~50 req/min to stay safely under the 100/min limit
+                  const DELAY_BETWEEN_REQUESTS = 1500; // 1.5s = ~40 req/min
+
+                  products.forEach(async (product) => {
+                    const imageUrl = product['image_url'];
+                    const pid = product['id'];
+                    const filePath = `/Users/srishti/Documents/code/appamz/tmp/i-${pid}.jpg`;
+
+                    if (fs.existsSync(filePath)) {
+                      console.log(`Skipping product ${pid} - already exists`);
+                      return;
+                    }
+
+                    let retries = 3;
+                    while (retries > 0) {
+                      try {
+                        const imageResponse = await fetch(imageUrl);
+                        const base64Image = Buffer.from(await imageResponse.arrayBuffer()).toString("base64");
+
+                        const response = await ai.models.generateContent({
+                          model: "gemini-3.1-flash-image-preview",
+                          contents: [
+                            { text: promptMap[highlight] },
+                            { inlineData: { mimeType: "image/png", data: base64Image } },
+                          ],
+                        });
+
+                        for (const part of response.candidates[0].content.parts) {
+                          if (part.inlineData) {
+                            fs.writeFileSync(filePath, Buffer.from(part.inlineData.data, "base64"));
+                            console.log(`✅ Saved i-${pid}.jpg`);
+                          }
+                        }
+
+                        break; // success, exit retry loop
+
+                      } catch (err) {
+                        if (err?.message?.includes('429')) {
+                          // Parse retry delay from error if available, else default to 60s
+                          const retryMatch = err.message.match(/retry in (\d+)/i);
+                          const waitMs = retryMatch ? parseInt(retryMatch[1]) * 1000 + 2000 : 60000;
+                          console.warn(`⚠️ Rate limited on ${pid}. Waiting ${waitMs / 1000}s before retry...`);
+                          await sleep(waitMs);
+                          retries--;
+                        } else {
+                          console.error(`❌ Error on ${pid}:`, err.message);
+                          break; // non-rate-limit error, don't retry
+                        }
+                      }
+                    }
+
+                    await sleep(DELAY_BETWEEN_REQUESTS); // always wait between requests
+                  });
                 client.end();
               }
           }
@@ -2014,7 +2171,7 @@ app.post('/createProduct', function(req, res) {
                                                                         let headline = 'New deal unlocked on '+item['product_type'];
                                                                         let detail = 'Check out this new arrival'
                                                                         axios
-                                                                          .post('https://api.pushalert.co/rest/v1/segment/'+item.segment+'/send', 'url=https://kidsaurajpnagar.lootler.com/app/kidsaurajpnagar/'+item['product_type']+'&title='+headline+'&message='+detail, {headers: {'Authorization': 'api_key='+pushKey}})
+                                                                          .post('https://api.pushalert.co/rest/v1/segment/'+item.segment+'/send', 'url=https://manthan.lootler.com/app/manthan/'+item['product_type']+'&title='+headline+'&message='+detail, {headers: {'Authorization': 'api_key='+pushKey}})
                                                                           .then(res => {
                                                                             console.log('Pushalert success: ');
                                                                             res.send('{"status":"push success"}');
