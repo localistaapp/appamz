@@ -246,7 +246,7 @@ const ProductList = ({products, storeConfig}) => {
       console.log('--Object.keys(basketData).length--', Object.keys(basketData).length);
 
       const checkDeliveryOptions = () => {
-        if (isClient && onlineOrdersPinCodes && onlineOrdersPinCodes.indexOf(document.getElementById('dPincode').value)>=0) {
+        if (isClient && onlineOrdersPinCodes && document.getElementById('dPincode').value.indexOf('560')>=0) {
             var curDay = window ? window.weekdays[new Date().getDay()].toLowerCase() : '';
             if (onlineOrdersTimings.hasOwnProperty(curDay) && onlineOrdersTimings[curDay].length > 0) {
                 console.log('--schedule--', onlineOrdersTimings[curDay]);
@@ -257,9 +257,11 @@ const ProductList = ({products, storeConfig}) => {
                 setShowDeliveryOptions(false);
                 setDeliveryNotSupported(true);
             }
+            document.getElementById('returns-info').style.display = 'none';
         } else {
             setShowDeliveryOptions(false);
             setDeliveryNotSupported(true);
+            document.getElementById('returns-info').style.display = 'none';
         }
         document.getElementById('checkoutNextBtn').style.display = 'block';
       }
@@ -487,6 +489,8 @@ const ProductList = ({products, storeConfig}) => {
                               <img src="../../assets/images/shipment.png" className="delivery-icon" style={{marginTop: '0px',width: '48px'}}/>
 
                               <span className="title-ff" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>Share your pincode to check delivery options:</span>
+                              <span className="title-ff title-returns" id="returns-info" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>*This store only accepts exchange only within 30 days from the date of order delivery. Returns are subject to store discretion.</span>
+
 
                               </div>
                           </div>
@@ -497,6 +501,7 @@ const ProductList = ({products, storeConfig}) => {
                                       <input id="dPincode" type="text" className="step-input" placeholder="Your pincode" style={{left: '20px',top: '0px'}}/>
                                       <input type="button" class="pincode-btn" value="Check Options" onClick={checkDeliveryOptions} />
                                   </div>
+
                             <div className="delivery-section" style={{top:'124px',paddingTop: '20px', display: `${showDeliveryOptions == true ? 'block' : 'none'}`}}>
                               {storeAcceptingOrders == true && <div class="radios">
                                   <input type="radio" style={{width: '30px'}} id="deliverNow" name="deliveryTime" value="deliverNow" checked/>

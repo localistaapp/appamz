@@ -613,6 +613,20 @@ video {
     margin-bottom: 6px;
   }
 
+  .title-ff.title-returns {
+    top: 0px;
+    padding: 10px;
+    line-height: 22px;
+    width: 300px;
+    left: 11px;
+    margin-top: 189px;
+    text-align: center;
+    margin: 0 auto;
+    left: -21px;
+    right: 0;
+    margin-top: 201px;
+  }
+
   .description {
     font-size: 0.95rem;
     margin-bottom: 10px;
