@@ -725,6 +725,112 @@ app.get("/categories/:storeId", (req, res) => {
   }});
 });
 
+app.get('/updatetitlep/:storeId', function (req, res) {
+  const storeId = req.params.storeId;
+  const highlight = 'kids,boys,0-to-6,coats';
+
+  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+  const titlePromptMap = {
+    "womens,sarees":                    "Generate a product title for this saree. Max 70 characters. Style: 'Red Saree in Dola Silk With Floral Weave and embroidery'. Include colour, fabric, design, and key detail. Respond with ONLY the title text, no quotes, no explanation.",
+    "womens,kurtis-tops":               "Generate a product title for this women's kurti/top. Max 70 characters. Style: 'Blue Cotton Kurti With Floral Print And Three-Quarter Sleeves'. Include colour, fabric, design, and key detail. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,girls,0-to-3,ethnic,frocks":  "Generate a product title for this baby/girls ethnic dress for 0-3 year olds. Max 70 characters. Style: 'Pink Silk Ethnic Frock With Zari Border For Baby Girls'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,girls,0-to-3,partywear":      "Generate a product title for this baby/girls partywear dress for 0-3 year olds. Max 70 characters. Style: 'Pink Net Partywear Frock With Sequin Detail For Baby Girls'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,girls,3-to-6,partywear":      "Generate a product title for this girls partywear dress for 3-6 year olds. Max 70 characters. Style: 'Lavender Tulle Partywear Dress With Bow Detail For Girls'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,girls,11-to-12,partywear":    "Generate a product title for this girls partywear dress for 11-12 year olds. Max 70 characters. Style: 'Teal Georgette Partywear Gown With Embroidered Yoke For Girls'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,boys,0-to-3,partywear":       "Generate a product title for this boys partywear outfit for 0-3 year olds. Max 70 characters. Style: 'Ivory Silk Partywear Sherwani Set For Baby Boys'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,boys,3-to-6,partywear":       "Generate a product title for this boys partywear outfit for 3-6 year olds. Max 70 characters. Style: 'Navy Blue Brocade Partywear Kurta Set For Boys'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,boys,6-to-12,partywear":      "Generate a product title for this boys partywear outfit for 6-12 year olds. Max 70 characters. Style: 'Maroon Silk Partywear Sherwani With Churidar For Boys'. Include colour, fabric, occasion, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,boys,6-to-12,partywear,kurta":"Generate a product title for this boys kurta set for 6-12 year olds. Max 70 characters. Style: 'Cream Cotton Kurta With Floral Embroidery And Pyjama For Boys'. Include colour, fabric, style, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+    "kids,boys,0-to-6,coats":           "Generate a product title for this boys coat for 0-6 year olds. Max 70 characters. Style: 'Grey Woollen Coat With Button Placket And Collar For Boys'. Include colour, fabric, key feature, and age group. Respond with ONLY the title text, no quotes, no explanation.",
+  };
+
+  const client = new Client(dbConfig);
+  client.connect(async (err) => {
+    if (err) {
+      console.error('error connecting', err.stack);
+      return res.send('{"status":"connect-error"}');
+    }
+
+    let products;
+    try {
+      const result = await client.query(
+        `SELECT id, image_url FROM am_store_product WHERE highlights = $1 AND store_id = $2`,
+        [highlight, storeId]
+      );
+      products = result.rows;
+    } catch (e) {
+      console.error('Query error:', e);
+      client.end();
+      return res.send('{"status":"query-error"}');
+    }
+
+    if (!products.length) {
+      client.end();
+      return res.send('{"status":"no-results"}');
+    }
+
+    res.send({ status: 'started', total: products.length });
+
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const DELAY = 100;
+    let updated = 0, failed = 0;
+
+    const prompt = titlePromptMap[highlight];
+
+    for (const product of products) {
+      const { id: pid, image_url: imageUrl } = product;
+
+      try {
+        const imageResponse = await fetch(imageUrl);
+        const base64Image = Buffer.from(await imageResponse.arrayBuffer()).toString("base64");
+
+        const aiResponse = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [
+            { text: prompt },
+            { inlineData: { mimeType: "image/jpeg", data: base64Image } },
+          ],
+        });
+
+        let title = aiResponse.candidates[0].content.parts
+          .filter(p => p.text)
+          .map(p => p.text)
+          .join("")
+          .trim()
+          .replace(/^["']|["']$/g, "")   // strip any surrounding quotes
+          .slice(0, 70);                  // hard cap at 70 chars
+
+        await client.query(
+          `UPDATE am_store_product SET title = $1, description = $1 WHERE id = $2`,
+          [title, pid]
+        );
+
+        console.log(`✅ ${pid} → "${title}"`);
+        updated++;
+
+      } catch (e) {
+        if (e?.message?.includes('429')) {
+          const waitMs = (() => {
+            const m = e.message.match(/retry in (\d+)/i);
+            return m ? parseInt(m[1]) * 1000 : 60000;
+          })();
+          console.warn(`⚠️ Rate limited on ${pid}. Waiting ${waitMs / 1000}s...`);
+          await sleep(waitMs);
+        } else {
+          console.error(`❌ Failed on ${pid}:`, e.message);
+          failed++;
+        }
+      }
+
+      await sleep(DELAY);
+    }
+
+    client.end();
+    console.log(`\n🏁 Done — updated: ${updated}, failed: ${failed}`);
+  });
+});
+
 app.get('/updategenp/', function(req, res) {
   const tmpDir = '/Users/srishti/Documents/code/appamz/tmp';
 

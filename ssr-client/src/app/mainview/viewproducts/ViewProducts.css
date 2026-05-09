@@ -614,9 +614,10 @@ video {
   }
 
   .description {
-    font-size: 1rem;
+    font-size: 0.95rem;
     margin-bottom: 10px;
     color: #333;
+    width: 100%;
   }
 
   .shop-description {
@@ -1200,6 +1201,12 @@ margin-right:20px;
   position: relative;
   top: -113px;
   left: 99px;
+}
+
+.top-right-mini .usp-title .title {
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
 }
 
 .section-one .top-left img.primary-img {
