@@ -2088,6 +2088,20 @@ app.post('/track', function(req, res) {
 
                     });
               //client.end();
+                  } else {
+                    client.query("UPDATE \"public\".\"am_store_stats\" SET value = "+metricValue+" where store_id = "+storeId+" and metric = '"+metric+"'",
+                [], (err, response) => {
+                      if (err) {
+                        console.log(err)
+                          res.send("error");
+                          client.end();
+                      } else {
+                          //res.send(response);
+                          res.send('success');
+                          client.end();
+                      }
+
+                    });
                   }
             }
       });
