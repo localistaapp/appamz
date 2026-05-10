@@ -201,6 +201,8 @@ app.get("/app/:store", (req, res) => {
   res.socket.on("error", (error) => console.log("Fatal error occured", error));
   const pathName = req.params.store;
   let didError = false;
+  const referrer = req.get('Referrer'); 
+  console.log('User came from:', referrer);
   
   const stream = ReactDOMServer.renderToPipeableStream(
     <AppSSR pathName={pathName} appName="" bootStrapCSS={bootstrapCSS} locationHref={req.url} />,
