@@ -312,27 +312,7 @@ const Stats = ({url}) => {
                         <div onClick={()=>{setActiveDITab('favourites');loadDIStats('favs');}} className={`notif-tab ${activeDITab == 'favourites' ? 'active' : ''}`}>Favourites</div>
                     </div>
                 </div>
-                {diData != null && activeDITab == "searches" && <><div className="funnel-headline">
-
-                        <span style={{marginRight: '8px',fontWeight: 'bold', top: '-14px', position: 'relative', color: '#616161'}}>Recent Searches:</span>
-                        {recentSearches && recentSearches.map ((recent, index)=> {
-                            if (index == 0) {
-                              return  <span style={{top: '-14px', position: 'relative', color: '#616161'}}>{recent.query}</span>
-                            } else {
-                              return  <span style={{top: '-14px', position: 'relative', color: '#616161'}}>, {recent.query}</span>
-                            }
-                        })
-                       
-                        }
-                          <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
-                            {
-                              diData.map((item,index) => (
-                                <li><a href="#" data-weight={item.count}>{item.query}</a></li>
-                              ))
-                            }
-                          </ul>
-                    </div></>
-                }
+                
                 {diData != null && activeDITab == "favourites" && <><div className="funnel-headline">
                           <ul class="cloud" role="navigation" aria-label="Webdev word cloud">
                             {
