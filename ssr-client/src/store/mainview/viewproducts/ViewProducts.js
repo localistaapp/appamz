@@ -19,7 +19,7 @@ const ProductList = ({products}) => {
           const originalPrice = Math.round(p.price * 1.2);
   
           return (
-            <div key={index} className="card">
+            <div key={index} className="card" style={{height:"688px"}}>
               <img src={p.image_url} alt={p.title} />
               <div className="card-content">
                 <div className="highlights">{p.highlights}</div>
