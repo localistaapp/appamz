@@ -489,7 +489,7 @@ const ProductList = ({products, storeConfig}) => {
                               <img src="../../assets/images/shipment.png" className="delivery-icon" style={{marginTop: '0px',width: '48px'}}/>
 
                               <span className="title-ff" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>Share your pincode to check delivery options:</span>
-                              <span className="title-ff title-returns" id="returns-info" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>*This store only accepts exchange only within 30 days from the date of order delivery. Returns are subject to store discretion.</span>
+                              <span className="title-ff title-returns" id="returns-info" style={{top:'0px', padding: '10px', lineHeight: '22px', width: '210px', left: '11px'}}>*This store accepts exchange only within 1 week from the date of order delivery. Returns are not accepted by the store.</span>
 
 
                               </div>
